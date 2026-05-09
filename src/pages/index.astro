@@ -1,11 +1,83 @@
 ---
-import Welcome from '../components/Welcome.astro';
+// src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// 임시 포스트 데이터 (실제로는 Markdown이나 CMS에서 불러옴)
+const posts = [
+	{
+		title: "제주도 3박 4일 가족 여행 동선 최적화 팁",
+		summary: "아이와 함께하는 여행에서 피로도는 낮추고 만족도는 높이는 제주도 가족 나들이 코스를 공유합니다.",
+		date: "2023. 11. 15.",
+		category: "Travel & Kids"
+	},
+	{
+		title: "2024년 아이 관련 정부 지원금 완벽 정리",
+		summary: "놓치기 쉬운 영유아 수당부터 교육비 지원까지, 부모를 위한 핵심 정부 혜택과 신청 방법을 알아봅니다.",
+		date: "2023. 11. 10.",
+		category: "Money & Policy"
+	},
+	{
+		title: "시놀로지 NAS 초기 세팅 및 실사용 트러블슈팅",
+		summary: "가족 사진 백업과 미디어 서버 구축을 위한 시놀로지 NAS 세팅 과정과 흔히 겪는 문제 해결법.",
+		date: "2023. 11. 05.",
+		category: "Tech & Gear"
+	},
+	{
+		title: "Python으로 텔레그램 알림 봇 만들기",
+		summary: "주식 리포트 알림과 가족 일정 관리를 자동화해주는 텔레그램 봇 개발 기록을 남깁니다.",
+		date: "2023. 11. 01.",
+		category: "Dev Log"
+	},
+	{
+		title: "DART 알고리즘 기반 주식 리포트 자동화 분석",
+		summary: "공시 데이터를 파이썬으로 크롤링하여 유의미한 주식 정보를 필터링하는 로직에 대해 설명합니다.",
+		date: "2023. 10. 28.",
+		category: "Money & Policy"
+	},
+	{
+		title: "아이를 위한 타자/한자 학습 프로그램 제작기",
+		summary: "아이의 눈높이에 맞춰 직접 코딩한 학습 프로그램. React와 Tailwind를 활용한 UI 구성기를 담았습니다.",
+		date: "2023. 10. 25.",
+		category: "Dev Log"
+	}
+];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="다다노트">
+	<!-- Hero Section -->
+	<section class="py-16 md:py-24 flex flex-col items-center text-center">
+		<h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
+			우리가족의 이야기, <br class="md:hidden" />
+			<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">다다노트</span>
+		</h1>
+		<p class="text-lg md:text-xl text-slate-600 max-w-2xl mb-10 leading-relaxed">
+			가족 나들이 로그부터 생활 밀착형 재테크, 실사용 IT 기기 리뷰와 코딩 기록까지 소중한 정보를 나눕니다.
+		</p>
+	</section>
+
+	<!-- Recent Posts Section -->
+	<section class="mt-8 md:mt-12">
+		<div class="flex items-center justify-between mb-8">
+			<h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+				최근 게시물
+			</h2>
+			<a href="/posts" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
+				전체보기 &rarr;
+			</a>
+		</div>
+
+		<!-- Responsive Grid -->
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{posts.map((post) => (
+				<Card 
+					title={post.title}
+					summary={post.summary}
+					date={post.date}
+					category={post.category}
+					href="#"
+				/>
+			))}
+		</div>
+	</section>
 </Layout>
