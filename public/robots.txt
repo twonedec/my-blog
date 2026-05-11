@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 
 Sitemap: https://dadanote.net/sitemap-index.xml
+
+User-agent: Yeti
+Allow: /
