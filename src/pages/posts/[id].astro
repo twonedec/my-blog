@@ -29,7 +29,7 @@ const catSlug: Record<string, string> = {
 const backHref = `/${catSlug[post.data.category] ?? ''}`;
 ---
 
-<Layout title={`${post.data.title} — 다다노트`} description={post.data.summary}>
+<Layout title={`${post.data.title} — 다다노트`} description={post.data.summary} ogImage={post.data.image}>
 <style is:global>
 /* ── Article layout ──────────────────────────────── */
 .article-wrap {

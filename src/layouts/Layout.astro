@@ -4,14 +4,21 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
   currentCategorySlug?: string;
 }
 
 const {
   title,
   description = "가족 여행, 생활 정책, 기어 리뷰, 코딩 기록 — 다다노트",
+  ogImage,
   currentCategorySlug,
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = ogImage
+  ? new URL(ogImage, Astro.site).href
+  : new URL('/thumbnail.png', Astro.site).href;
 
 const categories = [
   { slug: 'travel-kids', label: 'Travel & Kids' },
@@ -33,9 +40,17 @@ const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-dig
   <meta name="generator" content={Astro.generator} />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL} />
   <meta property="og:title"       content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type"        content="website" />
+  <meta property="og:url"         content={canonicalURL} />
+  <meta property="og:image"       content={ogImageURL} />
+  <meta property="og:locale"      content="ko_KR" />
+  <meta name="twitter:card"       content="summary_large_image" />
+  <meta name="twitter:title"      content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image"      content={ogImageURL} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />

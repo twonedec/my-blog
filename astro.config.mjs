@@ -3,6 +3,6 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://dadanote.com',
+  site: 'https://dadanote.net',
   integrations: [sitemap()],
 });
