@@ -2,46 +2,13 @@
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import { getCollection } from 'astro:content';
 
-// 임시 포스트 데이터 (실제로는 Markdown이나 CMS에서 불러옴)
-const posts = [
-	{
-		title: "제주도 3박 4일 가족 여행 동선 최적화 팁",
-		summary: "아이와 함께하는 여행에서 피로도는 낮추고 만족도는 높이는 제주도 가족 나들이 코스를 공유합니다.",
-		date: "2023. 11. 15.",
-		category: "Travel & Kids"
-	},
-	{
-		title: "2024년 아이 관련 정부 지원금 완벽 정리",
-		summary: "놓치기 쉬운 영유아 수당부터 교육비 지원까지, 부모를 위한 핵심 정부 혜택과 신청 방법을 알아봅니다.",
-		date: "2023. 11. 10.",
-		category: "Money & Policy"
-	},
-	{
-		title: "시놀로지 NAS 초기 세팅 및 실사용 트러블슈팅",
-		summary: "가족 사진 백업과 미디어 서버 구축을 위한 시놀로지 NAS 세팅 과정과 흔히 겪는 문제 해결법.",
-		date: "2023. 11. 05.",
-		category: "Tech & Gear"
-	},
-	{
-		title: "Python으로 텔레그램 알림 봇 만들기",
-		summary: "주식 리포트 알림과 가족 일정 관리를 자동화해주는 텔레그램 봇 개발 기록을 남깁니다.",
-		date: "2023. 11. 01.",
-		category: "Dev Log"
-	},
-	{
-		title: "DART 알고리즘 기반 주식 리포트 자동화 분석",
-		summary: "공시 데이터를 파이썬으로 크롤링하여 유의미한 주식 정보를 필터링하는 로직에 대해 설명합니다.",
-		date: "2023. 10. 28.",
-		category: "Money & Policy"
-	},
-	{
-		title: "아이를 위한 타자/한자 학습 프로그램 제작기",
-		summary: "아이의 눈높이에 맞춰 직접 코딩한 학습 프로그램. React와 Tailwind를 활용한 UI 구성기를 담았습니다.",
-		date: "2023. 10. 25.",
-		category: "Dev Log"
-	}
-];
+// 1. 실제 마크다운 게시물 데이터 불러오기
+const allPosts = await getCollection('posts');
+
+// 2. 최신순으로 정렬
+const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Layout title="다다노트">
@@ -69,15 +36,20 @@ const posts = [
 
 		<!-- Responsive Grid -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{posts.map((post) => (
-				<Card 
-					title={post.title}
-					summary={post.summary}
-					date={post.date}
-					category={post.category}
-					href="#"
-				/>
-			))}
+			{posts.length === 0 ? (
+				<p class="text-slate-500 py-10 col-span-full text-center">아직 작성된 글이 없습니다. src/content/posts 폴더에 첫 글을 작성해 보세요!</p>
+			) : (
+				posts.map((post) => (
+					<Card 
+						title={post.data.title}
+						summary={post.data.summary}
+						date={new Date(post.data.date).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+						category={post.data.category}
+						image={post.data.image}
+						href={`/posts/${post.id}`}
+					/>
+				))
+			)}
 		</div>
 	</section>
 </Layout>

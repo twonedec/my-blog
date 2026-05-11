@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+
+// 동적 라우팅을 위한 경로(Path) 생성
+export async function getStaticPaths() {
+  const categoryMap = {
+    'travel-kids': 'Travel & Kids',
+    'life-policy': 'Life & Policy',
+    'tech-gear': 'Tech & Gear',
+    'dev-quant': 'Dev & Quant'
+  };
+
+  return Object.entries(categoryMap).map(([slug, name]) => {
+    return {
+      params: { category: slug },
+      props: { categoryName: name },
+    };
+  });
+}
+
+// URL 파라미터와 props에서 값 가져오기
+const { category } = Astro.params;
+const { categoryName } = Astro.props;
+
+// 해당 카테고리의 게시물 필터링 및 정렬
+const allPosts = await getCollection('posts');
+const categoryPosts = allPosts.filter(post => post.data.category === categoryName);
+const sortedPosts = categoryPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout title={`${categoryName} | 다다노트`}>
+  <section class="py-8 md:py-12">
+    <!-- 카테고리 헤더 -->
+    <div class="mb-10 pb-6 border-b border-slate-200">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">{categoryName}</h1>
+      <p class="text-slate-600">해당 주제에 관한 유용한 글들을 확인해 보세요.</p>
+    </div>
+
+    <!-- 카드 그리드 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sortedPosts.length === 0 ? (
+        <p class="text-slate-500 py-10 col-span-full">이 카테고리에 아직 작성된 글이 없습니다.</p>
+      ) : (
+        sortedPosts.map((post) => (
+          <Card 
+            title={post.data.title}
+            summary={post.data.summary}
+            date={new Date(post.data.date).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+            category={post.data.category}
+            image={post.data.image}
+            href={`/posts/${post.id}`}
+          />
+        ))
+      )}
+    </div>
+  </section>
+</Layout>
