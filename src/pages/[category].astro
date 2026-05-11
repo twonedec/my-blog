@@ -1,59 +1,416 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import { getCollection } from 'astro:content';
 
-// 동적 라우팅을 위한 경로(Path) 생성
+const catMap: Record<string, {
+  label: string; cls: string; num: string; ko: string;
+  headline: string; enSub: string; desc: string;
+}> = {
+  'travel-kids': {
+    label:    'Travel & Kids',
+    cls:      'travel',
+    num:      '01',
+    ko:       '여행과 아이',
+    headline: '여행과 <em>아이</em>,<br>그리고 <em>속도</em>에 대하여',
+    enSub:    'Notes on family trips, slow travel, and places we keep returning to',
+    desc:     '온 가족이 함께한 장기여행과, 아이가 처음으로 본 풍경들. 빡빡한 일정 대신 같은 장소를 반복해서 찾는 우리만의 여행 방식을 기록합니다.',
+  },
+  'life-policy': {
+    label:    'Life & Policy',
+    cls:      'life',
+    num:      '02',
+    ko:       '생활과 정책',
+    headline: '받을 수 있는 <em>것들</em>,<br>그리고 몰라서 <em>지나친</em> 것들에 대하여',
+    enSub:    'Small notes on living, budgets, and quiet policies',
+    desc:     '육아기 단축근무를 신청하면서 처음으로 제도를 제대로 들여다봤습니다. 알고 나면 간단한데, 모르면 그냥 넘어가게 되는 것들. 정책과 지원금, 절세와 보험을 직접 신청해보며 정리합니다.',
+  },
+  'tech-gear': {
+    label:    'Tech & Gear',
+    cls:      'tech',
+    num:      '03',
+    ko:       '테크와 장비',
+    headline: '오래 <em>고민</em>하고,<br>오래 <em>쓰는</em> 것들에 대하여',
+    enSub:    'Reviews and reflections on tools that earn a place on the desk',
+    desc:     '충동구매보다는 비교가 먼저입니다. 아이를 찍기 위해 카메라를 골랐고, 집에서 음악을 듣기 위해 턴테이블을 들였습니다. 사기 전에 고민한 것들, 써보고 나서 솔직하게 씁니다.',
+  },
+  'dev-quant': {
+    label:    'Dev & Quant',
+    cls:      'dev',
+    num:      '04',
+    ko:       '개발과 분석',
+    headline: '<em>만들어</em>보고,<br><em>굴려</em>보는 것들에 대하여',
+    enSub:    'Code experiments, data explorations, and building things from scratch',
+    desc:     '전공자는 아닙니다. 그래도 코드를 짜고, 자동화를 시도하고, 데이터로 투자를 들여다봅니다. 잘 되는 것보다 시도한 과정이 더 많이 남는 기록입니다.',
+  },
+};
+
 export async function getStaticPaths() {
-  const categoryMap = {
-    'travel-kids': 'Travel & Kids',
-    'life-policy': 'Life & Policy',
-    'tech-gear': 'Tech & Gear',
-    'dev-quant': 'Dev & Quant'
-  };
-
-  return Object.entries(categoryMap).map(([slug, name]) => {
-    return {
-      params: { category: slug },
-      props: { categoryName: name },
-    };
-  });
+  const catMap2 = ['travel-kids','life-policy','tech-gear','dev-quant'];
+  return catMap2.map(slug => ({ params: { category: slug } }));
 }
 
-// URL 파라미터와 props에서 값 가져오기
 const { category } = Astro.params;
-const { categoryName } = Astro.props;
+const config = catMap[category]!;
 
-// 해당 카테고리의 게시물 필터링 및 정렬
 const allPosts = await getCollection('posts');
-const categoryPosts = allPosts.filter(post => post.data.category === categoryName);
-const sortedPosts = categoryPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts    = allPosts
+  .filter(p => p.data.category === config.label)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const featured  = posts[0];
+const listPosts = posts.slice(1);
+
+const readMin = (body: string) => Math.max(1, Math.ceil(body.split(/\s+/).length / 200));
+const fmtDate = (d: Date) => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const otherCats = Object.entries(catMap).filter(([slug]) => slug !== category);
+const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.').replace(/\s/g, '');
 ---
 
-<Layout title={`${categoryName} | 다다노트`}>
-  <section class="py-8 md:py-12">
-    <!-- 카테고리 헤더 -->
-    <div class="mb-10 pb-6 border-b border-slate-200">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">{categoryName}</h1>
-      <p class="text-slate-600">해당 주제에 관한 유용한 글들을 확인해 보세요.</p>
+<Layout title={`${config.label} — 다다노트`} currentCategorySlug={category}>
+<style>
+/* ── Accent scoping ─────────────────────────────── */
+.page-travel { --c-accent: var(--c-travel); }
+.page-life   { --c-accent: var(--c-life);   }
+.page-tech   { --c-accent: var(--c-tech);   }
+.page-dev    { --c-accent: var(--c-dev);    }
+
+/* ── Category masthead ──────────────────────────── */
+.cat-masthead {
+  padding: 72px 56px 60px;
+  border-bottom: 1px solid var(--line);
+}
+.cat-strip {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px; margin-bottom: 60px;
+  font-family: var(--mono); font-size: 10.5px; color: var(--muted);
+  letter-spacing: .09em; text-transform: uppercase;
+}
+.crumb { display: flex; gap: 10px; align-items: baseline; }
+.crumb a { color: var(--muted); transition: color .2s; }
+.crumb a:hover { color: var(--ink); }
+.crumb .sep { opacity: .5; }
+.cat-masthead-inner {
+  display: grid; grid-template-columns: 1fr 380px; gap: 80px; align-items: end;
+}
+.cat-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.cat-eyebrow .num {
+  font-family: var(--serif); font-style: italic; font-size: 26px;
+  color: var(--c-accent); letter-spacing: 0; text-transform: none;
+}
+.cat-headline {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(32px, 3.8vw, 56px);
+  line-height: 1.12; letter-spacing: -.02em; color: var(--ink);
+}
+.cat-headline em { font-style: italic; color: var(--ink-2); font-weight: 300; }
+.cat-headline-en {
+  font-family: var(--serif); font-style: italic; font-size: 18px;
+  color: var(--c-accent); margin-top: 14px;
+  display: inline-flex; align-items: center; gap: 12px; font-weight: 300;
+}
+.cat-headline-en::before { content: ""; width: 32px; height: 1px; background: var(--c-accent); }
+.cat-meta { padding-bottom: 12px; display: flex; flex-direction: column; gap: 22px; }
+.cat-meta p {
+  font-family: var(--serif); font-size: 17px; line-height: 1.65;
+  color: var(--ink-2); font-weight: 300; text-wrap: pretty;
+}
+.cat-stats {
+  display: flex; gap: 28px; font-size: 12px; color: var(--muted); letter-spacing: .02em;
+  padding-top: 18px; border-top: 1px solid var(--line);
+}
+.cat-stats div { display: flex; flex-direction: column; gap: 4px; }
+.cat-stats strong { font-size: 22px; font-weight: 600; color: var(--ink); letter-spacing: -.02em; }
+
+/* ── Filter strip ───────────────────────────────── */
+.filter-strip {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 56px;
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 64px; z-index: 50;
+  background: color-mix(in oklab, var(--bg) 90%, transparent);
+  backdrop-filter: blur(10px);
+}
+.filter-chips { display: flex; gap: 6px; }
+.chip {
+  font-size: 12.5px; font-weight: 500; padding: 8px 16px;
+  border-radius: 999px; border: 1px solid var(--line);
+  color: var(--ink-2); background: transparent; font-family: var(--sans);
+  transition: all .25s var(--ease-out);
+}
+.chip.active { background: var(--ink); color: var(--bg-elev); border-color: var(--ink); }
+.chip .ct { font-family: var(--mono); font-size: 10.5px; opacity: .7; margin-left: 6px; }
+.sort-group { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--muted); }
+.sort-group strong { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--ink); }
+.sort-toggle { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.sort-toggle button {
+  font-size: 11.5px; padding: 5px 11px; border: none; background: transparent;
+  color: var(--ink-2); font-family: var(--sans); transition: all .2s;
+}
+.sort-toggle button.active { background: var(--ink); color: var(--bg-elev); }
+
+/* ── Featured ───────────────────────────────────── */
+.featured {
+  padding: 64px 56px 56px;
+  display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px;
+  align-items: center; border-bottom: 1px solid var(--line);
+}
+.featured-img {
+  aspect-ratio: 4/5; border-radius: 4px; overflow: hidden; position: relative;
+  background: oklch(0.88 0.04 65);
+}
+.featured-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease-out); }
+.featured-img:hover img { transform: scale(1.04); }
+.featured-ph { width: 100%; height: 100%; background: oklch(0.88 0.04 65); }
+.featured-tag {
+  position: absolute; top: 20px; left: 20px; z-index: 2;
+  background: var(--bg-elev); padding: 6px 14px; border-radius: 999px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ink);
+}
+.featured-kicker { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.featured-kicker .rule { flex: 1; height: 1px; background: var(--line-s); max-width: 80px; }
+.featured-kicker .lbl { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+.featured-title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(32px, 3.6vw, 50px);
+  line-height: 1.06; letter-spacing: -.018em;
+  margin-bottom: 26px; text-wrap: balance;
+}
+.featured-title em { font-style: italic; color: var(--ink-2); }
+.featured-dek {
+  font-family: var(--serif); font-size: 17px; line-height: 1.7;
+  color: var(--ink-2); font-weight: 300; margin-bottom: 38px; max-width: 520px;
+}
+.featured-foot { display: flex; align-items: center; gap: 16px; font-size: 12.5px; color: var(--muted); }
+.featured-foot .read-link {
+  margin-left: auto; font-family: var(--serif); font-style: italic;
+  font-size: 17px; color: var(--ink); font-weight: 400;
+  border-bottom: 1px solid var(--ink); padding-bottom: 2px; transition: opacity .2s;
+}
+.featured-foot .read-link:hover { opacity: .6; }
+
+/* ── Post list ──────────────────────────────────── */
+.post-list { padding: 56px 56px 64px; }
+.post-list-head {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted);
+  padding-bottom: 16px; margin-bottom: 0;
+  border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between;
+}
+.post-row {
+  display: grid;
+  grid-template-columns: 56px 1fr 220px 110px 64px;
+  align-items: center; gap: 28px;
+  padding: 26px 0; border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.post-row:last-child { border-bottom: none; }
+.post-row::before {
+  content: ""; position: absolute; inset: 0 -16px;
+  background: var(--bg-soft); opacity: 0; transition: opacity .3s;
+  pointer-events: none; border-radius: 6px;
+}
+.post-row:hover::before { opacity: 1; }
+.post-row > * { position: relative; }
+.pr-num {
+  font-family: var(--serif); font-style: italic; font-size: 19px;
+  color: var(--faint); font-weight: 300;
+}
+.pr-title {
+  font-family: var(--serif); font-weight: 400; font-size: 22px;
+  line-height: 1.25; letter-spacing: -.012em; color: var(--ink);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  transition: color .2s;
+}
+.post-row:hover .pr-title { color: var(--c-accent); }
+.pr-summary {
+  font-size: 13px; color: var(--muted); line-height: 1.55;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.pr-meta { display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.pr-meta time { color: var(--ink-2); }
+.pr-arrow {
+  justify-self: end;
+  font-family: var(--serif); font-size: 24px; color: var(--muted); font-weight: 200;
+  transition: transform .35s var(--ease-out), color .2s;
+}
+.post-row:hover .pr-arrow { transform: translateX(8px); color: var(--ink); }
+
+/* ── Cat CTA ─────────────────────────────────────── */
+.cat-cta {
+  border-top: 1px solid var(--line);
+  padding: 80px 56px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+}
+.cat-cta-text h3 {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(32px, 3.2vw, 44px);
+  line-height: 1.1; letter-spacing: -.015em; margin-bottom: 16px;
+}
+.cat-cta-text h3 em { font-style: italic; color: var(--ink-2); }
+.cat-cta-text p { font-family: var(--serif); font-size: 17px; color: var(--ink-2); line-height: 1.65; font-weight: 300; }
+.cat-cta-links { display: grid; gap: 16px; }
+.cat-cta-links a {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 28px; border: 1px solid var(--line); border-radius: 8px;
+  transition: all .25s var(--ease-out); background: var(--bg-elev);
+}
+.cat-cta-links a:hover { border-color: var(--ink); transform: translateY(-2px); }
+.cat-cta-links .lbl { display: flex; flex-direction: column; gap: 4px; }
+.cat-cta-links .lbl span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.cat-cta-links .lbl strong { font-family: var(--serif); font-weight: 400; font-size: 20px; letter-spacing: -.01em; }
+.cat-cta-links .arr { font-family: var(--serif); font-size: 24px; color: var(--muted); transition: transform .3s var(--ease-out), color .2s; }
+.cat-cta-links a:hover .arr { transform: translateX(6px); color: var(--ink); }
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 1024px) {
+  .cat-masthead-inner { grid-template-columns: 1fr; gap: 40px; }
+  .featured { grid-template-columns: 1fr; gap: 40px; }
+  .featured-img { aspect-ratio: 16/9; }
+  .cat-cta { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 768px) {
+  .cat-masthead, .featured, .post-list, .cat-cta { padding-left: 20px; padding-right: 20px; }
+  .cat-masthead { padding-top: 48px; padding-bottom: 40px; }
+  .cat-strip { display: none; }
+  .filter-strip { padding: 14px 20px; }
+  .post-row { grid-template-columns: 40px 1fr 56px; gap: 16px; }
+  .pr-summary, .pr-meta { display: none; }
+  .pr-title { font-size: 17px; }
+}
+</style>
+
+<div class={`page-${config.cls}`}>
+
+<!-- Category masthead -->
+<header class="cat-masthead">
+  <div class="cat-strip">
+    <div class="crumb">
+      <a href="/">다다노트</a>
+      <span class="sep">/</span>
+      <span style="color:var(--ink)">{config.label}</span>
+    </div>
+    <span>VOL. {config.num} — UPDATED {updatedStr}</span>
+  </div>
+
+  <div class="cat-masthead-inner">
+    <div class="reveal">
+      <div class="cat-eyebrow">
+        <span class="num">{config.num}</span>
+        <span>—</span>
+        <span class={`cat ${config.cls}`}><span class="dot"></span>{config.label}</span>
+      </div>
+      <h1 class="cat-headline" set:html={config.headline}></h1>
+      <div class="cat-headline-en">{config.enSub}</div>
     </div>
 
-    <!-- 카드 그리드 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {sortedPosts.length === 0 ? (
-        <p class="text-slate-500 py-10 col-span-full">이 카테고리에 아직 작성된 글이 없습니다.</p>
-      ) : (
-        sortedPosts.map((post) => (
-          <Card 
-            title={post.data.title}
-            summary={post.data.summary}
-            date={new Date(post.data.date).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
-            category={post.data.category}
-            image={post.data.image}
-            href={`/posts/${post.id}`}
-          />
-        ))
-      )}
+    <div class="cat-meta reveal" style="transition-delay:.12s">
+      <p>{config.desc}</p>
+      <div class="cat-stats">
+        <div>
+          <strong>{posts.length}</strong>
+          <span>편의 글</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Filter strip -->
+<div class="filter-strip">
+  <div class="filter-chips">
+    <button class="chip active">전체 <span class="ct">{posts.length}</span></button>
+  </div>
+  <div class="sort-group">
+    <strong>Sort</strong>
+    <div class="sort-toggle">
+      <button class="active">최신순</button>
+      <button>오래된순</button>
+    </div>
+  </div>
+</div>
+
+<!-- Featured post -->
+{featured && (
+  <section class="featured">
+    <a href={`/posts/${featured.id}`} class="featured-img reveal">
+      <span class="featured-tag">★ This Month</span>
+      {featured.data.image
+        ? <img src={featured.data.image} alt={featured.data.title} loading="eager" />
+        : <div class="featured-ph"></div>
+      }
+    </a>
+    <div>
+      <div class="featured-kicker reveal">
+        <span class="rule"></span>
+        <span class="lbl">이달의 글</span>
+        <span class={`cat ${config.cls}`}><span class="dot"></span>{config.label}</span>
+      </div>
+      <a href={`/posts/${featured.id}`}>
+        <h2 class="featured-title reveal" style="transition-delay:.08s">{featured.data.title}</h2>
+      </a>
+      <p class="featured-dek reveal" style="transition-delay:.16s">{featured.data.summary}</p>
+      <div class="featured-foot reveal" style="transition-delay:.24s">
+        <time>{fmtDate(featured.data.date)}</time>
+        <span style="color:var(--line-s)">·</span>
+        <span>{readMin(featured.body ?? '')}분 분량</span>
+        <a href={`/posts/${featured.id}`} class="read-link">전문 읽기 →</a>
+      </div>
     </div>
   </section>
+)}
+
+<!-- Post list -->
+{listPosts.length > 0 && (
+  <section class="post-list">
+    <div class="post-list-head">
+      <span>지난 글들 · {listPosts.length} POSTS</span>
+      <span>{listPosts[listPosts.length-1]?.data.date.getFullYear()} — {listPosts[0]?.data.date.getFullYear()}</span>
+    </div>
+    {listPosts.map((post, i) => (
+      <a href={`/posts/${post.id}`}
+         class="post-row reveal"
+         style={`transition-delay:${(i * 0.04).toFixed(2)}s`}>
+        <span class="pr-num">№{String(i + 2).padStart(2, '0')}</span>
+        <div>
+          <h3 class="pr-title">{post.data.title}</h3>
+        </div>
+        <p class="pr-summary">{post.data.summary}</p>
+        <div class="pr-meta">
+          <time>{post.data.date.toLocaleDateString('ko-KR',{year:'numeric',month:'numeric',day:'numeric'})}</time>
+          <span>{readMin(post.body ?? '')}분 분량</span>
+        </div>
+        <span class="pr-arrow">→</span>
+      </a>
+    ))}
+  </section>
+)}
+
+<!-- Cross-category CTA -->
+<section class="cat-cta">
+  <div class="cat-cta-text reveal">
+    <h3>다음은 어떤 <em>호흡</em>으로<br>읽어보시겠어요?</h3>
+    <p>네 개의 카테고리, 서로 다른 결의 글들. 어디로 가도 다다노트의 같은 목소리가 이어집니다.</p>
+  </div>
+  <div class="cat-cta-links reveal" style="transition-delay:.12s">
+    {otherCats.map(([slug, c]) => (
+      <a href={`/${slug}`}>
+        <div class="lbl">
+          <span>{c.num} Category</span>
+          <strong>{c.label} — {c.ko}</strong>
+        </div>
+        <span class="arr">→</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+</div>
 </Layout>

@@ -1,55 +1,457 @@
 ---
-// src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
 import { getCollection } from 'astro:content';
 
-// 1. 실제 마크다운 게시물 데이터 불러오기
 const allPosts = await getCollection('posts');
+const posts    = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-// 2. 최신순으로 정렬
-const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const pick  = posts[0];
+const bento = posts.slice(1, 6);
+
+const readMin  = (body: string) => Math.max(1, Math.ceil(body.split(/\s+/).length / 200));
+const catClass = (cat: string)  => cat.toLowerCase().split(' ')[0];
+const fmtDate  = (d: Date)      => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const categories = [
+  {
+    slug:  'travel-kids',
+    label: 'Travel & Kids',
+    ko:    '여행과 아이',
+    cls:   'travel',
+    num:   '01',
+    desc:  '온 가족이 함께한 여행기와 아이와 떠나는 나들이 정보를 담아요.',
+  },
+  {
+    slug:  'life-policy',
+    label: 'Life & Policy',
+    ko:    '생활과 정책',
+    cls:   'life',
+    num:   '02',
+    desc:  '생활 속 유용한 정책 정보와 알뜰한 살림 꿀팁을 정리해요.',
+  },
+  {
+    slug:  'tech-gear',
+    label: 'Tech & Gear',
+    ko:    '테크와 장비',
+    cls:   'tech',
+    num:   '03',
+    desc:  '실제로 써본 IT 기기, 앱, 장비 리뷰를 솔직하게 씁니다.',
+  },
+  {
+    slug:  'dev-quant',
+    label: 'Dev & Quant',
+    ko:    '개발과 분석',
+    cls:   'dev',
+    num:   '04',
+    desc:  '코딩 기록과 투자 분석, 데이터 기반 인사이트를 공유해요.',
+  },
+];
+
+const countByCat: Record<string, number> = {};
+allPosts.forEach(p => {
+  countByCat[p.data.category] = (countByCat[p.data.category] ?? 0) + 1;
+});
 ---
 
-<Layout title="다다노트">
-	<!-- Hero Section -->
-	<section class="py-16 md:py-24 flex flex-col items-center text-center">
-		<h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
-			우리가족의 이야기, <br class="md:hidden" />
-			<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">다다노트</span>
-		</h1>
-		<p class="text-lg md:text-xl text-slate-600 max-w-2xl mb-10 leading-relaxed">
-			가족 나들이 로그부터 생활 밀착형 재테크, 실사용 IT 기기 리뷰와 코딩 기록까지 소중한 정보를 나눕니다.
-		</p>
-	</section>
+<Layout title="다다노트 — 여행, 생활, 기기, 코드의 기록">
+<style>
+/* ── Masthead ───────────────────────────────────────── */
+.masthead {
+  padding: 72px 56px 60px;
+  border-bottom: 1px solid var(--line);
+}
+.masthead-strip {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px; margin-bottom: 52px;
+  font-family: var(--mono); font-size: 10.5px; color: var(--muted);
+  letter-spacing: .09em; text-transform: uppercase;
+}
+.masthead-strip .center-it {
+  font-family: var(--serif); font-style: italic;
+  text-transform: none; font-size: 13px;
+}
+.masthead-inner {
+  display: grid; grid-template-columns: 1fr 380px; gap: 80px; align-items: end;
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 28px;
+}
+.hero-title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(64px, 7vw, 96px);
+  line-height: .98; letter-spacing: -.025em; color: var(--ink);
+}
+.hero-title .word { display: inline-block; overflow: hidden; }
+.hero-title .word span {
+  display: inline-block; transform: translateY(110%);
+  transition: transform .9s var(--ease-expo);
+}
+.hero-title .word span.in { transform: translateY(0); }
+.hero-title em { font-style: italic; color: var(--ink-2); font-weight: 300; }
+.hero-meta { display: flex; flex-direction: column; gap: 18px; padding-bottom: 10px; }
+.hero-body {
+  font-family: var(--serif); font-size: 18px; line-height: 1.6;
+  color: var(--ink-2); font-weight: 300; text-wrap: pretty;
+}
+.hero-stats {
+  display: flex; gap: 24px; font-size: 11.5px;
+  color: var(--muted); letter-spacing: .04em;
+}
+.hero-stats span { display: flex; align-items: center; gap: 8px; }
+.hero-stats span::before {
+  content: ""; display: inline-block; width: 1px; height: 12px; background: var(--line-s);
+}
+.hero-stats span:first-child::before { display: none; }
 
-	<!-- Recent Posts Section -->
-	<section class="mt-8 md:mt-12">
-		<div class="flex items-center justify-between mb-8">
-			<h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
-				최근 게시물
-			</h2>
-			<a href="/posts" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
-				전체보기 &rarr;
-			</a>
-		</div>
+/* ── Editor's Pick ──────────────────────────────────── */
+.pick { padding: 72px 56px 80px; }
+.pick-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+.pick-img {
+  border-radius: 4px; overflow: hidden; aspect-ratio: 5/4; position: relative;
+  background: oklch(0.88 0.04 65);
+}
+.pick-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out); }
+.pick-img:hover img { transform: scale(1.04); }
+.pick-ph { width: 100%; height: 100%; background: oklch(0.88 0.04 65); }
+.pick-kicker { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.pick-kicker .rule { flex: 1; height: 1px; background: var(--line-s); }
+.pick-title {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(30px, 3.2vw, 44px);
+  line-height: 1.08; letter-spacing: -.018em;
+  margin-bottom: 22px; text-wrap: balance;
+}
+.pick-body {
+  font-family: var(--serif); font-size: 17px; line-height: 1.7;
+  color: var(--ink-2); margin-bottom: 32px; font-weight: 300;
+}
+.pick-foot { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--muted); }
+.pick-foot .read-link {
+  margin-left: auto; font-size: 13px; color: var(--ink); font-weight: 500;
+  border-bottom: 1px solid var(--ink); padding-bottom: 2px; transition: opacity .2s;
+}
+.pick-foot .read-link:hover { opacity: .6; }
 
-		<!-- Responsive Grid -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{posts.length === 0 ? (
-				<p class="text-slate-500 py-10 col-span-full text-center">아직 작성된 글이 없습니다. src/content/posts 폴더에 첫 글을 작성해 보세요!</p>
-			) : (
-				posts.map((post) => (
-					<Card 
-						title={post.data.title}
-						summary={post.data.summary}
-						date={new Date(post.data.date).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
-						category={post.data.category}
-						image={post.data.image}
-						href={`/posts/${post.id}`}
-					/>
-				))
-			)}
-		</div>
-	</section>
+/* ── Category directory ─────────────────────────────── */
+.catdir { padding: 0 56px 80px; }
+.catdir-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto auto;
+  align-items: center; gap: 36px;
+  padding: 28px 0; border-bottom: 1px solid var(--line);
+  position: relative; transition: background .2s;
+}
+.catdir-row:last-child { border-bottom: none; }
+.catdir-row::before {
+  content: ""; position: absolute; inset: 0;
+  background: var(--bg-soft); opacity: 0; transition: opacity .3s;
+  pointer-events: none;
+}
+.catdir-row:hover::before { opacity: 1; }
+.catdir-num {
+  font-family: var(--serif); font-style: italic;
+  font-size: 26px; color: var(--faint); font-weight: 300;
+}
+.catdir-names h3 {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(28px, 3vw, 40px);
+  letter-spacing: -.015em; line-height: 1.05; margin-bottom: 4px;
+}
+.catdir-desc {
+  font-family: var(--serif); font-size: 15px;
+  color: var(--ink-2); max-width: 380px; line-height: 1.5; font-weight: 300;
+}
+.catdir-count {
+  font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap;
+}
+.catdir-arrow {
+  font-size: 16px; color: var(--muted);
+  transition: transform .3s var(--ease-out), color .2s;
+}
+.catdir-row:hover .catdir-arrow { transform: translateX(6px); color: var(--ink); }
+
+/* ── Bento grid ─────────────────────────────────────── */
+.bento { padding: 0 56px 96px; }
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr 1fr;
+  grid-auto-rows: auto;
+  gap: 24px;
+}
+.card {
+  background: var(--bg-elev); border: 1px solid var(--line);
+  border-radius: 12px; overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform .4s var(--ease-expo), box-shadow .4s var(--ease-expo), border-color .3s;
+  will-change: transform;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px -24px oklch(0.20 0.02 270 / .3);
+  border-color: var(--line-s);
+}
+.card .thumb { overflow: hidden; aspect-ratio: 16/10; position: relative; }
+.card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out); }
+.card .thumb .ph { width: 100%; height: 100%; }
+.card:hover .thumb img { transform: scale(1.04); }
+.card .body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.card .meta { display: flex; align-items: center; gap: 12px; }
+.card .meta time { font-size: 11px; color: var(--faint); }
+.card h3 {
+  font-family: var(--serif); font-weight: 400;
+  letter-spacing: -.012em; line-height: 1.22;
+  color: var(--ink); text-wrap: balance;
+}
+.card .summary {
+  font-size: 13.5px; color: var(--ink-2); line-height: 1.65;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1;
+}
+.card .read {
+  font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px;
+  margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); transition: color .2s;
+}
+.card:hover .read { color: var(--ink); }
+.card.lg { grid-row: span 2; }
+.card.lg h3 { font-size: 24px; }
+.card.lg .summary { -webkit-line-clamp: 3; }
+.card.lg .thumb { aspect-ratio: auto; flex: 1; min-height: 220px; }
+.card.lg .thumb img,
+.card.lg .thumb .ph { height: 100%; }
+.card.more-tile {
+  grid-column: span 2; background: var(--bg-soft); border: 1px solid var(--line);
+  padding: 38px 44px; position: relative; display: flex; align-items: center;
+  min-height: 220px;
+  transition: background .35s var(--ease-out), transform .35s var(--ease-out), border-color .35s var(--ease-out);
+}
+.card.more-tile:hover { background: var(--bg-elev); border-color: var(--line-s); transform: translateY(-4px); }
+.card.more-tile .more-tile-inner { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+.card.more-tile .more-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+.card.more-tile .more-headline {
+  font-family: var(--serif); font-size: 30px; font-weight: 300;
+  line-height: 1.22; letter-spacing: -.012em; color: var(--ink);
+}
+.card.more-tile .more-headline em { font-style: italic; color: var(--ink-2); }
+.card.more-tile .more-arrow {
+  position: absolute; right: 44px; bottom: 38px;
+  font-family: var(--serif); font-size: 44px; font-weight: 200; line-height: 1;
+  color: var(--ink); transition: transform .4s var(--ease-out);
+}
+.card.more-tile:hover .more-arrow { transform: translateX(8px); }
+.card.dark-tile {
+  background: var(--ink); border-color: transparent; color: var(--bg-elev);
+  justify-content: space-between; padding: 28px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.card.dark-tile h3 {
+  font-family: var(--serif); font-size: 22px; font-weight: 300;
+  line-height: 1.2; letter-spacing: -.01em;
+}
+.card.dark-tile em { font-style: italic; color: oklch(0.88 0.06 75); }
+.card.dark-tile .sub-link {
+  font-size: 13px; border-bottom: 1px solid rgba(255,255,255,.6);
+  padding-bottom: 2px; color: rgba(255,255,255,.85); align-self: flex-start; transition: opacity .2s;
+}
+.card.dark-tile:hover { transform: translateY(-4px); box-shadow: 0 20px 48px -24px rgba(0,0,0,.5); }
+
+/* placeholder color variants */
+.ph-warm  { background: oklch(0.88 0.04 65); }
+.ph-cool  { background: oklch(0.86 0.04 220); }
+.ph-olive { background: oklch(0.84 0.04 130); }
+.ph-dusk  { background: oklch(0.60 0.06 35); }
+.ph-deep  { background: oklch(0.28 0.05 240); }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .masthead-inner { grid-template-columns: 1fr; gap: 40px; }
+  .bento-grid { grid-template-columns: 1fr 1fr; }
+  .card.lg { grid-column: span 2; grid-row: span 1; }
+  .card.more-tile { grid-column: span 2; }
+}
+@media (max-width: 768px) {
+  .masthead, .pick, .catdir, .bento { padding-left: 20px; padding-right: 20px; }
+  .masthead { padding-top: 48px; padding-bottom: 40px; }
+  .masthead-strip { display: none; }
+  .pick-inner { grid-template-columns: 1fr; gap: 32px; }
+  .pick-img { aspect-ratio: 16/9; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .card.lg, .card.more-tile { grid-column: span 1; }
+  .catdir-row { grid-template-columns: 48px 1fr auto; gap: 16px; }
+  .catdir-desc, .catdir-count { display: none; }
+  .catdir-names h3 { font-size: 22px; }
+}
+</style>
+
+<!-- Masthead -->
+<section class="masthead">
+  <div class="masthead-strip reveal">
+    <span>다다노트 &nbsp;·&nbsp; DADANOTE</span>
+    <span>{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()}</span>
+  </div>
+
+  <div class="masthead-inner">
+    <div>
+      <p class="hero-eyebrow reveal">EDITOR'S LETTER · 다다노트</p>
+      <h1 class="hero-title">
+        <span class="word" id="hw0"><span>작게,</span></span><br>
+        <span class="word" id="hw1"><span><em>그러나 오래</em></span></span><br>
+        <span class="word" id="hw2"><span>남기는 기록.</span></span>
+      </h1>
+    </div>
+    <div class="hero-meta reveal" style="transition-delay:.4s">
+      <p class="hero-body">
+        여행에서 돌아온 저녁의 노트, 새로 산 기기의 첫 사용기, 반복되는 살림 속 작은 발견, 그리고 코드 한 줄.
+        <em style="font-family:var(--serif);font-style:italic"> — 다다노트는 그 사이의 글들입니다.</em>
+      </p>
+      <div class="hero-stats">
+        <span>{allPosts.length}편의 글</span>
+        <span>4개의 카테고리</span>
+        <span>기록 중</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Editor's Pick -->
+{pick && (
+  <section class="pick">
+    <div class="section-head reveal">
+      <h2 class="section-title">이번 주 <em>추천 글</em></h2>
+    </div>
+    <div class="pick-inner" style="margin-top:52px">
+      <a href={`/posts/${pick.id}`} class="pick-img reveal">
+        {pick.data.image
+          ? <img src={pick.data.image} alt={pick.data.title} loading="eager" />
+          : <div class="pick-ph"></div>
+        }
+      </a>
+      <div>
+        <div class="pick-kicker reveal">
+          <span style="font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)">이번 주 추천 글</span>
+          <span class="rule"></span>
+          <span class={`cat ${catClass(pick.data.category)}`}><span class="dot"></span>{pick.data.category}</span>
+        </div>
+        <a href={`/posts/${pick.id}`}>
+          <h2 class="pick-title reveal" style="transition-delay:.1s">{pick.data.title}</h2>
+        </a>
+        <p class="pick-body reveal" style="transition-delay:.2s">{pick.data.summary}</p>
+        <div class="pick-foot reveal" style="transition-delay:.3s">
+          <time>{fmtDate(pick.data.date)}</time>
+          <span style="color:var(--line-s)">·</span>
+          <span>{readMin(pick.body ?? '')}분 분량</span>
+          <a href={`/posts/${pick.id}`} class="read-link">전문 읽기 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- Category Directory -->
+<section class="catdir">
+  <div class="section-head reveal">
+    <h2 class="section-title">서로 다른 호흡의 <em>네 가지 기록</em></h2>
+    <a href="/" class="more-link">모두 보기 →</a>
+  </div>
+
+  {categories.map((c, i) => (
+    <a href={`/${c.slug}`}
+       class="catdir-row reveal"
+       style={`transition-delay:${(i * 0.08).toFixed(2)}s`}>
+      <span class="catdir-num">{c.num}</span>
+      <div class="catdir-names">
+        <div class={`cat ${c.cls}`} style="margin-bottom:7px"><span class="dot"></span>{c.label}</div>
+        <h3>{c.ko}</h3>
+      </div>
+      <p class="catdir-desc">{c.desc}</p>
+      <span class="catdir-count">{countByCat[c.label] ?? 0} POSTS</span>
+      <span class="catdir-arrow">→</span>
+    </a>
+  ))}
+</section>
+
+<!-- Bento grid -->
+{bento.length > 0 && (
+  <section class="bento">
+    <div class="section-head reveal" style="margin-bottom:32px">
+      <h2 class="section-title">최근의 <em>기록들</em></h2>
+      <a href="/" class="more-link">전체보기 →</a>
+    </div>
+
+    <div class="bento-grid">
+      <!-- Large card: first bento post -->
+      <a href={`/posts/${bento[0].id}`} class="card lg reveal">
+        <div class="thumb">
+          {bento[0].data.image
+            ? <img src={bento[0].data.image} alt={bento[0].data.title} loading="lazy" />
+            : <div class={`ph ph-warm`}></div>
+          }
+        </div>
+        <div class="body">
+          <div class="meta">
+            <span class={`cat ${catClass(bento[0].data.category)}`}><span class="dot"></span>{bento[0].data.category}</span>
+            <time>{bento[0].data.date.toLocaleDateString('ko-KR', {year:'numeric',month:'numeric',day:'numeric'})}</time>
+          </div>
+          <h3>{bento[0].data.title}</h3>
+          <p class="summary">{bento[0].data.summary}</p>
+          <span class="read">자세히 보기 →</span>
+        </div>
+      </a>
+
+      <!-- Small cards -->
+      {bento.slice(1).map((post, i) => {
+        const phClasses = ['ph-cool', 'ph-olive', 'ph-dusk', 'ph-deep'];
+        return (
+          <a href={`/posts/${post.id}`}
+             class="card reveal"
+             style={`transition-delay:${((i + 1) * 0.07).toFixed(2)}s`}>
+            <div class="thumb">
+              {post.data.image
+                ? <img src={post.data.image} alt={post.data.title} loading="lazy" />
+                : <div class={`ph ${phClasses[i % phClasses.length]}`}></div>
+              }
+            </div>
+            <div class="body">
+              <div class="meta">
+                <span class={`cat ${catClass(post.data.category)}`}><span class="dot"></span>{post.data.category}</span>
+                <time>{post.data.date.toLocaleDateString('ko-KR', {year:'numeric',month:'numeric',day:'numeric'})}</time>
+              </div>
+              <h3>{post.data.title}</h3>
+              <p class="summary">{post.data.summary}</p>
+              <span class="read">자세히 보기 →</span>
+            </div>
+          </a>
+        );
+      })}
+
+      <!-- More CTA -->
+      <a href="/" class="card more-tile reveal" style="transition-delay:.1s">
+        <div class="more-tile-inner">
+          <p class="more-eyebrow">ARCHIVE</p>
+          <h3 class="more-headline">남은 <em>{Math.max(0, allPosts.length - 1 - bento.length)}편</em>의 기록을<br>천천히 둘러보기</h3>
+        </div>
+        <span class="more-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- Dark tile -->
+      <div class="card dark-tile reveal" style="transition-delay:.17s">
+        <div>
+          <p style="font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:14px">NEWSLETTER</p>
+          <h3>일요일 저녁,<br><em>한 통의 편지</em>로<br>그 주의 기록을.</h3>
+        </div>
+        <a href="/about" class="sub-link">구독하기 →</a>
+      </div>
+    </div>
+  </section>
+)}
+
+<script>
+  /* Hero word reveal */
+  ['hw0','hw1','hw2'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.querySelector('span')?.classList.add('in');
+    }, 200 + i * 200);
+  });
+</script>
 </Layout>

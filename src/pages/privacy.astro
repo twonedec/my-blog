@@ -1,32 +1,80 @@
 ---
 import Layout from '../layouts/Layout.astro';
+const updated = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
-<Layout title="Privacy Policy | 다다노트">
-  <article class="max-w-3xl mx-auto py-12 md:py-16 w-full prose prose-slate prose-lg">
-    <h1 class="text-3xl font-extrabold text-slate-900 mb-6">Privacy Policy (개인정보처리방침)</h1>
-    <p class="text-sm text-slate-500 mb-8">Last updated: {new Date().toLocaleDateString('ko-KR')}</p>
-    
-    <p>다다노트(이하 '본 블로그')는 이용자의 개인정보를 중요하게 생각하며, "개인정보보호법" 등 관련 법령을 준수하고 있습니다.</p>
+<Layout title="개인정보처리방침 — 다다노트">
+<style>
+.privacy-wrap {
+  max-width: 740px; margin: 0 auto; padding: 72px 24px 120px;
+}
+.privacy-kicker {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.privacy-kicker::before { content: ""; width: 32px; height: 1px; background: var(--muted); }
+.privacy-title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.1; letter-spacing: -.022em;
+  color: var(--ink); margin-bottom: 12px;
+}
+.privacy-date {
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  letter-spacing: .08em; margin-bottom: 56px;
+}
+.privacy-body { display: flex; flex-direction: column; gap: 40px; }
+.privacy-section h2 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 18px; letter-spacing: -.01em;
+  color: var(--ink); margin-bottom: 14px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--line);
+}
+.privacy-section p, .privacy-section li {
+  font-family: var(--serif); font-size: 16px; line-height: 1.85;
+  color: var(--ink-2); font-weight: 300; text-wrap: pretty;
+}
+.privacy-section ul { padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.privacy-section li::marker { color: var(--muted); }
+.privacy-section a { color: var(--ink); border-bottom: 1px solid var(--line-s); transition: border-color .2s; }
+.privacy-section a:hover { border-color: var(--ink); }
+@media (min-width: 769px) {
+  .privacy-wrap { padding: 80px 48px 140px; }
+}
+</style>
 
-    <h2>1. 개인정보의 수집 및 이용 목적</h2>
-    <p>본 블로그는 별도의 회원가입 없이 콘텐츠에 접근할 수 있습니다. 다만, 사용자 경험 향상 및 웹 트래픽 분석, 맞춤형 광고 제공(구글 애드센스)을 위해 쿠키(Cookie)와 같은 비식별 정보가 수집될 수 있습니다.</p>
+<div class="privacy-wrap">
+  <p class="privacy-kicker">Privacy Policy</p>
+  <h1 class="privacy-title">개인정보처리방침</h1>
+  <p class="privacy-date">최종 수정일: {updated}</p>
 
-    <h2>2. 구글 애드센스(Google AdSense) 및 쿠키(Cookie)</h2>
-    <p>이 조항은 구글 애드센스 광고 게재를 위해 필수적인 항목입니다.</p>
-    <ul>
-      <li>본 블로그는 광고 게재를 위해 구글 애드센스를 사용하고 있습니다.</li>
-      <li>구글을 포함한 타사 공급업체는 쿠키를 사용하여 사용자가 본 웹사이트 또는 다른 웹사이트를 이전에 방문한 내역을 기반으로 광고를 게재합니다.</li>
-      <li>구글의 광고 쿠키 사용을 통해 구글 및 파트너는 사용자가 인터넷상의 이 사이트 및 다른 사이트를 방문한 내역을 기반으로 사용자에게 적절한 광고를 게재할 수 있습니다.</li>
-      <li>사용자는 <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">구글 광고 설정</a>을 방문하여 맞춤광고를 선택 해제할 수 있습니다.</li>
-    </ul>
+  <div class="privacy-body">
+    <div class="privacy-section">
+      <h2>1. 개요</h2>
+      <p>다다노트(이하 '본 블로그')는 이용자의 개인정보를 중요하게 생각하며 「개인정보보호법」 등 관련 법령을 준수합니다. 본 블로그는 별도의 회원가입 없이 콘텐츠에 접근할 수 있으며, 사용자 경험 향상과 트래픽 분석, 맞춤형 광고 제공을 위해 비식별 정보가 수집될 수 있습니다.</p>
+    </div>
 
-    <h2>3. 분석 도구 (Google Analytics)</h2>
-    <p>본 블로그는 사이트 방문자 수 등 통계 분석을 위해 분석 도구를 사용할 수 있습니다. 이 도구는 익명의 트래픽 데이터를 수집하며 개인을 특정하여 식별하지 않습니다.</p>
+    <div class="privacy-section">
+      <h2>2. 구글 애드센스 및 쿠키</h2>
+      <p>본 블로그는 광고 게재를 위해 구글 애드센스를 사용합니다.</p>
+      <ul>
+        <li>구글을 포함한 타사 공급업체는 쿠키를 사용하여 이전 방문 내역을 기반으로 광고를 게재합니다.</li>
+        <li>사용자는 <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">구글 광고 설정</a>에서 맞춤광고를 선택 해제할 수 있습니다.</li>
+      </ul>
+    </div>
 
-    <h2>4. 연락처</h2>
-    <p>개인정보 처리와 관련된 문의 사항이나 블로그 운영에 관한 피드백이 있으신 경우, 아래의 이메일로 연락해 주시기 바랍니다.</p>
-    <ul>
-      <li>Email: admin@dadanote.com (※ 추후 실제 사용하시는 이메일로 변경해 주세요)</li>
-    </ul>
-  </article>
+    <div class="privacy-section">
+      <h2>3. 분석 도구</h2>
+      <p>본 블로그는 방문자 통계 분석을 위해 Google Analytics를 사용할 수 있습니다. 수집되는 데이터는 익명으로 처리되며 개인을 특정하여 식별하지 않습니다.</p>
+    </div>
+
+    <div class="privacy-section">
+      <h2>4. 문의</h2>
+      <p>개인정보 처리 관련 문의는 아래 이메일로 연락해주세요.</p>
+      <ul>
+        <li>Email: <a href="mailto:admin@dadanote.com">admin@dadanote.com</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 </Layout>

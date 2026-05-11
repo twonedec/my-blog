@@ -1,27 +1,24 @@
 ---
-// src/components/Adsense.astro
-// 구글 애드센스 승인 후 여기에 발급받은 스크립트 코드를 붙여넣습니다.
-
-interface Props {
-  className?: string;
-}
-
-const { className = "my-8" } = Astro.props;
 const isDev = import.meta.env.DEV;
 ---
 
-<!-- 
-  TODO: 애드센스 승인 후 아래에 광고 코드를 삽입하세요.
-  (코드 삽입 후에는 isDev와 상관없이 광고가 뜨도록 수정하시면 됩니다.)
--->
-
 {isDev && (
-  <div class={`w-full bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center p-6 text-slate-400 text-sm font-medium ${className}`}>
-    <div class="text-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-2 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <span>구글 애드센스 광고 영역 (현재 로컬 개발 환경에서만 보입니다)</span>
-    </div>
+  <div class="ad-placeholder">
+    <span>광고 영역 — 애드센스 승인 후 코드 삽입</span>
   </div>
 )}
+
+<!-- TODO: 애드센스 승인 후 isDev 조건 제거하고 실제 광고 코드 삽입 -->
+
+<style>
+.ad-placeholder {
+  width: 100%; margin: 32px 0; padding: 24px;
+  background: oklch(0.95 0.005 85);
+  border: 1px dashed oklch(0.82 0.01 85);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: oklch(0.65 0.01 85);
+}
+</style>

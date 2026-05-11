@@ -1,79 +1,183 @@
 ---
-// src/layouts/Layout.astro
 import '../styles/global.css';
 
 interface Props {
-	title: string;
-	description?: string;
+  title: string;
+  description?: string;
+  currentCategorySlug?: string;
 }
 
-const { title, description = "최신 IT 정보와 수익형 블로그 운영 노하우를 공유합니다." } = Astro.props;
+const {
+  title,
+  description = "가족 여행, 생활 정책, 기어 리뷰, 코딩 기록 — 다다노트",
+  currentCategorySlug,
+} = Astro.props;
+
+const categories = [
+  { slug: 'travel-kids', label: 'Travel & Kids' },
+  { slug: 'life-policy', label: 'Life & Policy' },
+  { slug: 'tech-gear',   label: 'Tech & Gear'   },
+  { slug: 'dev-quant',   label: 'Dev & Quant'   },
+];
+
+const now = new Date();
+const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }).toUpperCase().replace(' ', " '");
 ---
 
 <!doctype html>
 <html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		
-		<!-- SEO Meta Tags -->
-		<title>{title}</title>
-		<meta name="description" content={description} />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:type" content="website" />
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-	</head>
-	<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-blue-500/30">
-		<!-- Header / Navigation -->
-		<header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 border-b border-slate-200">
-			<div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
-				<a href="/" class="text-xl font-bold text-slate-950 tracking-tight flex items-center gap-2">
-					<img src="/logo.png" alt="다다노트 로고" class="w-8 h-8 rounded-lg object-cover shadow-sm" />
-					다다노트
-				</a>
-				
-				<nav class="hidden md:flex gap-8">
-					<a href="/travel-kids" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Travel & Kids</a>
-					<a href="/life-policy" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Life & Policy</a>
-					<a href="/tech-gear" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Tech & Gear</a>
-					<a href="/dev-quant" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Dev & Quant</a>
-				</nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title"       content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type"        content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+</head>
+<body>
 
-				<button aria-label="Search" class="p-2 text-slate-600 hover:text-blue-600 transition-colors">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-				</button>
-			</div>
-		</header>
+  <!-- Cursor -->
+  <div id="cursor-dot"  aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
 
-		<!-- Main Content -->
-		<main class="flex-grow w-full max-w-6xl mx-auto px-5 py-8 md:py-12">
-			<slot />
-		</main>
+  <!-- Navigation -->
+  <header class="site-nav">
+    <a href="/" class="nav-brand">
+      <span class="nav-mark">d</span>
+      <span class="nav-name-ko">다다노트</span>
+      <span class="nav-name-en">&ensp;— Dadanote</span>
+    </a>
+    <nav class="nav-links" aria-label="주요 카테고리">
+      <a href="/" class={!currentCategorySlug ? 'current' : ''}>Home</a>
+      {categories.map(c => (
+        <a
+          href={`/${c.slug}`}
+          class={currentCategorySlug === c.slug ? 'current' : ''}
+          aria-current={currentCategorySlug === c.slug ? 'page' : undefined}
+        >
+          {c.label}
+        </a>
+      ))}
+    </nav>
+    <div class="nav-right">
+      <span>{issueDate}</span>
+    </div>
+    <button class="nav-hamburger" id="hamburger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-nav">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
 
-		<!-- Footer -->
-		<footer class="border-t border-slate-200 bg-white py-10 mt-12">
-			<div class="max-w-6xl mx-auto px-5 text-center flex flex-col md:flex-row justify-between items-center gap-4">
-				<p class="text-slate-500 text-sm">© {new Date().getFullYear()} 다다노트. All rights reserved.</p>
-				<div class="flex gap-4">
-					<a href="/about" class="text-sm text-slate-500 hover:text-slate-800 transition-colors">About</a>
-					<a href="/privacy" class="text-sm text-slate-500 hover:text-slate-800 transition-colors">Privacy Policy</a>
-				</div>
-			</div>
-		</footer>
-	</body>
+  <!-- Mobile nav panel -->
+  <nav class="nav-mobile-panel" id="mobile-nav" aria-label="모바일 메뉴">
+    {categories.map(c => (
+      <a href={`/${c.slug}`} class={currentCategorySlug === c.slug ? 'current' : ''}>
+        {c.label}
+      </a>
+    ))}
+  </nav>
+
+  <!-- Page content -->
+  <main>
+    <slot />
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <div class="brand">
+        <span class="nav-mark" style="width:24px;height:24px;font-size:14px">d</span>
+        <span>다다노트</span>
+      </div>
+      <p class="colophon">여행, 생활, 기기, 코드 사이를<br>오가며 작지만 오래 남는<br>기록을 쌓아갑니다.</p>
+    </div>
+    <div>
+      <h6>Categories</h6>
+      <ul>
+        {categories.map(c => (
+          <li><a href={`/${c.slug}`}>{c.label}</a></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h6>Site</h6>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+    </div>
+    <div class="footer-newsletter">
+      <h6>Newsletter</h6>
+      <p>매주 일요일 저녁, 한 통의 편지로 그 주의 기록을 보내드립니다.</p>
+      <a href="/about">구독하기 →</a>
+    </div>
+    <div class="footer-copy">
+      <span>© {new Date().getFullYear()} 다다노트. All rights reserved.</span>
+      <span>Built on Astro</span>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Custom Cursor ── */
+    const dot  = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+
+    if (dot && ring && window.matchMedia('(pointer: fine)').matches) {
+      let mx = -100, my = -100, rx = -100, ry = -100;
+
+      document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+      document.addEventListener('mousedown', () => document.body.classList.add('cursor-active'));
+      document.addEventListener('mouseup',   () => document.body.classList.remove('cursor-active'));
+
+      document.querySelectorAll('a, button, [role="button"], .card, .catdir-row, .pick-img').forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+      });
+
+      (function animCursor() {
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        dot.style.left  = mx + 'px';
+        dot.style.top   = my + 'px';
+        ring.style.left = rx + 'px';
+        ring.style.top  = ry + 'px';
+        requestAnimationFrame(animCursor);
+      })();
+    }
+
+    /* ── Scroll Reveal ── */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* ── Mobile hamburger ── */
+    const btn   = document.getElementById('hamburger');
+    const panel = document.getElementById('mobile-nav');
+    if (btn && panel) {
+      btn.addEventListener('click', () => {
+        const open = panel.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+        btn.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
+      });
+      panel.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          panel.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+  </script>
+
+</body>
 </html>
-
-<style is:global>
-	:root {
-		color-scheme: light;
-	}
-	/* 눈이 편안한 폰트 스택 적용 */
-	html {
-		font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-	}
-</style>

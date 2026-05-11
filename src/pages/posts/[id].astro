@@ -3,7 +3,6 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Adsense from '../../components/Adsense.astro';
 
-// 모든 포스트의 경로를 생성
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   return posts.map(post => ({
@@ -12,67 +11,225 @@ export async function getStaticPaths() {
   }));
 }
 
-// 현재 페이지의 포스트 데이터 가져오기
 const { post } = Astro.props;
 const { Content } = await render(post);
 
-// 날짜 포맷팅
-const formattedDate = new Date(post.data.date).toLocaleDateString('ko-KR', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
+const catClass = (cat: string) => cat.toLowerCase().split(' ')[0];
+const readMin = Math.max(1, Math.ceil((post.body ?? '').split(/\s+/).length / 200));
+const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
+  year: 'numeric', month: 'long', day: 'numeric'
 });
+
+const catSlug: Record<string, string> = {
+  'Travel & Kids': 'travel-kids',
+  'Life & Policy': 'life-policy',
+  'Tech & Gear':   'tech-gear',
+  'Dev & Quant':   'dev-quant',
+};
+const backHref = `/${catSlug[post.data.category] ?? ''}`;
 ---
 
-<Layout title={`${post.data.title} | 다다노트`} description={post.data.summary}>
-  <article class="max-w-3xl mx-auto py-10 w-full">
-    <!-- 상단: 뒤로 가기 버튼 -->
-    <div class="mb-8">
-      <button onclick="history.back()" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        목록으로 돌아가기
-      </button>
-    </div>
+<Layout title={`${post.data.title} — 다다노트`} description={post.data.summary}>
+<style is:global>
+/* ── Article layout ──────────────────────────────── */
+.article-wrap {
+  max-width: 740px; margin: 0 auto;
+  padding: 64px 24px 96px;
+}
 
-    <div class="mb-12 text-center border-b border-slate-200 pb-10">
-      <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-blue-50 text-blue-600 ring-1 ring-inset ring-blue-500/20 mb-6">
-        {post.data.category}
+/* ── Back link ───────────────────────────────────── */
+.article-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 48px; transition: color .2s;
+}
+.article-back:hover { color: var(--ink); }
+.article-back svg { transition: transform .2s var(--ease-out); }
+.article-back:hover svg { transform: translateX(-3px); }
+
+/* ── Header ──────────────────────────────────────── */
+.article-header { margin-bottom: 40px; }
+.article-meta {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+  font-size: 12px; color: var(--muted);
+}
+.article-meta time { font-weight: 500; }
+.article-meta .sep { opacity: .4; }
+.article-title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(28px, 4vw, 48px); line-height: 1.2;
+  letter-spacing: -.025em; color: var(--ink);
+  text-wrap: pretty; margin-bottom: 20px;
+}
+.article-summary {
+  font-family: var(--serif); font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.7; color: var(--ink-2); font-weight: 300;
+  border-left: 2px solid var(--line-s); padding-left: 20px;
+}
+
+/* ── Hero image ──────────────────────────────────── */
+.article-hero {
+  margin: 0 -24px 48px;
+  overflow: hidden; border-radius: 0;
+  background: oklch(0.93 0.015 85);
+}
+.article-hero img { width: 100%; height: auto; max-height: 520px; object-fit: cover; display: block; }
+
+/* ── Body typography ─────────────────────────────── */
+.article-body {
+  font-family: var(--serif); font-size: clamp(16.5px, 1.35vw, 18.5px);
+  line-height: 2.0; color: var(--ink); font-weight: 300;
+}
+.article-body p {
+  margin-bottom: 1.8em; text-wrap: pretty;
+}
+.article-body h2 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(21px, 2.1vw, 27px); line-height: 1.3;
+  letter-spacing: -.02em;
+  margin: 3.2em 0 1em;
+  padding-top: 2em;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+}
+.article-body h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.article-body h3 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(18px, 1.7vw, 22px); line-height: 1.4;
+  letter-spacing: -.015em; margin: 2.4em 0 .8em;
+  color: var(--ink);
+}
+.article-body h4 {
+  font-family: var(--sans); font-size: 14px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  margin: 2em 0 .6em; color: var(--muted);
+}
+.article-body a { color: var(--ink); border-bottom: 1px solid var(--line-s); transition: border-color .2s; }
+.article-body a:hover { border-color: var(--ink); }
+.article-body strong { font-weight: 600; color: var(--ink); }
+.article-body em { font-style: italic; }
+.article-body ul, .article-body ol {
+  padding-left: 1.4em; margin-bottom: 1.8em;
+}
+.article-body li { margin-bottom: .7em; line-height: 1.85; }
+.article-body li::marker { color: var(--muted); }
+.article-body blockquote {
+  border-left: 3px solid var(--line-s); padding: 4px 0 4px 24px;
+  margin: 2em 0; color: var(--ink-2); font-style: italic;
+  font-size: 1.05em;
+}
+.article-body hr {
+  border: none; border-top: 1px solid var(--line);
+  margin: 3em 0;
+}
+.article-body img {
+  width: 100%; border-radius: 8px; margin: 2.4em 0;
+  box-shadow: 0 2px 16px oklch(0.15 0.01 85 / .06);
+  max-height: 600px; object-fit: contain; background: var(--bg);
+}
+.article-body table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+  margin: 1.8em 0;
+}
+.article-body th {
+  text-align: left; padding: 10px 14px;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); border-bottom: 1px solid var(--line);
+}
+.article-body td {
+  padding: 12px 14px; border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.article-body tr:last-child td { border-bottom: none; }
+.article-body code {
+  font-family: var(--mono); font-size: .87em;
+  background: oklch(0.94 0.005 85); padding: 2px 6px;
+  border-radius: 4px;
+}
+.article-body pre {
+  font-family: var(--mono); font-size: 13px;
+  background: var(--ink); color: var(--bg);
+  padding: 20px 24px; border-radius: 8px;
+  overflow-x: auto; margin: 1.8em 0; line-height: 1.6;
+}
+.article-body pre code { background: none; padding: 0; font-size: inherit; }
+
+/* ── Footer ──────────────────────────────────────── */
+.article-footer {
+  margin-top: 64px; padding-top: 40px;
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.article-footer-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500; color: var(--ink-2);
+  transition: color .2s;
+}
+.article-footer-back:hover { color: var(--ink); }
+.article-footer-cat {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (min-width: 769px) {
+  .article-hero { margin: 0 -48px 56px; border-radius: 4px; }
+  .article-wrap { padding: 72px 48px 120px; }
+}
+</style>
+
+<div class="article-wrap">
+
+  <!-- Back -->
+  <a href={backHref} class="article-back">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    {post.data.category}
+  </a>
+
+  <!-- Header -->
+  <header class="article-header">
+    <div class="article-meta">
+      <span class={`cat ${catClass(post.data.category)}`}>
+        <span class="dot"></span>{post.data.category}
       </span>
-      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-        {post.data.title}
-      </h1>
-      <time class="text-sm text-slate-500 font-medium">
-        {formattedDate}
-      </time>
+      <span class="sep">|</span>
+      <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+      <span class="sep">·</span>
+      <span>{readMin}분 분량</span>
     </div>
+    <h1 class="article-title">{post.data.title}</h1>
+    <p class="article-summary">{post.data.summary}</p>
+  </header>
 
-    {post.data.image && (
-      <div class="w-full mb-10 rounded-2xl overflow-hidden shadow-sm">
-        <img src={post.data.image} alt={post.data.title} class="w-full h-auto object-cover" />
-      </div>
-    )}
-
-    <!-- 상단 광고 -->
-    <Adsense className="mb-10" />
-
-    <!-- 마크다운 본문이 렌더링되는 영역 -->
-    <div class="prose prose-slate prose-lg md:prose-xl max-w-none hover:prose-a:text-blue-600 prose-img:rounded-xl prose-headings:font-bold prose-a:text-blue-500">
-      <Content />
+  <!-- Hero image -->
+  {post.data.image && (
+    <div class="article-hero">
+      <img src={post.data.image} alt={post.data.title} loading="eager" />
     </div>
+  )}
 
-    <!-- 하단 광고 -->
-    <Adsense className="mt-12" />
+  <!-- Top ad -->
+  <Adsense />
 
-    <!-- 하단: 뒤로 가기 버튼 -->
-    <div class="mt-16 pt-8 border-t border-slate-200 text-center">
-      <button onclick="history.back()" class="inline-flex justify-center items-center px-6 py-2.5 border border-slate-300 shadow-sm text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 focus:outline-none transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-        </svg>
-        다른 글 더 보기
-      </button>
-    </div>
-  </article>
+  <!-- Body -->
+  <div class="article-body">
+    <Content />
+  </div>
+
+  <!-- Bottom ad -->
+  <Adsense />
+
+  <!-- Footer -->
+  <footer class="article-footer">
+    <a href={backHref} class="article-footer-back">
+      ← {post.data.category} 목록으로
+    </a>
+    <span class="article-footer-cat">dadanote.com</span>
+  </footer>
+
+</div>
 </Layout>
