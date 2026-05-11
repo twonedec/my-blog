@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dadanote.com/sitemap-index.xml
+Sitemap: https://dadanote.net/sitemap-index.xml
