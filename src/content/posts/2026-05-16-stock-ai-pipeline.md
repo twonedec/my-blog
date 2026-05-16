@@ -1,6 +1,6 @@
 ---
 title: "주식 프로그램 개발, NAS에서 AI 주식 리포트 자동화까지 — 삽질 기록과 실제 구조"
-summary: "개인 NAS와 Claude API로 주식 자동화 시스템 직접 개발. 첫날부터 월 $30 나올 수 있는 비용 실수와 실제 작동 구조를 솔직하게 정리했습니다."
+summary: "개인 NAS와 Claude API로 주식 자동화 시스템을 직접 만들었습니다. 비용 설계 실수부터 실제 작동 구조까지, 삽질 과정을 솔직하게 정리했습니다."
 date: 2026-05-16
 category: "Dev & Quant"
 image: /images/2026-05-16-stock-ai-pipeline/img_02.png
@@ -27,15 +27,15 @@ image: /images/2026-05-16-stock-ai-pipeline/img_02.png
   .sv .pipeline { background: #1e293b; border-radius: 20px; padding: 36px 28px 32px; border: 1px solid #334155; }
   .sv .pipeline-title { text-align: center; font-size: 18px; font-weight: 900; color: #f1f5f9; margin-bottom: 8px; }
   .sv .pipeline-sub { text-align: center; font-size: 12px; color: #64748b; margin-bottom: 32px; }
-  .sv .pipeline-steps { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; }
-  .sv .step { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 110px; }
-  .sv .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: white; }
-  .sv .step-box { width: 100px; padding: 16px 8px; border-radius: 14px; text-align: center; border-top: 3px solid; background: rgba(255,255,255,0.03); }
-  .sv .step-emoji { font-size: 24px; margin-bottom: 8px; }
-  .sv .step-name { font-size: 12px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+  .sv .pipeline-steps { display: flex; align-items: flex-start; justify-content: center; gap: 0; flex-wrap: wrap; padding-bottom: 8px; }
+  .sv .step { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 90px; }
+  .sv .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: white; flex-shrink: 0; }
+  .sv .step-box { width: 86px; padding: 12px 6px; border-radius: 14px; text-align: center; border-top: 3px solid; background: rgba(255,255,255,0.03); }
+  .sv .step-emoji { font-size: 20px; margin-bottom: 6px; }
+  .sv .step-name { font-size: 11px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
   .sv .step-file { font-size: 9px; color: #64748b; margin-bottom: 6px; }
   .sv .step-desc { font-size: 9px; color: #94a3b8; line-height: 1.5; }
-  .sv .arrow { font-size: 18px; color: #475569; flex-shrink: 0; padding: 0 4px; margin-top: 20px; }
+  .sv .arrow { font-size: 16px; color: #475569; flex-shrink: 0; padding: 0 2px; margin-top: 22px; }
   .sv .pipeline-footer { margin-top: 24px; text-align: center; background: #0f172a; border-radius: 10px; padding: 10px; font-size: 11px; color: #475569; }
   .sv .s1 .step-num { background: #0ea5e9; } .sv .s1 .step-box { border-color: #0ea5e9; }
   .sv .s2 .step-num { background: #10b981; } .sv .s2 .step-box { border-color: #10b981; }
