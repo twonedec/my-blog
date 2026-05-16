@@ -8,7 +8,7 @@ image: /images/2026-05-16-stock-ai-pipeline/img_02.png
 
 매일 아침 카카오톡으로 보유 종목의 호재·악재 판단 결과를 받아볼 수 있습니다. 개인 NAS와 Claude API를 연결해 주식 프로그램을 직접 개발했습니다. 결론부터 말하면, 처음부터 비용 구조를 잘못 설계하면 첫날부터 월 $30 이상 나갈 수 있습니다. 이 글은 그 실패와 수정 과정을 솔직하게 적은 기록입니다.
 
-![카카오톡으로 수신한 AI 주식 리포트](/images/2026-05-16-stock-ai-pipeline/img_01.jpg)
+![AI 추천 및 시장 동향 웹 대시보드](/images/2026-05-16-stock-ai-pipeline/img_02.png)
 
 ## 1. 바로 쓸 수 있는 핵심 구조 — 먼저 전체 그림을 봅니다
 
@@ -21,8 +21,6 @@ image: /images/2026-05-16-stock-ai-pipeline/img_02.png
 - **하드웨어**: Synology DS423+ NAS (24시간 가동 중인 집 서버 활용)
 - **실행 방식**: Docker 컨테이너 + cron (평일 오전 8시 자동 실행)
 - **알림 수단**: 카카오 비즈니스 메시지 API → 카카오톡
-
-![AI 추천 및 시장 동향 웹 대시보드](/images/2026-05-16-stock-ai-pipeline/img_02.png)
 
 <style>
   .sv * { box-sizing: border-box; margin: 0; padding: 0; }
