@@ -108,17 +108,20 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 }
 .post-row:hover .pr-arrow { transform: translateX(6px); color: var(--ink); }
 
-/* ── Category filter ─────────────────────────── */
-.cat-filter {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  padding: 36px 56px;
+/* ── Filter bar ──────────────────────────────── */
+.filter-bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 24px 56px;
   border-bottom: 1px solid var(--line);
   position: sticky; top: 0; z-index: 10;
   background: var(--bg);
 }
+.filter-divider {
+  width: 1px; height: 18px; background: var(--line); margin: 0 4px;
+}
 .cat-btn {
   font-family: var(--mono); font-size: 12px; letter-spacing: .07em;
-  text-transform: uppercase; padding: 8px 18px;
+  text-transform: uppercase; padding: 7px 16px;
   border: 1px solid var(--line); border-radius: 999px;
   background: transparent; color: var(--muted);
   cursor: pointer; transition: all .2s;
@@ -164,10 +167,13 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
   </div>
 </header>
 
-<div class="cat-filter">
+<div class="filter-bar">
   {categories.map(cat => (
     <button class={`cat-btn${cat === '전체' ? ' active' : ''}`} data-cat={cat}>{cat}</button>
   ))}
+  <div class="filter-divider"></div>
+  <button class="cat-btn active" data-sort="desc">최신순</button>
+  <button class="cat-btn" data-sort="asc">오래된순</button>
 </div>
 
 <div class="arch-body">
@@ -195,25 +201,82 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 </div>
 
 <script>
-const btns = document.querySelectorAll<HTMLButtonElement>('.cat-btn');
-const rows = document.querySelectorAll<HTMLElement>('.post-row');
-const groups = document.querySelectorAll<HTMLElement>('.year-group');
+  const catBtns = document.querySelectorAll('[data-cat]');
+  const sortBtns = document.querySelectorAll('[data-sort]');
+  const archBody = document.querySelector('.arch-body');
 
-btns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    btns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.cat!;
-    rows.forEach(row => {
-      const match = cat === '전체' || row.dataset.category === cat;
-      row.toggleAttribute('data-hidden', !match);
+  let activeCat = '전체';
+  let activeSort = 'desc';
+
+  function render() {
+    const groups = document.querySelectorAll('.year-group');
+    groups.forEach(function(g) {
+      g.parentNode.removeChild(g);
     });
-    groups.forEach(g => {
-      const visible = g.querySelectorAll('.post-row:not([data-hidden])').length > 0;
-      (g as HTMLElement).style.display = visible ? '' : 'none';
+
+    const allRows = window._allRows;
+    if (!allRows) return;
+
+    let filtered = activeCat === '전체'
+      ? allRows.slice()
+      : allRows.filter(function(r) { return r.dataset.category === activeCat; });
+
+    if (activeSort === 'asc') filtered = filtered.slice().reverse();
+
+    // 연도별 그룹핑
+    const byYear = {};
+    filtered.forEach(function(row) {
+      const y = row.dataset.year;
+      if (!byYear[y]) byYear[y] = [];
+      byYear[y].push(row);
+    });
+
+    const years = Object.keys(byYear).sort(function(a, b) {
+      return activeSort === 'desc' ? b - a : a - b;
+    });
+
+    years.forEach(function(year) {
+      const group = document.createElement('div');
+      group.className = 'year-group reveal';
+      const label = document.createElement('div');
+      label.className = 'year-label';
+      label.textContent = year;
+      group.appendChild(label);
+      byYear[year].forEach(function(row) { group.appendChild(row); });
+      archBody.appendChild(group);
+    });
+  }
+
+  // 초기 데이터 저장 (연도 포함)
+  const rows = document.querySelectorAll('.post-row');
+  window._allRows = Array.from(rows).map(function(r) {
+    const dateEl = r.querySelector('.pr-date');
+    if (dateEl && !r.dataset.year) {
+      // date는 "MM. DD. · N분" 형식 → year는 부모 year-group에서 가져옴
+      const group = r.closest('.year-group');
+      const yearLabel = group ? group.querySelector('.year-label') : null;
+      r.dataset.year = yearLabel ? yearLabel.textContent.trim() : '2026';
+    }
+    return r;
+  });
+
+  catBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      catBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      render();
     });
   });
-});
+
+  sortBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      sortBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      activeSort = btn.dataset.sort;
+      render();
+    });
+  });
 </script>
 
 </Layout>
