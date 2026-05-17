@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 380" width="100%" height="100%" style="background-color: #FAFBFC; font-family: 'Pretendard', -apple-system, sans-serif;">
+  <!-- Title -->
+  <text x="425" y="40" text-anchor="middle" font-size="20" font-weight="700" fill="#1D2939">장애 재실행 시 Brave API 중복 호출 방어 메커니즘 (Idempotency 픽스)</text>
+  
+  <!-- Left Column: AS-IS (Naive 구조) -->
+  <g transform="translate(60, 80)">
+    <rect width="320" height="260" rx="6" fill="#FFFFFF" stroke="#F04438" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <text x="160" y="25" text-anchor="middle" font-size="14" font-weight="700" fill="#D92D20">초기 구조: 무조건적인 재수집 (비효율)</text>
+    
+    <!-- Step 1 -->
+    <rect x="20" y="50" width="280" height="40" rx="4" fill="#FEF3F2" stroke="#F04438" stroke-width="1"/>
+    <text x="160" y="74" text-anchor="middle" font-size="12" fill="#B42318">파이프라인 실행 ➔ Brave API 63건 소모</text>
+    
+    <!-- Crash Interruption -->
+    <line x1="20" y1="115" x2="300" y2="115" stroke="#D92D20" stroke-width="2"/>
+    <text x="160" y="110" text-anchor="middle" font-size="11" font-weight="700" fill="#D92D20">중간 연산 레이어 구문 에러 (Down)</text>
+    
+    <!-- Step 2 -->
+    <rect x="20" y="140" width="280" height="40" rx="4" fill="#FEF3F2" stroke="#F04438" stroke-width="1"/>
+    <text x="160" y="164" text-anchor="middle" font-size="12" fill="#B42318">수동 재시작 (상태 기억 상실)</text>
+    
+    <!-- Result -->
+    <rect x="20" y="200" width="280" height="45" rx="4" fill="#F2F4F7"/>
+    <text x="160" y="220" text-anchor="middle" font-size="12" font-weight="700" fill="#344054">Brave API 63건 추가 중복 청구</text>
+    <text x="160" y="238" text-anchor="middle" font-size="11" font-weight="700" fill="#D92D20">결과: 에러 복구 시 비용 승수 폭탄 발생</text>
+  </g>
+
+  <!-- Right Column: TO-BE (Hardened 캐시 인터셉터 구조) -->
+  <g transform="translate(470, 80)">
+    <rect width="320" height="260" rx="6" fill="#FFFFFF" stroke="#12B76A" stroke-width="1.5"/>
+    <text x="160" y="25" text-anchor="middle" font-size="14" font-weight="700" fill="#027A48">개선 구조: 상태 캐싱 인터셉터 도입</text>
+    
+    <!-- Step 1 -->
+    <rect x="20" y="50" width="280" height="40" rx="4" fill="#ECFDF5" stroke="#12B76A" stroke-width="1"/>
+    <text x="160" y="74" text-anchor="middle" font-size="12" fill="#027A48">최초 수집 데이터 로컬 파일 캐싱 완료</text>
+    
+    <!-- Crash Interruption -->
+    <line x1="20" y1="115" x2="300" y2="115" stroke="#D92D20" stroke-width="1"/>
+    <text x="160" y="110" text-anchor="middle" font-size="11" fill="#475467">동일 구문 에러 다운 발생 지점</text>
+    
+    <!-- Step 2 (Interceptor Intercept) -->
+    <rect x="20" y="140" width="280" height="40" rx="4" fill="#EFF8FF" stroke="#0284C7" stroke-width="1"/>
+    <text x="160" y="164" text-anchor="middle" font-size="12" font-weight="700" fill="#0269A1">재시작 ➔ 로컬 주간 캐시 유효성 체크</text>
+    
+    <!-- Result -->
+    <rect x="20" y="200" width="280" height="45" rx="4" fill="#ECFDF5"/>
+    <text x="160" y="220" text-anchor="middle" font-size="12" font-weight="700" fill="#027A48">Brave API 호출 스킵 (원격 쿼리 0건)</text>
+    <text x="160" y="238" text-anchor="middle" font-size="11" font-weight="700" fill="#027A48">결과: 실패 지점부터 안전한 멱등성 복구</text>
+  </g>
+</svg>
