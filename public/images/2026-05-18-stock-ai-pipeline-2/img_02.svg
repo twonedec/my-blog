@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 420" width="100%" height="100%" style="background-color: #FAFBFC; font-family: 'Pretendard', -apple-system, sans-serif;">
+  <!-- Title -->
+  <text x="425" y="45" text-anchor="middle" font-size="20" font-weight="700" fill="#1D2939">다단 계층화(Multi-Tiering) 아키텍처를 통한 데이터 필터링 메커니즘</text>
+  
+  <!-- Funnel Outer Guide Lines -->
+  <polygon points="100,100 750,100 580,320 270,320" fill="#F2F4F7" opacity="0.5" stroke="#D0D5DD" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- Tier 1 -->
+  <g>
+    <polygon points="120,110 730,110 650,155 200,155" fill="#F9F5FF" stroke="#7F56D9" stroke-width="1.5"/>
+    <text x="425" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="#6941C6">Tier 1: 전 종목 시장 데이터 수집 (3,000+ 종목) | 규칙 기반 코드 &amp; KIS API [비용: 0원]</text>
+  </g>
+
+  <!-- Tier 2 -->
+  <g>
+    <polygon points="210,165 640,165 570,210 280,210" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"/>
+    <text x="425" y="192" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">Tier 2: 대량 뉴스 악재 필터링 &amp; 1차 스크리닝 | Gemini 2.5 Flash-Lite [비용: 무료 티어]</text>
+  </g>
+
+  <!-- Tier 3 -->
+  <g>
+    <polygon points="290,220 560,220 500,265 350,265" fill="#F0F9FF" stroke="#0284C7" stroke-width="1.5"/>
+    <text x="425" y="247" text-anchor="middle" font-size="12" font-weight="700" fill="#0171A3">Tier 3: 퀀트 신호 분석 및 추천 후보 압축 (상위 25개) | Claude 3 Haiku [저비용 고속 연산]</text>
+  </g>
+
+  <!-- Tier 4 -->
+  <g>
+    <polygon points="360,275 490,275 460,320 390,320" fill="#FFFBEB" stroke="#D97706" stroke-width="1.5"/>
+    <text x="425" y="302" text-anchor="middle" font-size="12" font-weight="700" fill="#B56303">Tier 4: 포트폴리오 심층 분석 및 최종 확정 | Claude 3.5 Sonnet</text>
+  </g>
+
+  <!-- Flow Direction Arrow -->
+  <path d="M 425 335 L 425 365" fill="none" stroke="#98A2B3" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+  <text x="425" y="385" text-anchor="middle" font-size="13" font-weight="600" fill="#344054">최종 정제된 고부가가치 AI 주식 리포트 출력 (월 고정 비용 $6.5 안착)</text>
+
+  <!-- Arrow Marker -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#98A2B3"/>
+    </marker>
+  </defs>
+</svg>
