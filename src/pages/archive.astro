@@ -15,6 +15,8 @@ const catCls = (cat: string) => {
   return '';
 };
 
+const categories = ['전체', ...Array.from(new Set(posts.map(p => p.data.category))).sort()];
+
 const byYear = posts.reduce<Record<number, typeof posts>>((acc, p) => {
   const y = p.data.date.getFullYear();
   (acc[y] ??= []).push(p);
@@ -106,6 +108,23 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 }
 .post-row:hover .pr-arrow { transform: translateX(6px); color: var(--ink); }
 
+/* ── Category filter ─────────────────────────── */
+.cat-filter {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 32px 56px 0;
+}
+.cat-btn {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .07em;
+  text-transform: uppercase; padding: 6px 14px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: transparent; color: var(--muted);
+  cursor: pointer; transition: all .2s;
+}
+.cat-btn:hover { border-color: var(--ink-2); color: var(--ink); }
+.cat-btn.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.post-row[data-hidden] { display: none; }
+
 /* ── Responsive ──────────────────────────────── */
 @media (max-width: 768px) {
   .arch-header, .arch-body { padding-left: 20px; padding-right: 20px; }
@@ -116,6 +135,12 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
   .pr-title { font-size: 16px; }
 }
 </style>
+
+<div class="cat-filter">
+  {categories.map(cat => (
+    <button class={`cat-btn${cat === '전체' ? ' active' : ''}`} data-cat={cat}>{cat}</button>
+  ))}
+</div>
 
 <header class="arch-header">
   <div class="arch-strip">
@@ -149,6 +174,7 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
       {byYear[year].map((post, i) => (
         <a href={`/posts/${post.id}`}
            class="post-row"
+           data-category={post.data.category}
            style={`transition-delay:${(i * 0.03).toFixed(2)}s`}>
           <span class="pr-date">
             {post.data.date.toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' })}
@@ -164,5 +190,27 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
     </div>
   ))}
 </div>
+
+<script>
+const btns = document.querySelectorAll<HTMLButtonElement>('.cat-btn');
+const rows = document.querySelectorAll<HTMLElement>('.post-row');
+const groups = document.querySelectorAll<HTMLElement>('.year-group');
+
+btns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    btns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat!;
+    rows.forEach(row => {
+      const match = cat === '전체' || row.dataset.category === cat;
+      row.toggleAttribute('data-hidden', !match);
+    });
+    groups.forEach(g => {
+      const visible = g.querySelectorAll('.post-row:not([data-hidden])').length > 0;
+      (g as HTMLElement).style.display = visible ? '' : 'none';
+    });
+  });
+});
+</script>
 
 </Layout>
