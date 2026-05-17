@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 460" width="100%" height="100%" style="background-color: #FAFBFC; font-family: 'Pretendard', -apple-system, sans-serif;">
+  <!-- Title -->
+  <text x="425" y="45" text-anchor="middle" font-size="20" font-weight="700" fill="#1D2939">v3 아키텍처 핵심: 레이어별 역할 분산 및 비용 최적화 구조</text>
+  
+  <!-- Flow Arrows (Connecting Background Line) -->
+  <path d="M 170 200 L 680 200" fill="none" stroke="#E4E7EC" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <!-- LAYER 1: Raw Data 수집 -->
+  <g transform="translate(50, 110)">
+    <rect width="160" height="160" rx="8" fill="#F9F5FF" stroke="#7F56D9" stroke-width="2"/>
+    <rect width="160" height="35" rx="8" fill="#7F56D9"/>
+    <!-- Fixing clip artifact for top corners -->
+    <rect width="160" height="20" y="15" fill="#7F56D9"/>
+    <text x="80" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">데이터 수집 레이어</text>
+    
+    <text x="80" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#344054">무료 인프라 소스</text>
+    <text x="80" y="90" text-anchor="middle" font-size="11" fill="#667085">Google RSS 뉴스</text>
+    <text x="80" y="110" text-anchor="middle" font-size="11" fill="#667085">네이버 뉴스 데이터</text>
+    
+    <rect x="15" y="130" width="130" height="20" rx="4" fill="#F4EBFF"/>
+    <text x="80" y="144" text-anchor="middle" font-size="11" font-weight="700" fill="#6941C6">비용: 0원 (무료)</text>
+  </g>
+
+  <!-- LAYER 2: 규칙 기반 필터링 -->
+  <g transform="translate(240, 110)">
+    <rect width="160" height="160" rx="8" fill="#F0F9FF" stroke="#0284C7" stroke-width="2"/>
+    <rect width="160" height="35" rx="8" fill="#0284C7"/>
+    <rect width="160" height="20" y="15" fill="#0284C7"/>
+    <text x="80" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">1차 전처리 레이어</text>
+    
+    <text x="80" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#344054">규칙 기반 알고리즘</text>
+    <text x="80" y="90" text-anchor="middle" font-size="11" fill="#667085">정규식 뉴스 필터링</text>
+    <text x="80" y="110" text-anchor="middle" font-size="11" fill="#667085">URL 해시 중복 제거</text>
+    
+    <rect x="15" y="130" width="130" height="20" rx="4" fill="#E0F2FE"/>
+    <text x="80" y="144" text-anchor="middle" font-size="11" font-weight="700" fill="#0369A1">연산 비용: 0원</text>
+  </g>
+
+  <!-- LAYER 3: 경량 LLM 스크리닝 -->
+  <g transform="translate(430, 110)">
+    <rect width="160" height="160" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+    <rect width="160" height="35" rx="8" fill="#059669"/>
+    <rect width="160" height="20" y="15" fill="#059669"/>
+    <text x="80" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">2차 판단 레이어</text>
+    
+    <text x="80" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#344054">저비용 대량 연산</text>
+    <text x="80" y="90" text-anchor="middle" font-size="11" fill="#667085">Gemini 2.5 Flash-Lite</text>
+    <text x="80" y="110" text-anchor="middle" font-size="11" fill="#667085">3000개 종목 뉴스 스크리닝</text>
+    
+    <rect x="15" y="130" width="130" height="20" rx="4" fill="#D1FAE5"/>
+    <text x="80" y="144" text-anchor="middle" font-size="11" font-weight="700" fill="#065F46">무료 티어 100% 활용</text>
+  </g>
+
+  <!-- LAYER 4: 고성능 LLM 정밀 분석 -->
+  <g transform="translate(620, 110)">
+    <rect width="160" height="160" rx="8" fill="#FFFBEB" stroke="#D97706" stroke-width="2"/>
+    <rect width="160" height="35" rx="8" fill="#D97706"/>
+    <rect width="160" height="20" y="15" fill="#D97706"/>
+    <text x="80" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">최종 분석 레이어</text>
+    
+    <text x="80" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#344054">고성능 심층 진단</text>
+    <text x="80" y="90" text-anchor="middle" font-size="11" fill="#667085">Claude 3.5 Sonnet</text>
+    <text x="80" y="110" text-anchor="middle" font-size="11" fill="#667085">압축된 핵심 종목만 분석</text>
+    
+    <rect x="15" y="130" width="130" height="20" rx="4" fill="#FEF3C7"/>
+    <text x="80" y="144" text-anchor="middle" font-size="11" font-weight="700" fill="#92400E">최소 투입 (월 $1.4)</text>
+  </g>
+
+  <!-- Bottom Summary Description -->
+  <g transform="translate(50, 310)">
+    <rect width="730" height="90" rx="6" fill="#F2F4F7"/>
+    <text x="20" y="32" font-size="13" font-weight="700" fill="#1D2939">핵심 메커니즘</text>
+    <text x="130" y="32" font-size="12" fill="#344054">: 무거운 텍스트 요약 및 대량 스크리닝은 비용이 들지 않는 코드 알고리즘과 무료 AI 모델 레이어에서 소화</text>
+    
+    <text x="20" y="58" font-size="13" font-weight="700" fill="#1D2939">엔지니어링 성과</text>
+    <text x="130" y="58" font-size="12" fill="#344054">: 고비용 LLM(Sonnet)의 호출 빈도와 입력 토큰을 최소화하여 단일 모델 대비 운영 비용 90% 이상 세이브</text>
+  </g>
+
+  <!-- Arrow Marker Definition -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#98A2B3"/>
+    </marker>
+  </defs>
+</svg>
