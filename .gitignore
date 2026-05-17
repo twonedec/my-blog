@@ -20,6 +20,9 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# 정리 보류 폴더 (2026-05-24 삭제 여부 결정)
+_cleanup/
+
 # jetbrains setting folder
 .idea/
 astro-src 2/
