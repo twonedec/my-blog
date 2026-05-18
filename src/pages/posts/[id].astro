@@ -21,7 +21,7 @@ const related = allPosts
   .slice(0, 3);
 
 const catClass = (cat: string) => cat.toLowerCase().split(' ')[0];
-const readMin = Math.max(1, Math.ceil((post.body ?? '').split(/\s+/).length / 200));
+const readMin = Math.max(1, Math.ceil((post.body ?? '').replace(/\s+/g, '').length / 700));
 const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   year: 'numeric', month: 'long', day: 'numeric'
 });
@@ -36,6 +36,23 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
 ---
 
 <Layout title={`${post.data.title} — 다다노트`} description={post.data.summary} ogImage={post.data.image}>
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.data.title,
+  "description": post.data.summary,
+  "image": post.data.image ? new URL(post.data.image, Astro.site).href : new URL('/thumbnail.png', Astro.site).href,
+  "url": new URL(`/posts/${post.id}/`, Astro.site).href,
+  "datePublished": post.data.date.toISOString(),
+  "dateModified": post.data.date.toISOString(),
+  "author": { "@type": "Person", "name": "다다노트", "url": new URL('/about/', Astro.site).href },
+  "publisher": {
+    "@type": "Organization",
+    "name": "다다노트",
+    "logo": { "@type": "ImageObject", "url": new URL('/logo.png', Astro.site).href }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": new URL(`/posts/${post.id}/`, Astro.site).href }
+})} />
 <style is:global>
 /* ── Article layout ──────────────────────────────── */
 .article-wrap {
@@ -214,6 +231,30 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
   margin-top: auto;
 }
 
+/* ── TOC sidebar ─────────────────────────────────── */
+.article-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 740px);
+  justify-content: center;
+}
+.article-toc {
+  display: none;
+}
+.toc-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+}
+.toc-nav a {
+  display: block; font-family: var(--serif); font-size: 13.5px;
+  font-weight: 300; color: var(--muted); line-height: 1.5;
+  padding: 5px 0 5px 12px;
+  border-left: 1px solid var(--line);
+  transition: color .2s, border-color .2s;
+  text-wrap: pretty;
+}
+.toc-nav a:hover { color: var(--ink); border-color: var(--line-s); }
+.toc-nav a.active { color: var(--ink); border-color: var(--ink); font-weight: 400; }
+
 /* ── Responsive ──────────────────────────────────── */
 @media (max-width: 768px) {
   .related-grid { grid-template-columns: 1fr; }
@@ -222,7 +263,30 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
   .article-hero { margin: 0 -48px 56px; border-radius: 4px; }
   .article-wrap { padding: 72px 48px 120px; }
 }
+@media (min-width: 1100px) {
+  .article-layout {
+    grid-template-columns: 200px minmax(0, 740px);
+    gap: 0 56px;
+    max-width: 1060px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  .article-layout.has-toc .article-toc {
+    display: block;
+    position: sticky;
+    top: 88px;
+    padding-top: 72px;
+    max-height: calc(100vh - 108px);
+    overflow-y: auto;
+  }
+}
 </style>
+
+<div class="article-layout" id="article-layout">
+  <aside class="article-toc" id="article-toc">
+    <p class="toc-label">목차</p>
+    <nav class="toc-nav" id="toc-nav"></nav>
+  </aside>
 
 <div class="article-wrap">
 
@@ -294,4 +358,38 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
   </footer>
 
 </div>
+</div>
+
+<script>
+  const headings = Array.from(document.querySelectorAll('.article-body h2'));
+  const layout   = document.getElementById('article-layout');
+  const tocNav   = document.getElementById('toc-nav');
+
+  if (headings.length >= 3 && layout && tocNav) {
+    layout.classList.add('has-toc');
+
+    headings.forEach((h, i) => {
+      const id = `h-${i}`;
+      h.id = id;
+      const a = document.createElement('a');
+      a.href    = `#${id}`;
+      a.textContent = h.textContent ?? '';
+      tocNav.appendChild(a);
+    });
+
+    const links = Array.from(tocNav.querySelectorAll('a'));
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const active = links.find(l => l.getAttribute('href') === `#${entry.target.id}`);
+          active?.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+    headings.forEach(h => io.observe(h));
+  }
+</script>
 </Layout>

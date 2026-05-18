@@ -27,8 +27,7 @@ const categories = [
   { slug: 'dev-quant',   label: 'Dev & Quant'   },
 ];
 
-const now = new Date();
-const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }).toUpperCase().replace(' ', " '");
+const isPost = !!ogImage;
 ---
 
 <!doctype html>
@@ -52,9 +51,17 @@ const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-dig
   <meta name="twitter:title"      content={title} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image"      content={ogImageURL} />
+  <link rel="alternate" type="application/rss+xml" title="다다노트 RSS" href="/rss.xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "다다노트",
+    "url": Astro.site?.href,
+    "description": description
+  })} />
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-2PS6E2120N"></script>
@@ -91,7 +98,14 @@ const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-dig
       ))}
     </nav>
     <div class="nav-right">
-      <span>{issueDate}</span>
+      <a href="/rss.xml" class="rss-link" aria-label="RSS 구독" title="RSS 구독">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="2.5" cy="11.5" r="1.5" fill="currentColor"/>
+          <path d="M1 6.5C4.03757 6.5 6.5 8.96243 6.5 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          <path d="M1 2C6.52285 2 11 6.47715 11 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        </svg>
+        RSS
+      </a>
     </div>
     <button class="nav-hamburger" id="hamburger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-nav">
       <span></span><span></span><span></span>
@@ -100,6 +114,7 @@ const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-dig
 
   <!-- Mobile nav panel -->
   <nav class="nav-mobile-panel" id="mobile-nav" aria-label="모바일 메뉴">
+    <a href="/" class={!currentCategorySlug ? 'current' : ''}>Home</a>
     {categories.map(c => (
       <a href={`/${c.slug}`} class={currentCategorySlug === c.slug ? 'current' : ''}>
         {c.label}
@@ -111,6 +126,15 @@ const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-dig
   <main>
     <slot />
   </main>
+
+  <!-- Cookie Banner -->
+  <div id="cookie-banner" role="dialog" aria-label="쿠키 사용 안내" style="display:none">
+    <p>이 블로그는 Google Analytics와 Google AdSense를 통해 방문 통계 수집 및 맞춤 광고 제공에 쿠키를 사용합니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>을 참고하세요.</p>
+    <div class="cookie-btns">
+      <button id="cookie-accept">동의합니다</button>
+      <button id="cookie-decline">거부합니다</button>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="site-footer">
@@ -137,9 +161,9 @@ const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-dig
       </ul>
     </div>
     <div class="footer-newsletter">
-      <h6>Newsletter</h6>
-      <p>매주 일요일 저녁, 한 통의 편지로 그 주의 기록을 보내드립니다.</p>
-      <a href="/about">구독하기 →</a>
+      <h6>RSS</h6>
+      <p>새 글이 올라오면 피드 리더로 바로 받아볼 수 있습니다.</p>
+      <a href="/rss.xml">RSS 구독 →</a>
     </div>
     <div class="footer-copy">
       <span>© {new Date().getFullYear()} 다다노트. All rights reserved.</span>
@@ -185,6 +209,28 @@ const issueDate = now.toLocaleDateString('en-US', { month: 'short', year: '2-dig
       });
     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* ── Cookie Banner ── */
+    const banner = document.getElementById('cookie-banner');
+    if (banner && !localStorage.getItem('cookie-consent')) {
+      banner.style.display = 'flex';
+      document.getElementById('cookie-accept')?.addEventListener('click', () => {
+        localStorage.setItem('cookie-consent', 'accepted');
+        banner.style.animation = 'none';
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateX(-50%) translateY(16px)';
+        banner.style.transition = 'opacity .3s, transform .3s';
+        setTimeout(() => banner.remove(), 350);
+      });
+      document.getElementById('cookie-decline')?.addEventListener('click', () => {
+        localStorage.setItem('cookie-consent', 'declined');
+        banner.style.animation = 'none';
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateX(-50%) translateY(16px)';
+        banner.style.transition = 'opacity .3s, transform .3s';
+        setTimeout(() => banner.remove(), 350);
+      });
+    }
 
     /* ── Mobile hamburger ── */
     const btn   = document.getElementById('hamburger');

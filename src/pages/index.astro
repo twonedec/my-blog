@@ -8,7 +8,7 @@ const posts    = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.val
 const pick  = posts[0];
 const bento = posts.slice(1, 6);
 
-const readMin  = (body: string) => Math.max(1, Math.ceil(body.split(/\s+/).length / 200));
+const readMin  = (body: string) => Math.max(1, Math.ceil(body.replace(/\s+/g, '').length / 700));
 const catClass = (cat: string)  => cat.toLowerCase().split(' ')[0];
 const fmtDate  = (d: Date)      => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -317,7 +317,7 @@ allPosts.forEach(p => {
 {pick && (
   <section class="pick">
     <div class="section-head reveal">
-      <h2 class="section-title">이번 주 <em>추천 글</em></h2>
+      <h2 class="section-title">가장 최근의 <em>기록</em></h2>
     </div>
     <div class="pick-inner" style="margin-top:52px">
       <a href={`/posts/${pick.id}`} class="pick-img reveal">
@@ -328,7 +328,7 @@ allPosts.forEach(p => {
       </a>
       <div>
         <div class="pick-kicker reveal">
-          <span style="font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)">이번 주 추천 글</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)">최근 기록</span>
           <span class="rule"></span>
           <span class={`cat ${catClass(pick.data.category)}`}><span class="dot"></span>{pick.data.category}</span>
         </div>
@@ -434,13 +434,13 @@ allPosts.forEach(p => {
       </a>
 
       <!-- Dark tile -->
-      <div class="card dark-tile reveal" style="transition-delay:.17s">
+      <a href="/archive" class="card dark-tile reveal" style="transition-delay:.17s">
         <div>
-          <p style="font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:14px">NEWSLETTER</p>
-          <h3>일요일 저녁,<br><em>한 통의 편지</em>로<br>그 주의 기록을.</h3>
+          <p style="font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:14px">ARCHIVE</p>
+          <h3>지금까지의<br><em>모든 기록</em>을<br>한눈에.</h3>
         </div>
-        <a href="/about" class="sub-link">구독하기 →</a>
-      </div>
+        <span class="sub-link">전체 보기 →</span>
+      </a>
     </div>
   </section>
 )}
