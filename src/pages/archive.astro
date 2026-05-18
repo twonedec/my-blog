@@ -3,7 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('posts');
-const posts    = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts    = allPosts.sort((a, b) =>
+  b.data.date.valueOf() - a.data.date.valueOf() || b.id.localeCompare(a.id)
+);
 
 const readMin = (body: string) => Math.max(1, Math.ceil(body.split(/\s+/).length / 200));
 
@@ -184,6 +186,8 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
         <a href={`/posts/${post.id}`}
            class="post-row"
            data-category={post.data.category}
+           data-date-ts={post.data.date.valueOf()}
+           data-year={post.data.date.getFullYear()}
            style={`transition-delay:${(i * 0.03).toFixed(2)}s`}>
           <span class="pr-date">
             {post.data.date.toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' })}
@@ -201,44 +205,47 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 </div>
 
 <script>
-  const catBtns = document.querySelectorAll('[data-cat]');
-  const sortBtns = document.querySelectorAll('[data-sort]');
-  const archBody = document.querySelector('.arch-body');
+  var allRows = Array.from(document.querySelectorAll('.post-row'));
+  var activeCat = '전체';
+  var activeSort = 'desc';
 
-  let activeCat = '전체';
-  let activeSort = 'desc';
+  function applyFilter() {
+    var archBody = document.querySelector('.arch-body');
+    if (!archBody) return;
 
-  function render() {
-    const groups = document.querySelectorAll('.year-group');
-    groups.forEach(function(g) {
-      g.parentNode.removeChild(g);
+    // Sort by timestamp embedded in data-date-ts
+    var sorted = allRows.slice().sort(function(a, b) {
+      var da = Number(a.getAttribute('data-date-ts'));
+      var db = Number(b.getAttribute('data-date-ts'));
+      return activeSort === 'desc' ? db - da : da - db;
     });
 
-    const allRows = window._allRows;
-    if (!allRows) return;
+    // Category filter
+    if (activeCat !== '전체') {
+      sorted = sorted.filter(function(r) {
+        return r.getAttribute('data-category') === activeCat;
+      });
+    }
 
-    let filtered = activeCat === '전체'
-      ? allRows.slice()
-      : allRows.filter(function(r) { return r.dataset.category === activeCat; });
+    // Detach existing year-groups (post-rows remain referenced in allRows)
+    archBody.querySelectorAll('.year-group').forEach(function(g) { g.remove(); });
 
-    if (activeSort === 'asc') filtered = filtered.slice().reverse();
-
-    // 연도별 그룹핑
-    const byYear = {};
-    filtered.forEach(function(row) {
-      const y = row.dataset.year;
+    // Group by year
+    var byYear = {};
+    sorted.forEach(function(row) {
+      var y = row.getAttribute('data-year') || '2026';
       if (!byYear[y]) byYear[y] = [];
       byYear[y].push(row);
     });
 
-    const years = Object.keys(byYear).sort(function(a, b) {
-      return activeSort === 'desc' ? b - a : a - b;
+    var years = Object.keys(byYear).sort(function(a, b) {
+      return activeSort === 'desc' ? Number(b) - Number(a) : Number(a) - Number(b);
     });
 
     years.forEach(function(year) {
-      const group = document.createElement('div');
-      group.className = 'year-group reveal';
-      const label = document.createElement('div');
+      var group = document.createElement('div');
+      group.className = 'year-group';
+      var label = document.createElement('div');
       label.className = 'year-label';
       label.textContent = year;
       group.appendChild(label);
@@ -247,34 +254,21 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
     });
   }
 
-  // 초기 데이터 저장 (연도 포함)
-  const rows = document.querySelectorAll('.post-row');
-  window._allRows = Array.from(rows).map(function(r) {
-    const dateEl = r.querySelector('.pr-date');
-    if (dateEl && !r.dataset.year) {
-      // date는 "MM. DD. · N분" 형식 → year는 부모 year-group에서 가져옴
-      const group = r.closest('.year-group');
-      const yearLabel = group ? group.querySelector('.year-label') : null;
-      r.dataset.year = yearLabel ? yearLabel.textContent.trim() : '2026';
-    }
-    return r;
-  });
-
-  catBtns.forEach(function(btn) {
+  document.querySelectorAll('[data-cat]').forEach(function(btn) {
     btn.addEventListener('click', function() {
-      catBtns.forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('[data-cat]').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
-      activeCat = btn.dataset.cat;
-      render();
+      activeCat = btn.getAttribute('data-cat') || '전체';
+      applyFilter();
     });
   });
 
-  sortBtns.forEach(function(btn) {
+  document.querySelectorAll('[data-sort]').forEach(function(btn) {
     btn.addEventListener('click', function() {
-      sortBtns.forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('[data-sort]').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
-      activeSort = btn.dataset.sort;
-      render();
+      activeSort = btn.getAttribute('data-sort') || 'desc';
+      applyFilter();
     });
   });
 </script>
