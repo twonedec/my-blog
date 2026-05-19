@@ -433,14 +433,21 @@ allPosts.forEach(p => {
         <span class="more-arrow" aria-hidden="true">→</span>
       </a>
 
-      <!-- Dark tile -->
-      <div class="card dark-tile reveal" style="transition-delay:.17s">
+      <!-- Dark tile - Random post -->
+      <a href="#" id="random-tile" class="card dark-tile reveal" style="transition-delay:.17s">
         <div>
-          <p style="font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:14px">NEWSLETTER</p>
-          <h3>일요일 저녁,<br><em>한 통의 편지</em>로<br>그 주의 기록을.</h3>
+          <p style="font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:14px">RANDOM</p>
+          <h3>읽을 글이<br><em>없다면,</em><br>이건 어때요?</h3>
         </div>
-        <a href="/about" class="sub-link">구독하기 →</a>
-      </div>
+        <span class="sub-link">랜덤 글 보기 →</span>
+      </a>
+      <script define:vars={{ postIds: allPosts.map(p => p.id) }}>
+        document.getElementById('random-tile')?.addEventListener('click', e => {
+          e.preventDefault();
+          const id = postIds[Math.floor(Math.random() * postIds.length)];
+          window.location.href = '/posts/' + id;
+        });
+      </script>
     </div>
   </section>
 )}
