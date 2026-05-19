@@ -98,15 +98,17 @@ const isPost = !!ogImage;
       ))}
     </nav>
     <div class="nav-right">
-      <a href="/rss.xml" class="rss-link" aria-label="RSS 구독" title="RSS 구독">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="2.5" cy="11.5" r="1.5" fill="currentColor"/>
-          <path d="M1 6.5C4.03757 6.5 6.5 8.96243 6.5 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-          <path d="M1 2C6.52285 2 11 6.47715 11 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-        </svg>
-        RSS
-      </a>
+      <span id="nav-season" style="font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)"></span>
     </div>
+    <script>
+      (function() {
+        const m = new Date().getMonth() + 1;
+        const y = new Date().getFullYear();
+        const s = m >= 3 && m <= 5 ? '봄' : m >= 6 && m <= 8 ? '여름' : m >= 9 && m <= 11 ? '가을' : '겨울';
+        const el = document.getElementById('nav-season');
+        if (el) el.textContent = s + ' ' + y;
+      })();
+    </script>
     <button class="nav-hamburger" id="hamburger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-nav">
       <span></span><span></span><span></span>
     </button>
