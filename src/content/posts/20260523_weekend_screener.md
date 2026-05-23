@@ -1,6 +1,8 @@
 ---
 title: "[AI 주식 시스템] 주간 성장주/저평가주 스크리닝 — 2026년 05월 23일"
+summary: "이번 주 AI 스크리닝 — 성장주 5개 · 저평가주 5개 선별"
 date: 2026-05-23
+category: "Dev & Quant"
 tags: [주식, 성장주, 저평가주, 퀀트, 자동화]
 image: /images/20260523_weekend_screener/weekend_scores_20260523.png
 disclaimer: 이 글은 자동화 시스템이 기술적 신호·수급·뉴스를 조합해 출력한 분석 로그입니다. 종목 추천이나 투자 권유가 아닙니다.
