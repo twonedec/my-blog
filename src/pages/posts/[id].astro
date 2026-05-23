@@ -56,7 +56,7 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
 <style is:global>
 /* ── Article layout ──────────────────────────────── */
 .article-wrap {
-  max-width: 900px; margin: 0 auto;
+  max-width: 1060px; margin: 0 auto;
   padding: 64px 24px 96px;
 }
 
@@ -149,7 +149,7 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
 .article-body img {
   width: 100%; border-radius: 8px; margin: 2.4em 0;
   box-shadow: 0 2px 16px oklch(0.15 0.01 85 / .06);
-  max-height: 600px; object-fit: contain; background: var(--bg);
+  max-height: 800px; object-fit: contain; background: var(--bg);
 }
 .article-body table {
   width: 100%; border-collapse: collapse; font-size: 14px;
@@ -365,7 +365,7 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
   const layout   = document.getElementById('article-layout');
   const tocNav   = document.getElementById('toc-nav');
 
-  if (headings.length >= 3 && layout && tocNav) {
+  if (headings.length >= 2 && layout && tocNav) {
     layout.classList.add('has-toc');
 
     headings.forEach((h, i) => {
