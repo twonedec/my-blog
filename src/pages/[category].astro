@@ -52,7 +52,7 @@ export async function getStaticPaths() {
 const { category } = Astro.params;
 const config = catMap[category]!;
 
-const allPosts = await getCollection('posts');
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
 const posts    = allPosts
   .filter(p => p.data.category === config.label)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
