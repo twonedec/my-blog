@@ -2,7 +2,7 @@
 title: "소니 A7C II에 205g짜리 단렌즈를 달게 된 이유 — 빌트록스 AF 50/2.0 FE 육아 아빠 솔직 후기"
 summary: "20만 원대 후반, 205g. 소니 풀프레임에 중국산 서드파티 렌즈를 선택한 육아 아빠의 솔직한 사용 후기입니다."
 date: 2026-05-28
-category: "Review"
+category: "Tech & Gear"
 image: /images/2026-05-28-viltrox-af50-review/img_04.jpg
 tags: [카메라, 소니, 렌즈, 빌트록스, 육아]
 ---
