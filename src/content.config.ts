@@ -11,6 +11,7 @@ const postsCollection = defineCollection({
     category: z.enum(['Travel & Kids', 'Life & Policy', 'Tech & Gear', 'Dev & Quant']),
     draft: z.boolean().optional().default(false),
     disclaimer: z.string().optional(),
+    imageCredit: z.string().optional(),
     tags: z.array(z.string()).optional(),
   })
 });
