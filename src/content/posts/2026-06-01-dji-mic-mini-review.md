@@ -6,8 +6,6 @@ category: "Tech & Gear"
 image: "/images/2026-06-01-dji-mic-mini-review/img_01.jpg"
 ---
 
-![DJI 파우치](/images/2026-06-01-dji-mic-mini-review/img_01.jpg)
-
 Sony A7C2로 촬영하면서 음질만 계속 아쉬웠다. 바람 소리에 아이들 목소리가 묻히고, 실내에서도 울림이 잡혔다. 마이크를 추가하기로 결정한 뒤 세 가지를 검토했다.
 
 ## 검토한 대안과 탈락 이유
