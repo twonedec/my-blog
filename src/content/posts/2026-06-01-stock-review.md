@@ -2,7 +2,7 @@
 title: "AI 주식 추천 시스템 중간 점검 — 2주 성과와 솔직한 진단"
 summary: "13건 추천, 승률 30%, 평균 +3.47%. 숫자만 보면 나쁘지 않다. 그런데 한 종목을 빼면 얘기가 완전히 달라진다."
 date: 2026-06-01
-category: "Coding"
+category: "Dev & Quant"
 image: "/images/2026-06-01-stock-review/hero.jpg"
 ---
 
