@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif">
+  <!-- Background -->
+  <rect width="800" height="420" fill="#f8f9fa" rx="16"/>
+
+  <!-- Title -->
+  <text x="400" y="38" text-anchor="middle" font-size="17" font-weight="700" fill="#1a1a2e">영유아검진 일정표 — 생후 14일 ~ 71개월</text>
+
+  <!-- Legend -->
+  <rect x="188" y="54" width="14" height="14" rx="3" fill="#4a90d9"/>
+  <text x="206" y="65" font-size="12" fill="#444">일반 건강검진</text>
+  <rect x="330" y="54" width="14" height="14" rx="3" fill="#2ecc71"/>
+  <text x="348" y="65" font-size="12" fill="#444">구강(치아)검진</text>
+
+  <!-- Row labels -->
+  <text x="68" y="148" text-anchor="middle" font-size="12" font-weight="600" fill="#333">일반</text>
+  <text x="68" y="162" text-anchor="middle" font-size="12" font-weight="600" fill="#333">건강</text>
+  <text x="68" y="176" text-anchor="middle" font-size="12" font-weight="600" fill="#333">검진</text>
+
+  <text x="68" y="280" text-anchor="middle" font-size="12" font-weight="600" fill="#333">구강</text>
+  <text x="68" y="294" text-anchor="middle" font-size="12" font-weight="600" fill="#333">검진</text>
+
+  <!-- Timeline base line: x=100 ~ x=750, months 0~72 -->
+  <!-- px per month = 650/72 = 9.028 -->
+
+  <!-- Helper: month to x = 100 + month * 9.028 -->
+  <!-- 1차: 14일~35일 ≈ 0.47~1.17mo → x=104~111 (too small, show as special pill) -->
+  <!-- Use minimum bar width of 30px for visibility -->
+
+  <!-- ── 일반 건강검진 bars (y=130, height=40) ── -->
+
+  <!-- 1차: 14일~35일 → show at x=100, width=30 as special -->
+  <rect x="100" y="128" width="30" height="40" rx="6" fill="#4a90d9"/>
+  <text x="115" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="white">1차</text>
+  <text x="115" y="158" text-anchor="middle" font-size="9" fill="white">14~35일</text>
+
+  <!-- 2차: 4~6mo → x=136~154 -->
+  <rect x="136" y="128" width="36" height="40" rx="6" fill="#4a90d9"/>
+  <text x="154" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="white">2차</text>
+  <text x="154" y="158" text-anchor="middle" font-size="9" fill="white">4~6개월</text>
+
+  <!-- 3차: 9~12mo → x=181~208 -->
+  <rect x="181" y="128" width="45" height="40" rx="6" fill="#4a90d9"/>
+  <text x="203" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="white">3차</text>
+  <text x="203" y="158" text-anchor="middle" font-size="9" fill="white">9~12개월</text>
+
+  <!-- 4차: 18~24mo → x=262~317 -->
+  <rect x="262" y="128" width="54" height="40" rx="6" fill="#4a90d9"/>
+  <text x="289" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="white">4차</text>
+  <text x="289" y="158" text-anchor="middle" font-size="9" fill="white">18~24개월</text>
+
+  <!-- 5차: 30~36mo → x=371~425 -->
+  <rect x="371" y="128" width="54" height="40" rx="6" fill="#4a90d9"/>
+  <text x="398" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="white">5차</text>
+  <text x="398" y="158" text-anchor="middle" font-size="9" fill="white">30~36개월</text>
+
+  <!-- 6차: 42~48mo → x=479~533 -->
+  <rect x="479" y="128" width="54" height="40" rx="6" fill="#4a90d9"/>
+  <text x="506" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="white">6차</text>
+  <text x="506" y="158" text-anchor="middle" font-size="9" fill="white">42~48개월</text>
+
+  <!-- 7차: 54~60mo → x=588~642 -->
+  <rect x="588" y="128" width="54" height="40" rx="6" fill="#4a90d9"/>
+  <text x="615" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="white">7차</text>
+  <text x="615" y="158" text-anchor="middle" font-size="9" fill="white">54~60개월</text>
+
+  <!-- 8차: 66~71mo → x=695~740 -->
+  <rect x="695" y="128" width="45" height="40" rx="6" fill="#3a7bc8"/>
+  <text x="717" y="140" text-anchor="middle" font-size="10" font-weight="700" fill="white">8차</text>
+  <text x="717" y="152" text-anchor="middle" font-size="9" fill="white">66~71개월</text>
+  <text x="717" y="163" text-anchor="middle" font-size="8" fill="#d0e8ff">취학 전 최종</text>
+
+  <!-- ── 구강검진 bars (y=260, height=40) ── -->
+
+  <!-- 구강 1차: 18~29mo → x=262~362 -->
+  <rect x="262" y="258" width="100" height="40" rx="6" fill="#2ecc71"/>
+  <text x="312" y="274" text-anchor="middle" font-size="10" font-weight="700" fill="white">구강 1차</text>
+  <text x="312" y="288" text-anchor="middle" font-size="9" fill="white">18~29개월</text>
+
+  <!-- 구강 2차: 30~41mo → x=371~470 -->
+  <rect x="371" y="258" width="99" height="40" rx="6" fill="#27ae60"/>
+  <text x="420" y="274" text-anchor="middle" font-size="10" font-weight="700" fill="white">구강 2차</text>
+  <text x="420" y="288" text-anchor="middle" font-size="9" fill="white">30~41개월</text>
+
+  <!-- 구강 3차: 42~53mo → x=479~578 -->
+  <rect x="479" y="258" width="99" height="40" rx="6" fill="#2ecc71"/>
+  <text x="528" y="274" text-anchor="middle" font-size="10" font-weight="700" fill="white">구강 3차</text>
+  <text x="528" y="288" text-anchor="middle" font-size="9" fill="white">42~53개월</text>
+
+  <!-- 구강 4차: 54~65mo → x=588~687 -->
+  <rect x="588" y="258" width="99" height="40" rx="6" fill="#27ae60"/>
+  <text x="637" y="274" text-anchor="middle" font-size="10" font-weight="700" fill="white">구강 4차</text>
+  <text x="637" y="288" text-anchor="middle" font-size="9" fill="white">54~65개월</text>
+
+  <!-- Month axis line -->
+  <line x1="100" y1="215" x2="750" y2="215" stroke="#ccc" stroke-width="1.5"/>
+
+  <!-- Month ticks & labels -->
+  <!-- 0mo -->
+  <line x1="100" y1="210" x2="100" y2="220" stroke="#999" stroke-width="1"/>
+  <text x="100" y="232" text-anchor="middle" font-size="10" fill="#666">0</text>
+
+  <!-- 6mo = x=154 -->
+  <line x1="154" y1="210" x2="154" y2="220" stroke="#999" stroke-width="1"/>
+  <text x="154" y="232" text-anchor="middle" font-size="10" fill="#666">6개월</text>
+
+  <!-- 12mo = x=208 -->
+  <line x1="208" y1="210" x2="208" y2="220" stroke="#999" stroke-width="1"/>
+  <text x="208" y="232" text-anchor="middle" font-size="10" fill="#666">12개월</text>
+
+  <!-- 18mo = x=262 -->
+  <line x1="262" y1="210" x2="262" y2="220" stroke="#bbb" stroke-width="1.5"/>
+  <text x="262" y="232" text-anchor="middle" font-size="10" fill="#555">18개월</text>
+
+  <!-- 24mo = x=316 -->
+  <line x1="316" y1="210" x2="316" y2="220" stroke="#999" stroke-width="1"/>
+  <text x="316" y="232" text-anchor="middle" font-size="10" fill="#666">24개월</text>
+
+  <!-- 30mo = x=370 -->
+  <line x1="370" y1="210" x2="370" y2="220" stroke="#bbb" stroke-width="1.5"/>
+  <text x="370" y="232" text-anchor="middle" font-size="10" fill="#555">30개월</text>
+
+  <!-- 36mo = x=424 -->
+  <line x1="424" y1="210" x2="424" y2="220" stroke="#999" stroke-width="1"/>
+  <text x="424" y="232" text-anchor="middle" font-size="10" fill="#666">36개월</text>
+
+  <!-- 42mo = x=478 -->
+  <line x1="478" y1="210" x2="478" y2="220" stroke="#bbb" stroke-width="1.5"/>
+  <text x="478" y="232" text-anchor="middle" font-size="10" fill="#555">42개월</text>
+
+  <!-- 48mo = x=532 -->
+  <line x1="532" y1="210" x2="532" y2="220" stroke="#999" stroke-width="1"/>
+  <text x="532" y="232" text-anchor="middle" font-size="10" fill="#666">48개월</text>
+
+  <!-- 54mo = x=586 -->
+  <line x1="586" y1="210" x2="586" y2="220" stroke="#bbb" stroke-width="1.5"/>
+  <text x="586" y="232" text-anchor="middle" font-size="10" fill="#555">54개월</text>
+
+  <!-- 60mo = x=640 -->
+  <line x1="640" y1="210" x2="640" y2="220" stroke="#999" stroke-width="1"/>
+  <text x="640" y="232" text-anchor="middle" font-size="10" fill="#666">60개월</text>
+
+  <!-- 66mo = x=694 -->
+  <line x1="694" y1="210" x2="694" y2="220" stroke="#bbb" stroke-width="1.5"/>
+  <text x="694" y="232" text-anchor="middle" font-size="10" fill="#555">66개월</text>
+
+  <!-- 72mo = x=750 -->
+  <line x1="750" y1="210" x2="750" y2="220" stroke="#999" stroke-width="1"/>
+  <text x="750" y="232" text-anchor="middle" font-size="10" fill="#666">72개월</text>
+
+  <!-- Connector lines: bars to axis -->
+  <!-- 일반검진 row to axis -->
+  <line x1="115" y1="168" x2="115" y2="215" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="154" y1="168" x2="154" y2="215" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="203" y1="168" x2="203" y2="215" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="289" y1="168" x2="289" y2="215" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="398" y1="168" x2="398" y2="215" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="506" y1="168" x2="506" y2="215" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="615" y1="168" x2="615" y2="215" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="717" y1="168" x2="717" y2="215" stroke="#3a7bc8" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+
+  <!-- 구강검진 row to axis -->
+  <line x1="312" y1="258" x2="312" y2="215" stroke="#2ecc71" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="420" y1="258" x2="420" y2="215" stroke="#27ae60" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="528" y1="258" x2="528" y2="215" stroke="#2ecc71" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <line x1="637" y1="258" x2="637" y2="215" stroke="#27ae60" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+
+  <!-- Overlap notice -->
+  <rect x="245" y="190" width="190" height="18" rx="4" fill="#fff3cd" opacity="0.9"/>
+  <text x="340" y="202" text-anchor="middle" font-size="10" fill="#856404">18개월: 일반+구강 동시 가능 구간</text>
+
+  <!-- Footer note -->
+  <text x="400" y="370" text-anchor="middle" font-size="11" fill="#888">※ 각 차수는 기간 내 지정 의료기관 방문 시 무료 / 건강보험25시 앱에서 내 아이 일정 확인</text>
+
+  <!-- Bottom border line -->
+  <line x1="60" y1="385" x2="740" y2="385" stroke="#e0e0e0" stroke-width="1"/>
+  <text x="400" y="400" text-anchor="middle" font-size="10" fill="#bbb">dadanote.net</text>
+</svg>
