@@ -43,7 +43,7 @@ const isPost = !!ogImage;
   <link rel="canonical" href={canonicalURL} />
   <meta property="og:title"       content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:type"        content="website" />
+  <meta property="og:type"        content={isPost ? "article" : "website"} />
   <meta property="og:url"         content={canonicalURL} />
   <meta property="og:image"       content={ogImageURL} />
   <meta property="og:locale"      content="ko_KR" />

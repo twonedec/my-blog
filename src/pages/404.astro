@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="페이지를 찾을 수 없습니다 — 다다노트" description="요청하신 페이지가 존재하지 않습니다.">
+  <style>
+    .not-found {
+      max-width: 600px;
+      margin: 120px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .not-found-code {
+      font-family: var(--mono);
+      font-size: 80px;
+      font-weight: 700;
+      color: var(--line);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+    .not-found-title {
+      font-family: var(--serif);
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 300;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .not-found-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .not-found-home {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      padding: 10px 24px;
+      text-decoration: none;
+      transition: background .2s, color .2s;
+    }
+    .not-found-home:hover {
+      background: var(--ink);
+      color: var(--bg);
+    }
+  </style>
+  <div class="not-found">
+    <div class="not-found-code">404</div>
+    <h1 class="not-found-title">페이지를 찾을 수 없습니다</h1>
+    <p class="not-found-desc">
+      삭제되거나 주소가 변경된 페이지입니다.<br>
+      홈으로 돌아가 다른 글을 찾아보세요.
+    </p>
+    <a href="/" class="not-found-home">홈으로 돌아가기</a>
+  </div>
+</Layout>
