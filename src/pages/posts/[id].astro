@@ -97,7 +97,9 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
   overflow: hidden; border-radius: 0;
   background: oklch(0.93 0.015 85);
 }
-.article-hero img { width: 100%; height: auto; max-height: 520px; object-fit: cover; display: block; }
+.article-hero img { width: 100%; height: auto; max-height: 520px; object-fit: cover; object-position: center center; display: block; }
+.article-body .img-row { display: flex; gap: 12px; margin: 2.4em 0; }
+.article-body .img-row img { flex: 1; width: 50%; margin: 0; max-height: 480px; }
 .image-credit { font-size: 11px; color: oklch(0.55 0 0); text-align: right; padding: 6px 12px 0; }
 .image-credit a { color: inherit; }
 
@@ -318,7 +320,7 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
   <!-- Hero image -->
   {post.data.image && (
     <div class="article-hero">
-      <img src={post.data.image} alt={post.data.title} loading="eager" />
+      <img src={post.data.image} alt={post.data.title} loading="eager" style={post.data.imagePosition ? `object-position: ${post.data.imagePosition}` : undefined} />
       {post.data.imageCredit && (
         <p class="image-credit" set:html={post.data.imageCredit} />
       )}
