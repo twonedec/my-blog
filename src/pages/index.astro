@@ -14,36 +14,36 @@ const fmtDate  = (d: Date)      => d.toLocaleDateString('ko-KR', { year: 'numeri
 
 const categories = [
   {
-    slug:  'travel-kids',
-    label: 'Travel & Kids',
-    ko:    '여행과 아이',
-    cls:   'travel',
+    slug:  'dev-quant',
+    label: 'Dev & Quant',
+    ko:    '개발과 분석',
+    cls:   'dev',
     num:   '01',
-    desc:  '온 가족이 함께한 여행기와 아이와 떠나는 나들이 정보를 담아요.',
-  },
-  {
-    slug:  'life-policy',
-    label: 'Life & Policy',
-    ko:    '생활과 정책',
-    cls:   'life',
-    num:   '02',
-    desc:  '생활 속 유용한 정책 정보와 알뜰한 살림 꿀팁을 정리해요.',
+    desc:  '필요한 도구를 직접 코딩으로 만듭니다. 자동화 시스템, 주식 분석 파이프라인, 생활 속 작은 프로그램 — 만들고 굴려보고 다시 고치는 기록입니다.',
   },
   {
     slug:  'tech-gear',
     label: 'Tech & Gear',
     ko:    '테크와 장비',
     cls:   'tech',
-    num:   '03',
-    desc:  '실제로 써본 IT 기기, 앱, 장비 리뷰를 솔직하게 씁니다.',
+    num:   '02',
+    desc:  '충동구매보다 비교가 먼저입니다. 카메라·렌즈·맥미니·NAS까지, 오래 고민하고 직접 써본 뒤 솔직하게 리뷰합니다.',
   },
   {
-    slug:  'dev-quant',
-    label: 'Dev & Quant',
-    ko:    '개발과 분석',
-    cls:   'dev',
+    slug:  'travel-kids',
+    label: 'Travel & Kids',
+    ko:    '여행과 아이',
+    cls:   'travel',
+    num:   '03',
+    desc:  '아이와 함께 다녀온 여행과 나들이 기록. 같은 곳을 다시 찾고 싶어지는 우리만의 속도로 씁니다.',
+  },
+  {
+    slug:  'life-policy',
+    label: 'Life & Policy',
+    ko:    '생활과 정책',
+    cls:   'life',
     num:   '04',
-    desc:  '코딩 기록과 투자 분석, 데이터 기반 인사이트를 공유해요.',
+    desc:  '직접 신청해본 육아 정책·지원금·제도. 알고 나면 별것 아닌데, 모르면 손해보는 것들을 정리합니다.',
   },
 ];
 
@@ -53,7 +53,7 @@ allPosts.forEach(p => {
 });
 ---
 
-<Layout title="다다노트 — 여행, 생활, 기기, 코드의 기록">
+<Layout title="다다노트 — 직접 만드는 개발자 아빠의 기록">
 <style>
 /* ── Masthead ───────────────────────────────────────── */
 .masthead {
@@ -292,17 +292,17 @@ allPosts.forEach(p => {
 
   <div class="masthead-inner">
     <div>
-      <p class="hero-eyebrow reveal">EDITOR'S LETTER · 다다노트</p>
+      <p class="hero-eyebrow reveal">MAKER'S NOTE · 다다노트</p>
       <h1 class="hero-title">
-        <span class="word" id="hw0"><span>작게,</span></span><br>
-        <span class="word" id="hw1"><span><em>그러나 오래</em></span></span><br>
-        <span class="word" id="hw2"><span>남기는 기록.</span></span>
+        <span class="word" id="hw0"><span>만들고,</span></span><br>
+        <span class="word" id="hw1"><span><em>써보고,</em></span></span><br>
+        <span class="word" id="hw2"><span>기록한다.</span></span>
       </h1>
     </div>
     <div class="hero-meta reveal" style="transition-delay:.4s">
       <p class="hero-body">
-        여행에서 돌아온 저녁의 노트, 새로 산 기기의 첫 사용기, 반복되는 살림 속 작은 발견, 그리고 코드 한 줄.
-        <em style="font-family:var(--serif);font-style:italic"> — 다다노트는 그 사이의 글들입니다.</em>
+        필요한 도구는 직접 코딩해 만들고, 장비는 오래 고민해 들인 뒤 솔직하게 씁니다.
+        <em style="font-family:var(--serif);font-style:italic"> — 개발자 아빠가 일상의 문제를 푸는 기록, 다다노트입니다.</em>
       </p>
       <div class="hero-stats">
         <span>{allPosts.length}편의 글</span>
@@ -320,7 +320,7 @@ allPosts.forEach(p => {
       <h2 class="section-title">가장 최근의 <em>기록</em></h2>
     </div>
     <div class="pick-inner" style="margin-top:52px">
-      <a href={`/posts/${pick.id}`} class="pick-img reveal">
+      <a href={`/posts/${pick.id}/`} class="pick-img reveal">
         {pick.data.image
           ? <img src={pick.data.image} alt={pick.data.title} loading="eager" />
           : <div class="pick-ph"></div>
@@ -332,7 +332,7 @@ allPosts.forEach(p => {
           <span class="rule"></span>
           <span class={`cat ${catClass(pick.data.category)}`}><span class="dot"></span>{pick.data.category}</span>
         </div>
-        <a href={`/posts/${pick.id}`}>
+        <a href={`/posts/${pick.id}/`}>
           <h2 class="pick-title reveal" style="transition-delay:.1s">{pick.data.title}</h2>
         </a>
         <p class="pick-body reveal" style="transition-delay:.2s">{pick.data.summary}</p>
@@ -340,7 +340,7 @@ allPosts.forEach(p => {
           <time>{fmtDate(pick.data.date)}</time>
           <span style="color:var(--line-s)">·</span>
           <span>{readMin(pick.body ?? '')}분 분량</span>
-          <a href={`/posts/${pick.id}`} class="read-link">전문 읽기 →</a>
+          <a href={`/posts/${pick.id}/`} class="read-link">전문 읽기 →</a>
         </div>
       </div>
     </div>
@@ -350,12 +350,12 @@ allPosts.forEach(p => {
 <!-- Category Directory -->
 <section class="catdir">
   <div class="section-head reveal">
-    <h2 class="section-title">서로 다른 호흡의 <em>네 가지 기록</em></h2>
+    <h2 class="section-title">직접 만들고, 써보고, <em>다녀온 기록</em></h2>
     <a href="/archive" class="more-link">모두 보기 →</a>
   </div>
 
   {categories.map((c, i) => (
-    <a href={`/${c.slug}`}
+    <a href={`/${c.slug}/`}
        class="catdir-row reveal"
        style={`transition-delay:${(i * 0.08).toFixed(2)}s`}>
       <span class="catdir-num">{c.num}</span>
@@ -380,7 +380,7 @@ allPosts.forEach(p => {
 
     <div class="bento-grid">
       <!-- Large card: first bento post -->
-      <a href={`/posts/${bento[0].id}`} class="card lg reveal">
+      <a href={`/posts/${bento[0].id}/`} class="card lg reveal">
         <div class="thumb">
           {bento[0].data.image
             ? <img src={bento[0].data.image} alt={bento[0].data.title} loading="lazy" />
@@ -402,7 +402,7 @@ allPosts.forEach(p => {
       {bento.slice(1).map((post, i) => {
         const phClasses = ['ph-cool', 'ph-olive', 'ph-dusk', 'ph-deep'];
         return (
-          <a href={`/posts/${post.id}`}
+          <a href={`/posts/${post.id}/`}
              class="card reveal"
              style={`transition-delay:${((i + 1) * 0.07).toFixed(2)}s`}>
             <div class="thumb">

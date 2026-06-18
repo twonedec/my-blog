@@ -10,7 +10,7 @@ interface Props {
 
 const {
   title,
-  description = "가족 여행, 생활 정책, 기어 리뷰, 코딩 기록 — 다다노트",
+  description = "직접 만드는 개발자 아빠의 기록 — 자동화·퀀트 개발, 장비 리뷰, 그리고 가족의 일상. 다다노트",
   ogImage,
   currentCategorySlug,
 } = Astro.props;
@@ -21,10 +21,10 @@ const ogImageURL = ogImage
   : new URL('/thumbnail.png', Astro.site).href;
 
 const categories = [
+  { slug: 'dev-quant',   label: 'Dev & Quant'   },
+  { slug: 'tech-gear',   label: 'Tech & Gear'   },
   { slug: 'travel-kids', label: 'Travel & Kids' },
   { slug: 'life-policy', label: 'Life & Policy' },
-  { slug: 'tech-gear',   label: 'Tech & Gear'   },
-  { slug: 'dev-quant',   label: 'Dev & Quant'   },
 ];
 
 const isPost = !!ogImage;
@@ -89,7 +89,7 @@ const isPost = !!ogImage;
       <a href="/" class={!currentCategorySlug ? 'current' : ''}>Home</a>
       {categories.map(c => (
         <a
-          href={`/${c.slug}`}
+          href={`/${c.slug}/`}
           class={currentCategorySlug === c.slug ? 'current' : ''}
           aria-current={currentCategorySlug === c.slug ? 'page' : undefined}
         >
@@ -118,7 +118,7 @@ const isPost = !!ogImage;
   <nav class="nav-mobile-panel" id="mobile-nav" aria-label="모바일 메뉴">
     <a href="/" class={!currentCategorySlug ? 'current' : ''}>Home</a>
     {categories.map(c => (
-      <a href={`/${c.slug}`} class={currentCategorySlug === c.slug ? 'current' : ''}>
+      <a href={`/${c.slug}/`} class={currentCategorySlug === c.slug ? 'current' : ''}>
         {c.label}
       </a>
     ))}
@@ -145,13 +145,13 @@ const isPost = !!ogImage;
         <span class="nav-mark" style="width:24px;height:24px;font-size:14px">d</span>
         <span>다다노트</span>
       </div>
-      <p class="colophon">여행, 생활, 기기, 코드 사이를<br>오가며 작지만 오래 남는<br>기록을 쌓아갑니다.</p>
+      <p class="colophon">필요한 도구는 직접 만들고,<br>장비는 오래 써본 뒤 씁니다.<br>개발자 아빠의 기록.</p>
     </div>
     <div>
       <h6>Categories</h6>
       <ul>
         {categories.map(c => (
-          <li><a href={`/${c.slug}`}>{c.label}</a></li>
+          <li><a href={`/${c.slug}/`}>{c.label}</a></li>
         ))}
       </ul>
     </div>

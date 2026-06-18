@@ -183,7 +183,7 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
     <div class="year-group reveal">
       <div class="year-label">{year}</div>
       {byYear[year].map((post, i) => (
-        <a href={`/posts/${post.id}`}
+        <a href={`/posts/${post.id}/`}
            class="post-row"
            data-category={post.data.category}
            data-date-ts={post.data.date.valueOf()}

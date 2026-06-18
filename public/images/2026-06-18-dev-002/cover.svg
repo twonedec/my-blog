@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eef5ff"/>
+      <stop offset="100%" style="stop-color:#e9f4f0"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#3b82f6" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g stroke="#d1e3f8" stroke-width="1" opacity="0.45">
+    <line x1="0" y1="130" x2="1200" y2="130"/>
+    <line x1="0" y1="260" x2="1200" y2="260"/>
+    <line x1="0" y1="390" x2="1200" y2="390"/>
+  </g>
+
+  <!-- 전체 파이프라인 흐름 -->
+  <g font-family="sans-serif" text-anchor="middle">
+    <rect x="70"  y="180" width="170" height="74" rx="12" fill="white" filter="url(#shadow)"/>
+    <text x="155" y="208" font-size="13" fill="#64748b">전 종목</text>
+    <text x="155" y="234" font-family="monospace" font-size="18" fill="#1e40af" font-weight="700">~3,000</text>
+
+    <rect x="290" y="180" width="170" height="74" rx="12" fill="white" filter="url(#shadow)"/>
+    <rect x="290" y="180" width="6" height="74" rx="3" fill="#3b82f6"/>
+    <text x="378" y="208" font-size="13" fill="#1e3a5f" font-weight="600">신호 감지</text>
+    <text x="378" y="234" font-size="12" fill="#475569">코드 · 상위 25</text>
+
+    <rect x="510" y="180" width="170" height="74" rx="12" fill="white" filter="url(#shadow)"/>
+    <rect x="510" y="180" width="6" height="74" rx="3" fill="#22c55e"/>
+    <text x="598" y="208" font-size="13" fill="#1e3a5f" font-weight="600">AI 필터</text>
+    <text x="598" y="234" font-size="12" fill="#475569">무료 모델 · ~5</text>
+
+    <rect x="730" y="180" width="170" height="74" rx="12" fill="#1e3a5f" filter="url(#shadow)"/>
+    <text x="815" y="208" font-size="13" fill="#cbd5e1">최종 판단</text>
+    <text x="815" y="234" font-family="monospace" font-size="16" fill="#fff" font-weight="700">0–3개</text>
+
+    <rect x="950" y="180" width="180" height="74" rx="12" fill="white" filter="url(#shadow)"/>
+    <rect x="950" y="180" width="6" height="74" rx="3" fill="#14b8a6"/>
+    <text x="1040" y="208" font-size="13" fill="#1e3a5f" font-weight="600">주말 스크리너</text>
+    <text x="1040" y="234" font-size="12" fill="#475569">재무 기반</text>
+
+    <g stroke="#94a3b8" stroke-width="2.5" fill="none" stroke-linecap="round">
+      <path d="M242 217 L286 217"/><path d="M462 217 L506 217"/><path d="M682 217 L726 217"/><path d="M902 217 L946 217"/>
+    </g>
+    <g fill="#94a3b8">
+      <path d="M286 217 l-9 -5 v10 z"/><path d="M506 217 l-9 -5 v10 z"/><path d="M726 217 l-9 -5 v10 z"/><path d="M946 217 l-9 -5 v10 z"/>
+    </g>
+  </g>
+
+  <!-- 6편 점들 -->
+  <g font-family="monospace" text-anchor="middle">
+    <g fill="#3b82f6">
+      <circle cx="430" cy="345" r="5"/><circle cx="490" cy="345" r="5"/><circle cx="550" cy="345" r="5"/>
+      <circle cx="610" cy="345" r="5"/><circle cx="670" cy="345" r="5"/><circle cx="730" cy="345" r="5"/>
+    </g>
+    <text x="580" y="380" font-family="sans-serif" font-size="13" fill="#64748b">1편 → 6편 전체 설계 정리</text>
+  </g>
+
+  <text x="600" y="470" text-anchor="middle" font-family="sans-serif" font-size="34" fill="#1e3a5f" font-weight="700" letter-spacing="-0.5">파이썬 주식 분석 자동화 시스템</text>
+  <text x="600" y="510" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#475569">전 종목 스캔부터 AI 판단까지 — 전체 설계 한눈에</text>
+  <text x="600" y="556" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#94a3b8">개발자 아빠의 기록 · 다다노트</text>
+</svg>

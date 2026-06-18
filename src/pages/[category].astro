@@ -9,7 +9,7 @@ const catMap: Record<string, {
   'travel-kids': {
     label:    'Travel & Kids',
     cls:      'travel',
-    num:      '01',
+    num:      '03',
     ko:       '여행과 아이',
     headline: '여행과 <em>아이</em>,<br>그리고 <em>속도</em>에 대하여',
     enSub:    'Notes on family trips, slow travel, and places we keep returning to',
@@ -18,7 +18,7 @@ const catMap: Record<string, {
   'life-policy': {
     label:    'Life & Policy',
     cls:      'life',
-    num:      '02',
+    num:      '04',
     ko:       '생활과 정책',
     headline: '받을 수 있는 <em>것들</em>,<br>그리고 몰라서 <em>지나친</em> 것들에 대하여',
     enSub:    'Small notes on living, budgets, and quiet policies',
@@ -27,7 +27,7 @@ const catMap: Record<string, {
   'tech-gear': {
     label:    'Tech & Gear',
     cls:      'tech',
-    num:      '03',
+    num:      '02',
     ko:       '테크와 장비',
     headline: '오래 <em>고민</em>하고,<br>오래 <em>쓰는</em> 것들에 대하여',
     enSub:    'Reviews and reflections on tools that earn a place on the desk',
@@ -36,11 +36,11 @@ const catMap: Record<string, {
   'dev-quant': {
     label:    'Dev & Quant',
     cls:      'dev',
-    num:      '04',
+    num:      '01',
     ko:       '개발과 분석',
-    headline: '<em>만들어</em>보고,<br><em>굴려</em>보는 것들에 대하여',
-    enSub:    'Code experiments, data explorations, and building things from scratch',
-    desc:     '전공자는 아닙니다. 그래도 코드를 짜고, 자동화를 시도하고, 데이터로 투자를 들여다봅니다. 잘 되는 것보다 시도한 과정이 더 많이 남는 기록입니다.',
+    headline: '필요한 건 <em>직접</em><br><em>만들어</em> 씁니다',
+    enSub:    'Building tools from scratch — automation, data pipelines, and quant experiments',
+    desc:     '비전공자지만 일상의 불편함을 코드로 풉니다. 예약 관리 시스템, 텔레그램 자동 브리핑, 그리고 코스피 전 종목을 스캔하는 주식 분석 파이프라인까지 — 직접 만들고, 굴려보고, 망하면 다시 고치는 과정을 기록합니다. (투자 관련 글은 방법론·개발 기록이며, 종목 추천이 아닙니다.)',
   },
 };
 
@@ -340,7 +340,7 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
 <!-- Featured post -->
 {featured && (
   <section class="featured">
-    <a href={`/posts/${featured.id}`} class="featured-img reveal">
+    <a href={`/posts/${featured.id}/`} class="featured-img reveal">
       <span class="featured-tag">★ This Month</span>
       {featured.data.image
         ? <img src={featured.data.image} alt={featured.data.title} loading="eager" />
@@ -353,7 +353,7 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
         <span class="lbl">이달의 글</span>
         <span class={`cat ${config.cls}`}><span class="dot"></span>{config.label}</span>
       </div>
-      <a href={`/posts/${featured.id}`}>
+      <a href={`/posts/${featured.id}/`}>
         <h2 class="featured-title reveal" style="transition-delay:.08s">{featured.data.title}</h2>
       </a>
       <p class="featured-dek reveal" style="transition-delay:.16s">{featured.data.summary}</p>
@@ -361,7 +361,7 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
         <time>{fmtDate(featured.data.date)}</time>
         <span style="color:var(--line-s)">·</span>
         <span>{readMin(featured.body ?? '')}분 분량</span>
-        <a href={`/posts/${featured.id}`} class="read-link">전문 읽기 →</a>
+        <a href={`/posts/${featured.id}/`} class="read-link">전문 읽기 →</a>
       </div>
     </div>
   </section>
@@ -375,7 +375,7 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
       <span>{listPosts[listPosts.length-1]?.data.date.getFullYear()} — {listPosts[0]?.data.date.getFullYear()}</span>
     </div>
     {listPosts.map((post, i) => (
-      <a href={`/posts/${post.id}`}
+      <a href={`/posts/${post.id}/`}
          class="post-row reveal"
          style={`transition-delay:${(i * 0.04).toFixed(2)}s`}>
         <span class="pr-num">№{String(i + 2).padStart(2, '0')}</span>
@@ -401,7 +401,7 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
   </div>
   <div class="cat-cta-links reveal" style="transition-delay:.12s">
     {otherCats.map(([slug, c]) => (
-      <a href={`/${slug}`}>
+      <a href={`/${slug}/`}>
         <div class="lbl">
           <span>{c.num} Category</span>
           <strong>{c.label} — {c.ko}</strong>

@@ -32,7 +32,7 @@ const catSlug: Record<string, string> = {
   'Tech & Gear':   'tech-gear',
   'Dev & Quant':   'dev-quant',
 };
-const backHref = `/${catSlug[post.data.category] ?? ''}`;
+const backHref = `/${catSlug[post.data.category] ?? ''}/`;
 ---
 
 <Layout title={`${post.data.title} — 다다노트`} description={post.data.summary} ogImage={post.data.image}>
@@ -102,6 +102,23 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
 .article-body .img-row img { flex: 1; width: 50%; margin: 0; max-height: 480px; }
 .image-credit { font-size: 11px; color: oklch(0.55 0 0); text-align: right; padding: 6px 12px 0; }
 .image-credit a { color: inherit; }
+
+/* ── Disclaimer ──────────────────────────────────── */
+.article-disclaimer {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin: 0 0 40px; padding: 16px 20px;
+  background: oklch(0.96 0.008 85);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--muted);
+  border-radius: 6px;
+}
+.article-disclaimer .disc-mark {
+  font-size: 14px; color: var(--muted); line-height: 1.6; flex-shrink: 0;
+}
+.article-disclaimer p {
+  font-family: var(--sans); font-size: 13px; line-height: 1.65;
+  color: var(--ink-2); margin: 0;
+}
 
 /* ── Body typography ─────────────────────────────── */
 .article-body {
@@ -330,6 +347,14 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
   <!-- Top ad -->
   <Adsense />
 
+  <!-- Disclaimer (e.g. 투자 정보 면책) -->
+  {post.data.disclaimer && (
+    <aside class="article-disclaimer">
+      <span class="disc-mark">ⓘ</span>
+      <p set:html={post.data.disclaimer}></p>
+    </aside>
+  )}
+
   <!-- Body -->
   <div class="article-body">
     <Content />
@@ -344,7 +369,7 @@ const backHref = `/${catSlug[post.data.category] ?? ''}`;
       <p class="related-label">같은 카테고리의 다른 글</p>
       <div class="related-grid">
         {related.map(p => (
-          <a href={`/posts/${p.id}`} class="related-card">
+          <a href={`/posts/${p.id}/`} class="related-card">
             <span class="related-card-cat">{p.data.category}</span>
             <span class="related-card-title">{p.data.title}</span>
             <span class="related-card-date">

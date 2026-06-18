@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0f7ff"/>
+      <stop offset="100%" style="stop-color:#e8f4f0"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#3b82f6" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- 격자 -->
+  <g stroke="#d1e3f8" stroke-width="1" opacity="0.5">
+    <line x1="0" y1="120" x2="1200" y2="120"/>
+    <line x1="0" y1="240" x2="1200" y2="240"/>
+    <line x1="0" y1="360" x2="1200" y2="360"/>
+    <line x1="0" y1="480" x2="1200" y2="480"/>
+  </g>
+
+  <!-- 깔때기(퍼널) 단계 -->
+  <g font-family="sans-serif" text-anchor="middle">
+    <!-- 입력 -->
+    <rect x="120" y="170" width="200" height="64" rx="12" fill="white" filter="url(#shadow)"/>
+    <text x="220" y="198" font-size="13" fill="#64748b">퀀트 신호 후보</text>
+    <text x="220" y="222" font-family="monospace" font-size="20" fill="#1e40af" font-weight="700">약 25개</text>
+
+    <!-- 1.5단계 -->
+    <rect x="380" y="160" width="210" height="84" rx="12" fill="white" filter="url(#shadow)"/>
+    <rect x="380" y="160" width="6" height="84" rx="3" fill="#22c55e"/>
+    <text x="488" y="186" font-size="12" fill="#64748b">1.5단계 · Gemini 뉴스</text>
+    <text x="488" y="210" font-size="14" fill="#1e3a5f" font-weight="600">거래정지·악재 제외</text>
+    <text x="488" y="232" font-family="monospace" font-size="16" fill="#16a34a">→ 약 20개</text>
+
+    <!-- 2단계 -->
+    <rect x="650" y="160" width="210" height="84" rx="12" fill="white" filter="url(#shadow)"/>
+    <rect x="650" y="160" width="6" height="84" rx="3" fill="#3b82f6"/>
+    <text x="758" y="186" font-size="12" fill="#64748b">2단계 · 종합 스코어</text>
+    <text x="758" y="210" font-size="14" fill="#1e3a5f" font-weight="600">7점 이상 통과</text>
+    <text x="758" y="232" font-family="monospace" font-size="16" fill="#2563eb">→ 약 5개</text>
+
+    <!-- 3단계 -->
+    <rect x="920" y="170" width="180" height="64" rx="12" fill="#1e3a5f" filter="url(#shadow)"/>
+    <text x="1010" y="196" font-size="12" fill="#cbd5e1">3단계 · 최종 판단</text>
+    <text x="1010" y="221" font-family="monospace" font-size="18" fill="#ffffff" font-weight="700">0–3개</text>
+
+    <!-- 화살표 -->
+    <g stroke="#94a3b8" stroke-width="2.5" fill="none" stroke-linecap="round">
+      <path d="M322 202 L376 202"/><path d="M592 202 L646 202"/><path d="M862 202 L916 202"/>
+    </g>
+    <g fill="#94a3b8">
+      <path d="M376 202 l-9 -5 v10 z"/><path d="M646 202 l-9 -5 v10 z"/><path d="M916 202 l-9 -5 v10 z"/>
+    </g>
+  </g>
+
+  <!-- 비용 라벨 -->
+  <g font-family="sans-serif">
+    <rect x="380" y="300" width="480" height="40" rx="10" fill="#dcfce7" opacity="0.8"/>
+    <text x="620" y="326" text-anchor="middle" font-size="14" fill="#15803d" font-weight="600">무료 모델로 많이 거르고 · 비싼 모델은 끝에서 조금만</text>
+  </g>
+
+  <!-- 메인 텍스트 -->
+  <text x="600" y="560" text-anchor="middle" font-family="sans-serif" font-size="30" fill="#1e3a5f" font-weight="700" letter-spacing="-0.5">AI 판단 파이프라인</text>
+  <text x="600" y="598" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#475569">후보를 3단계로 거르는 필터링 설계 — 시리즈 5편</text>
+</svg>
