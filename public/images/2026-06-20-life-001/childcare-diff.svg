@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc"/>
+      <stop offset="100%" style="stop-color:#eef7f1"/>
+    </linearGradient>
+    <filter id="sh2"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#1e293b" flood-opacity="0.1"/></filter>
+  </defs>
+  <rect width="1200" height="520" fill="url(#bg2)"/>
+
+  <text x="600" y="80" text-anchor="middle" font-family="sans-serif" font-size="26" font-weight="700" fill="#1e293b">만 0세, 어린이집 보내도 매달 현금이 들어옵니다</text>
+
+  <!-- 수식: 100만 - 58.4만 = 41.6만 -->
+  <g font-family="sans-serif" text-anchor="middle">
+    <!-- 부모급여 -->
+    <rect x="110" y="180" width="280" height="150" rx="16" fill="#ffffff" filter="url(#sh2)"/>
+    <text x="250" y="225" font-size="17" fill="#64748b">부모급여</text>
+    <text x="250" y="285" font-size="44" font-weight="800" fill="#1e293b">100만 원</text>
+
+    <text x="435" y="270" font-size="46" font-weight="700" fill="#94a3b8">−</text>
+
+    <!-- 보육료 바우처 -->
+    <rect x="480" y="180" width="280" height="150" rx="16" fill="#ffffff" filter="url(#sh2)"/>
+    <text x="620" y="225" font-size="17" fill="#64748b">보육료 바우처</text>
+    <text x="620" y="285" font-size="44" font-weight="800" fill="#64748b">58.4만 원</text>
+
+    <text x="805" y="270" font-size="46" font-weight="700" fill="#94a3b8">=</text>
+
+    <!-- 현금 차액 -->
+    <rect x="850" y="180" width="290" height="150" rx="16" fill="#166534" filter="url(#sh2)"/>
+    <text x="995" y="225" font-size="17" fill="#bbf7d0">매달 통장 현금</text>
+    <text x="995" y="285" font-size="48" font-weight="800" fill="#ffffff">41.6만 원</text>
+  </g>
+
+  <text x="600" y="430" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#475569">보육료가 먼저 지원되고, 남는 금액이 현금으로 입금되는 구조입니다</text>
+  <text x="600" y="465" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#94a3b8">※ 만 1세는 보육료(51.5만)가 부모급여(50만)보다 커 현금 차액은 없지만, 추가 자부담도 없습니다</text>
+</svg>
