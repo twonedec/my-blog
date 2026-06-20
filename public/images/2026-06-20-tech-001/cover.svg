@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f4f6f9"/>
+      <stop offset="100%" style="stop-color:#eceff3"/>
+    </linearGradient>
+    <filter id="sh"><feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#1e293b" flood-opacity="0.12"/></filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- 두 바디(같은 몸) -->
+  <g filter="url(#sh)">
+    <rect x="160" y="190" width="360" height="210" rx="18" fill="#ffffff"/>
+    <rect x="680" y="190" width="360" height="210" rx="18" fill="#1e293b"/>
+  </g>
+  <!-- 렌즈 마운트 표현 -->
+  <circle cx="340" cy="295" r="58" fill="none" stroke="#cbd5e1" stroke-width="10"/>
+  <circle cx="340" cy="295" r="30" fill="#e2e8f0"/>
+  <circle cx="860" cy="295" r="58" fill="none" stroke="#475569" stroke-width="10"/>
+  <circle cx="860" cy="295" r="30" fill="#334155"/>
+
+  <!-- 라벨 -->
+  <text x="340" y="240" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#1e293b">A7C II</text>
+  <text x="340" y="372" text-anchor="middle" font-family="monospace" font-size="20" fill="#2563eb" font-weight="700">33MP</text>
+  <text x="860" y="240" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#ffffff">A7CR</text>
+  <text x="860" y="372" text-anchor="middle" font-family="monospace" font-size="22" fill="#fbbf24" font-weight="700">61MP</text>
+
+  <!-- vs -->
+  <text x="600" y="305" text-anchor="middle" font-family="serif" font-style="italic" font-size="40" fill="#94a3b8">vs</text>
+
+  <!-- 핵심 메시지 -->
+  <text x="600" y="100" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="600" fill="#64748b" letter-spacing="2">같은 몸 · 다른 센서</text>
+
+  <text x="600" y="490" text-anchor="middle" font-family="sans-serif" font-size="33" font-weight="700" fill="#1e293b" letter-spacing="-0.5">A7C II 사용자가 본 A7CR</text>
+  <text x="600" y="530" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#475569">갈아탈 이유와 안 갈아탈 이유 — 다다노트</text>
+</svg>

@@ -172,6 +172,12 @@ const backHref = `/${catSlug[post.data.category] ?? ''}/`;
   box-shadow: 0 2px 16px oklch(0.15 0.01 85 / .06);
   max-height: 800px; object-fit: contain; background: var(--bg);
 }
+.article-body figure { margin: 2.4em 0; }
+.article-body figure img { margin: 0; }
+.article-body figcaption {
+  font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+  text-align: center; margin-top: 10px; line-height: 1.5;
+}
 .article-body table {
   width: 100%; border-collapse: collapse; font-size: 14px;
   margin: 1.8em 0;
