@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf7ff"/>
+      <stop offset="1" stop-color="#f1ecff"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#a073e8"/>
+    </marker>
+    <marker id="arrowback" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#b9b3cf"/>
+    </marker>
+  </defs>
+
+  <rect width="860" height="380" rx="18" fill="url(#bg)"/>
+  <text x="430" y="48" text-anchor="middle" font-size="24" font-weight="800" fill="#4a3b73">API 키는 서버 뒤에 숨긴다</text>
+  <text x="430" y="76" text-anchor="middle" font-size="14" fill="#8b84a8">키는 브라우저로 절대 내려보내지 않고, 서버가 대신 호출</text>
+
+  <!-- 브라우저 -->
+  <rect x="40" y="140" width="210" height="120" rx="14" fill="#ffffff" stroke="#d9cdf5" stroke-width="2"/>
+  <text x="145" y="178" text-anchor="middle" font-size="34">🖥️</text>
+  <text x="145" y="212" text-anchor="middle" font-size="17" font-weight="700" fill="#4a3b73">브라우저</text>
+  <text x="145" y="236" text-anchor="middle" font-size="13" fill="#8b84a8">입력만 전달 · 키 없음</text>
+
+  <!-- 내 서버 -->
+  <rect x="325" y="125" width="210" height="150" rx="14" fill="#ffffff" stroke="#a073e8" stroke-width="2.5"/>
+  <text x="430" y="165" text-anchor="middle" font-size="34">🔒</text>
+  <text x="430" y="199" text-anchor="middle" font-size="17" font-weight="700" fill="#4a3b73">내 서버 (Flask)</text>
+  <text x="430" y="223" text-anchor="middle" font-size="13" fill="#8b84a8">.env 에 키 보관</text>
+  <text x="430" y="247" text-anchor="middle" font-size="13" fill="#8b84a8">호출 횟수 제한 적용</text>
+
+  <!-- AI -->
+  <rect x="610" y="140" width="210" height="120" rx="14" fill="#ffffff" stroke="#d9cdf5" stroke-width="2"/>
+  <text x="715" y="178" text-anchor="middle" font-size="34">🤖</text>
+  <text x="715" y="212" text-anchor="middle" font-size="17" font-weight="700" fill="#4a3b73">AI 모델</text>
+  <text x="715" y="236" text-anchor="middle" font-size="13" fill="#8b84a8">사주 해석 생성</text>
+
+  <!-- 화살표: 정방향 -->
+  <line x1="250" y1="185" x2="320" y2="185" stroke="#a073e8" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="285" y="176" text-anchor="middle" font-size="11" fill="#a073e8">입력</text>
+  <line x1="535" y1="185" x2="605" y2="185" stroke="#a073e8" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="570" y="176" text-anchor="middle" font-size="11" fill="#a073e8">키로 호출</text>
+
+  <!-- 화살표: 역방향 결과 -->
+  <line x1="605" y1="220" x2="535" y2="220" stroke="#b9b3cf" stroke-width="2" marker-end="url(#arrowback)"/>
+  <line x1="320" y1="220" x2="250" y2="220" stroke="#b9b3cf" stroke-width="2" marker-end="url(#arrowback)"/>
+  <text x="430" y="312" text-anchor="middle" font-size="13" fill="#9a93b3">← 결과 텍스트만 다시 화면으로</text>
+</svg>
