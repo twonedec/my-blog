@@ -7,6 +7,7 @@ const postsCollection = defineCollection({
     title: z.string(),
     summary: z.string(),
     date: z.date(),
+    updated: z.date().optional(),
     image: z.string().optional(),
     category: z.enum(['Travel & Kids', 'Life & Policy', 'Tech & Gear', 'Dev & Quant']),
     draft: z.boolean().optional().default(false),
