@@ -260,9 +260,7 @@ const backHref = `/${catSlug[post.data.category] ?? ''}/`;
 
 /* ── TOC sidebar ─────────────────────────────────── */
 .article-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 740px);
-  justify-content: center;
+  display: block;
 }
 .article-toc {
   display: none;
@@ -292,6 +290,7 @@ const backHref = `/${catSlug[post.data.category] ?? ''}/`;
 }
 @media (min-width: 1100px) {
   .article-layout {
+    display: grid;
     grid-template-columns: 200px minmax(0, 740px);
     gap: 0 56px;
     max-width: 1060px;
