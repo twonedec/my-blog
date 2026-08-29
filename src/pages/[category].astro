@@ -45,7 +45,7 @@ const catMap: Record<string, {
 };
 
 export async function getStaticPaths() {
-  const catMap2 = ['travel-kids','life-policy','tech-gear','dev-quant'];
+  const catMap2 = ['tech-gear', 'dev-quant'];
   return catMap2.map(slug => ({ params: { category: slug } }));
 }
 
@@ -63,7 +63,8 @@ const listPosts = posts.slice(1);
 const readMin = (body: string) => Math.max(1, Math.ceil(body.split(/\s+/).length / 200));
 const fmtDate = (d: Date) => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
-const otherCats = Object.entries(catMap).filter(([slug]) => slug !== category);
+const allowedSlugs = ['tech-gear', 'dev-quant'];
+const otherCats = Object.entries(catMap).filter(([slug]) => allowedSlugs.includes(slug) && slug !== category);
 const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.').replace(/\s/g, '');
 ---
 
