@@ -82,23 +82,28 @@ AI가 필요한 라이브러리 자동 설치부터, 내 컴퓨터 웹 브라우
    - 파이썬 설치 여부를 먼저 체크하고, 미설치 시 다운로드 링크 안내 후 종료
    - 설치되어 있다면 'pip install flask requests'를 자동 실행하여 의존성을 맞춘 뒤, 즉시 app.py를 실행하도록 작성할 것.
 5. 아래 기존 네이버 API 로직(HMAC 서명, parse_cnt, 포화도 등급 판정)을 100% 원형 보존하여 이식할 것.
+6. 원클릭 자동 실행: 코드 생성이 완료되면 직접 백그라운드 터미널 명령으로 서버를 구동하고 브라우저(http://localhost:5000)를 즉시 오픈할 것.
 
 [내 네이버 API 키]
-- CUSTOMER_ID: "여기에_고객ID_7자리_입력"
-- SEARCHAD_API_KEY: "여기에_검색광고_API키_입력"
-- SEARCHAD_SECRET_KEY: "여기에_검색광고_SECRET키_입력"
-- NAVER_CLIENT_ID: "여기에_NCP_Client_ID_입력"
-- NAVER_CLIENT_SECRET: "여기에_NCP_Client_Secret_입력"
+- CUSTOMER_ID: "YOUR_CUSTOMER_ID" # (검색광고 고객 ID 7자리 숫자)
+- SEARCHAD_API_KEY: "YOUR_SEARCHAD_API_KEY" # (검색광고 API 라이선스 키)
+- SEARCHAD_SECRET_KEY: "YOUR_SEARCHAD_SECRET_KEY" # (검색광고 비밀키)
+- NAVER_CLIENT_ID: "YOUR_NCP_CLIENT_ID" # (네이버 클라우드 Client ID)
+- NAVER_CLIENT_SECRET: "YOUR_NCP_CLIENT_SECRET" # (네이버 클라우드 Secret)
 
 [기본 네이버 API 조회 로직 (35줄 파이썬)]
 import time, requests, base64, hmac, hashlib
 
 def get_keyword_scout(keyword: str):
+    # 키 누락 및 한글 플레이스홀더 오류 방어
+    if any(not k.isascii() or "YOUR" in k or "입력" in k for k in [CUSTOMER_ID, SEARCHAD_API_KEY, SEARCHAD_SECRET_KEY, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET]):
+        return {"keyword": keyword, "pc": 0, "mob": 0, "total_search": 0, "doc_count": 0, "sat_ratio": 0, "grade": "⚠️ API 키를 먼저 입력해주세요"}
+
     # ① 네이버 검색광고 API (월간 검색량)
     timestamp = str(int(time.time() * 1000))
     path = "/keywordstool"
     sig = base64.b64encode(hmac.new(SEARCHAD_SECRET_KEY.encode(), f"{timestamp}.GET.{path}".encode(), hashlib.sha256).digest()).decode()
-    headers_ad = {"X-Timestamp": timestamp, "X-API-KEY": SEARCHAD_API_KEY, "X-Customer": SEARCHAD_CUSTOMER_ID, "X-Signature": sig}
+    headers_ad = {"X-Timestamp": timestamp, "X-API-KEY": SEARCHAD_API_KEY, "X-Customer": CUSTOMER_ID, "X-Signature": sig}
     r_ad = requests.get(f"https://api.naver.com{path}", params={"hintKeywords": keyword.replace(" ", ""), "showDetail": "1"}, headers=headers_ad).json()
     item = next((k for k in r_ad.get("keywordList", []) if k.get("relKeyword") == keyword.replace(" ", "")), None)
     
@@ -110,15 +115,15 @@ def get_keyword_scout(keyword: str):
     mob = parse_cnt(item.get("monthlyMobileQcCnt", 0)) if item else 0
     total_search = pc + mob
 
-    # ② 네이버 블로그 검색 API (총 발행 문서수)
+    # ② 네이버 블로그 검색 API (총 발행 문서수 - 최신 NCP API HUB 우선)
     headers_nv = {"X-NCP-APIGW-API-KEY-ID": NAVER_CLIENT_ID, "X-NCP-APIGW-API-KEY": NAVER_CLIENT_SECRET}
-    if not NAVER_CLIENT_ID.startswith("ncp_") and len(NAVER_CLIENT_ID) <= 20:
+    url_nv = "https://naverapihub.apigw.ntruss.com/search/v1/blog"
+    res_nv = requests.get(url_nv, params={"query": keyword, "display": 1}, headers=headers_nv)
+    if res_nv.status_code != 200:
         headers_nv = {"X-Naver-Client-Id": NAVER_CLIENT_ID, "X-Naver-Client-Secret": NAVER_CLIENT_SECRET}
         url_nv = "https://openapi.naver.com/v1/search/blog.json"
-    else:
-        url_nv = "https://naverapihub.apigw.ntruss.com/search/v1/blog"
-    r_nv = requests.get(url_nv, params={"query": keyword, "display": 1}, headers=headers_nv).json()
-    doc_count = r_nv.get("total", 0)
+        res_nv = requests.get(url_nv, params={"query": keyword, "display": 1}, headers=headers_nv)
+    doc_count = res_nv.json().get("total", 0) if res_nv.status_code == 200 else 0
 
     # ③ 경쟁 포화도 계산
     sat_ratio = round(doc_count / max(total_search, 1), 2)
@@ -130,6 +135,17 @@ def get_keyword_scout(keyword: str):
 ```
 
 > 💡 **웹 브라우저로 ChatGPT를 쓰시는 분을 위한 팁**: 브라우저 대화창에 넣으실 때는 맨 마지막에 `"완성된 파일들을 압축한 keyword_tool.zip 다운로드 링크를 제공해줘"`라는 한 줄을 덧붙이시면, 챗GPT가 다운로드 버튼을 대화창에 직접 만들어줍니다!
+
+---
+
+## 💡 비전공자를 위한 AI 실전 구동 & 재실행 완벽 가이드 (FAQ)
+
+* **Q1. AI가 파일을 다 만들었다고 하는데 브라우저가 안 떠요. 어떻게 실행하나요?**  
+  ➔ 파이썬 명령어나 검은 터미널 창을 몰라도 전혀 걱정 마세요! 지금 대화 중인 AI(Claude, Antigravity, ChatGPT 등) 채팅창에 **"방금 만든 프로그램 지금 바로 터미널에서 백그라운드로 실행해서 브라우저 띄워줘"**라고 한 줄만 치시면 AI가 알아서 서버를 켜고 화면을 띄워줍니다.
+* **Q2. 실행 도중 빨간 글씨 오류나 통신 에러가 발생하면요?**  
+  ➔ 본문에 검증된 100% 정답 코드가 다 들어있기 때문에 절대 당황하실 필요 없습니다. 터미널이나 화면에 뜬 오류 문구 전체를 그대로 복사해서 AI 대화창에 **"이 에러 수정해서 다시 실행해줘"**라고 던지시면 10초 만에 완벽히 고쳐줍니다.
+* **Q3. 내일 컴퓨터를 껐다가 다시 켰을 때는 어떻게 다시 여나요?**  
+  ➔ 코드를 다시 짤 필요가 전혀 없습니다! 기존에 작업했던 AI 대화창을 다시 열고 **"어제 만든 이 프로그램(app.py) 서버 다시 실행해서 브라우저 열어줘"**라고만 요청하시면 즉시 다시 켜집니다.
 
 ---
 

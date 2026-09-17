@@ -57,6 +57,8 @@ $$\text{PEG (Price/Earnings to Growth)} = \frac{\text{PER (주가수익비율)}}
      * 0.5 < PEG <= 1.0 ➔ "⭐ 우량 저평가 성장주 (매수 적기)"
      * 1.0 < PEG <= 1.5 ➔ "💡 적정 주가 구간"
      * PEG > 1.5 ➔ "⚠️ 고평가 주의 (성장 대비 과열)"
+     * 추정치 부재 ➔ "⚠️ 컨센서스 부재 (증권사 리포트 없는 종목은 DART 재무제표 필요)"
+     * 역성장 ➔ "🚫 이익 역성장/정체 (성장주 제외)"
 3. 자동 브라우저 실행: 서버 기동 시 webbrowser 모듈로 http://localhost:5002 자동 오픈.
 
 [피터 린치 PEG 진단 로직 (파이썬)]
@@ -65,25 +67,63 @@ import requests
 def evaluate_lynch_peg(ticker: str):
     url = f"https://m.stock.naver.com/api/stock/{ticker}/integration"
     headers = {"User-Agent": "Mozilla/5.0"}
-    r = requests.get(url, headers=headers, timeout=5)
-    data = r.json()
+    try:
+        r = requests.get(url, headers=headers, timeout=5)
+        data = r.json()
+    except Exception as e:
+        return {"name": ticker, "per": 0, "growth": "오류", "peg": "오류", "grade": f"⚠️ 통신 실패 ({str(e)})"}
+
     name = data.get("stockName", ticker)
     total_infos = {it.get("key"): it.get("value") for it in data.get("totalInfos", [])}
     
-    per_raw = total_infos.get("PER", "15").replace("배", "").replace(",", "").strip()
+    per_raw = total_infos.get("PER", "0").replace("배", "").replace(",", "").strip()
     try: per = float(per_raw)
-    except: per = 15.0
+    except: per = 0.0
 
-    eps_curr = float(total_infos.get("EPS", "0").replace("원", "").replace(",", "").strip() or 1)
-    eps_est = float(total_infos.get("추정EPS", "0").replace("원", "").replace(",", "").strip() or 0)
-    growth_rate = round(((eps_est - eps_curr) / eps_curr) * 100, 1) if eps_est > eps_curr else 25.0
+    eps_raw = total_infos.get("EPS", "0").replace("원", "").replace(",", "").strip()
+    try: eps_curr = float(eps_raw)
+    except: eps_curr = 0.0
 
-    peg = round(per / max(growth_rate, 1), 2)
-    if peg <= 0.5: grade = "💎 10루타 후보 (PEG 0.5 이하)"
-    elif peg <= 1.0: grade = "⭐ 우수 성장주 (PEG 1.0 이하)"
-    else: grade = "⚠️ 고평가 주의 (PEG 1.0 초과)"
-    return {"name": name, "per": per, "growth": growth_rate, "peg": peg, "grade": grade}
+    est_raw = total_infos.get("추정EPS", "").replace("원", "").replace(",", "").strip()
+    
+    # 1. 증권사 추정치(컨센서스)가 없는 중소형주
+    if not est_raw or est_raw in ["N/A", "-", "0"]:
+        return {"name": name, "per": per, "growth": "N/A", "peg": "N/A", "grade": "⚠️ 컨센서스 부재 (증권사 리포트 없음)"}
+
+    try: eps_est = float(est_raw)
+    except: eps_est = 0.0
+
+    # 2. 적자 기업
+    if eps_curr <= 0:
+        return {"name": name, "per": per, "growth": "N/A", "peg": "N/A", "grade": "🚫 적자 기업 (성장주 제외)"}
+
+    # 3. 역성장 또는 성장 정체
+    if eps_est <= eps_curr:
+        decline = round(((eps_est - eps_curr) / eps_curr) * 100, 1)
+        return {"name": name, "per": per, "growth": f"{decline}%", "peg": "역성장", "grade": "⚠️ 이익 역성장/정체 (성장주 제외)"}
+
+    # 4. 정상 성장 기업 (피터 린치 공식 산출)
+    growth_rate = round(((eps_est - eps_curr) / eps_curr) * 100, 1)
+    peg = round(per / max(growth_rate, 0.1), 2)
+
+    if peg <= 0.5: grade = "💎 피터 린치 극단적 저평가 (10루타 후보)"
+    elif peg <= 1.0: grade = "⭐ 우량 저평가 성장주 (매수 적기)"
+    elif peg <= 1.5: grade = "💡 적정 주가 구간"
+    else: grade = "⚠️ 고평가 주의 (성장 대비 과열)"
+
+    return {"name": name, "per": per, "growth": f"{growth_rate}%", "peg": peg, "grade": grade}
 ```
+
+---
+
+## 💡 비전공자를 위한 AI 실전 구동 & 재실행 완벽 가이드 (FAQ)
+
+* **Q1. AI가 파일을 다 만들었다고 하는데 브라우저가 안 떠요. 어떻게 실행하나요?**  
+  ➔ 파이썬 명령어나 검은 터미널 창을 몰라도 전혀 걱정 마세요! 지금 대화 중인 AI(Claude, Antigravity, ChatGPT 등) 채팅창에 **"방금 만든 프로그램 지금 바로 터미널에서 백그라운드로 실행해서 브라우저 띄워줘"**라고 한 줄만 치시면 AI가 알아서 서버를 켜고 화면을 띄워줍니다.
+* **Q2. 실행 도중 빨간 글씨 오류나 통신 에러가 발생하면요?**  
+  ➔ 본문에 검증된 100% 정답 코드가 다 들어있기 때문에 절대 당황하실 필요 없습니다. 터미널이나 화면에 뜬 오류 문구 전체를 그대로 복사해서 AI 대화창에 **"이 에러 수정해서 다시 실행해줘"**라고 던지시면 10초 만에 완벽히 고쳐줍니다.
+* **Q3. 내일 컴퓨터를 껐다가 다시 켰을 때는 어떻게 다시 여나요?**  
+  ➔ 코드를 다시 짤 필요가 전혀 없습니다! 기존에 작업했던 AI 대화창을 다시 열고 **"어제 만든 이 프로그램(app_peter_lynch.py) 서버 다시 실행해서 브라우저 열어줘"**라고만 요청하시면 즉시 다시 켜집니다.
 
 ---
 
