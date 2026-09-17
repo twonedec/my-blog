@@ -68,7 +68,7 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
 /* ── Header ─────────────────────────────────────── */
 .lab-header { margin-bottom: 36px; }
 .lab-title {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 400;
   font-size: clamp(28px, 3.8vw, 42px);
   line-height: 1.25;
@@ -78,11 +78,11 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   text-wrap: pretty;
 }
 .lab-lead {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: clamp(16px, 1.3vw, 18px);
   line-height: 1.75;
   color: var(--ink-2);
-  font-weight: 300;
+  font-weight: 400;
   border-left: 3px solid #2563eb;
   padding-left: 18px;
   margin-bottom: 24px;
@@ -90,16 +90,16 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
 
 /* ── Body Typography ────────────────────────────── */
 .lab-body {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: clamp(16px, 1.25vw, 18px);
-  line-height: 1.95;
+  line-height: 1.75;
   color: var(--ink);
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 56px;
 }
 .lab-body p { margin-bottom: 1.6em; text-wrap: pretty; }
 .lab-body h2 {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 500;
   font-size: clamp(20px, 2vw, 25px);
   letter-spacing: -0.02em;
@@ -198,7 +198,7 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   color: #94a3b8;
 }
 .kmong-cta-title {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 22px;
   font-weight: 400;
   color: #ffffff;
@@ -239,7 +239,7 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   margin-bottom: 24px;
 }
 .recommended-title {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 21px;
   font-weight: 500;
   color: var(--ink);
@@ -274,7 +274,7 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
   text-transform: uppercase;
 }
 .rec-title {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 16.5px;
   font-weight: 500;
   line-height: 1.35;
@@ -391,7 +391,7 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
 
     <div class="home-jump-btn">
       <a href="/">
-        <span>📚 dadanote 전체 엔지니어링 글 둘러보기</span>
+        <span> dadanote 전체 엔지니어링 글 둘러보기</span>
         <span>→</span>
       </a>
     </div>
@@ -408,10 +408,10 @@ document.addEventListener('DOMContentLoaded', () => {
     banner.className = 'copy-banner';
     banner.innerHTML = `
       <div class="copy-banner-label">
-        <span>✨</span> TWONELAB PROMPT · 복사해서 바로 사용하세요
+        <span></span> TWONELAB PROMPT · 복사해서 바로 사용하세요
       </div>
       <button class="copy-action-btn" id="copy-btn-${idx}">
-        <span class="btn-icon">📋</span>
+        <span class="btn-icon"></span>
         <span class="btn-text">복사하기</span>
       </button>
     `;
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           btn.classList.remove('copied');
           textSpan.innerText = '복사하기';
-          iconSpan.innerText = '📋';
+          iconSpan.innerText = '';
         }, 2000);
       });
     });
