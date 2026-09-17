@@ -14,8 +14,8 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 
 // 지능형 맞춤 큐레이션 추천 시스템
-const allLabPosts = await getCollection('lab', ({ data }) => !data.draft);
-const allDevPosts = await getCollection('posts', ({ data }) => !data.draft && (data.category === 'Dev & Quant' || data.category === 'Tech & Gear'));
+const allDevPosts = (await getCollection('posts', ({ data }) => !data.draft && (data.category === 'Dev & Quant' || data.category === 'Tech & Gear')))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const isStockPost = post.id.includes('stock') || (post.data.tags && post.data.tags.some(t => t.includes('주식') || t.includes('퀀트')));
 
@@ -31,8 +31,8 @@ let sectionTitle = "함께 읽으면 좋은 twonelab의 추천 테크 기록";
 
 if (isStockPost) {
   sectionTitle = "함께 읽으면 좋은 실전 퀀트 & 자동화 엔지니어링";
-  const priorityStockIds = ['2026-05-15-dev-001', '2026-05-28-dev-001', '2026-06-17-dev-001', '2026-06-18-dev-001', '2026-06-18-dev-002'];
-  const matchedPosts = allDevPosts.filter(p => priorityStockIds.includes(p.id));
+  const priorityStockIds = ['2026-05-15-dev-001', '2026-05-28-dev-001', '2026-06-17-dev-001'];
+  const matchedPosts = priorityStockIds.map(id => allDevPosts.find(p => p.id === id)).filter(Boolean) as typeof allDevPosts;
   const otherPosts = allDevPosts.filter(p => !priorityStockIds.includes(p.id));
   const pool = [...matchedPosts, ...otherPosts];
 
@@ -43,30 +43,19 @@ if (isStockPost) {
     summary: p.data.summary,
   }));
 } else {
-  sectionTitle = "함께 읽으면 좋은 블로그 자동화 & 개발자 실전 기록";
-  // 1. 다른 블로그 lab 글 우선 매칭
-  const otherLabPosts = allLabPosts.filter(p => p.id !== post.id && p.id.includes('blog'));
-  
-  // 2. 대표적인 개발/자동화 포스트 매칭
-  const priorityDevIds = ['2026-06-29-dev-001', '2026-05-15-dev-001', '2026-06-17-dev-001'];
-  const matchedDev = allDevPosts.filter(p => priorityDevIds.includes(p.id));
+  sectionTitle = "함께 읽으면 좋은 dadanote 실전 엔지니어링 기록";
+  // 블로그 글인 경우: dadanote 본진의 대표 개발/자동화 실전기 3편을 엄선 추천
+  const priorityDevIds = ['2026-06-29-dev-001', '2026-05-15-dev-001', '2026-06-02-dev-001'];
+  const matchedDev = priorityDevIds.map(id => allDevPosts.find(p => p.id === id)).filter(Boolean) as typeof allDevPosts;
+  const otherDev = allDevPosts.filter(p => !priorityDevIds.includes(p.id));
+  const pool = [...matchedDev, ...otherDev];
 
-  const pool: RecommendedItem[] = [
-    ...otherLabPosts.map(p => ({
-      url: `/lab/${p.id}/`,
-      badge: 'twonelab 연구소',
-      title: p.data.title,
-      summary: p.data.summary,
-    })),
-    ...matchedDev.map(p => ({
-      url: `/posts/${p.id}/`,
-      badge: 'Dev & Quant',
-      title: p.data.title,
-      summary: p.data.summary,
-    }))
-  ];
-
-  recommendedItems = pool.slice(0, 3);
+  recommendedItems = pool.slice(0, 3).map(p => ({
+    url: `/posts/${p.id}/`,
+    badge: 'Dev & Quant',
+    title: p.data.title,
+    summary: p.data.summary,
+  }));
 }
 
 // CTA 박스 동적 분기
