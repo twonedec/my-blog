@@ -35,7 +35,7 @@ const catSlug: Record<string, string> = {
 const backHref = `/${catSlug[post.data.category] ?? ''}/`;
 ---
 
-<Layout title={`${post.data.title} — twonelab`} description={post.data.summary} ogImage={post.data.image}>
+<Layout title={`${post.data.title} — 다다노트`} description={post.data.summary} ogImage={post.data.image}>
 <script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "BlogPosting",
@@ -45,10 +45,10 @@ const backHref = `/${catSlug[post.data.category] ?? ''}/`;
   "url": new URL(`/posts/${post.id}/`, Astro.site).href,
   "datePublished": post.data.date.toISOString(),
   "dateModified": post.data.date.toISOString(),
-  "author": { "@type": "Person", "name": "twonelab", "url": new URL('/about/', Astro.site).href },
+  "author": { "@type": "Person", "name": "다다노트", "url": new URL('/about/', Astro.site).href },
   "publisher": {
     "@type": "Organization",
-    "name": "twonelab",
+    "name": "다다노트",
     "logo": { "@type": "ImageObject", "url": new URL('/logo.png', Astro.site).href }
   },
   "mainEntityOfPage": { "@type": "WebPage", "@id": new URL(`/posts/${post.id}/`, Astro.site).href }
@@ -391,7 +391,7 @@ const backHref = `/${catSlug[post.data.category] ?? ''}/`;
     <a href={backHref} class="article-footer-back">
       ← {post.data.category} 목록으로
     </a>
-    <span class="article-footer-cat">twoneworks.com</span>
+    <span class="article-footer-cat">dadanote.net</span>
   </footer>
 
 </div>

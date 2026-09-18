@@ -28,7 +28,7 @@ const byYear = posts.reduce<Record<number, typeof posts>>((acc, p) => {
 const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 ---
 
-<Layout title="아카이브 — twonelab">
+<Layout title="아카이브 — 다다노트">
 <style>
 .arch-header {
   padding: 72px 56px 60px;
@@ -147,7 +147,7 @@ const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 <header class="arch-header">
   <div class="arch-strip">
     <div style="display:flex;gap:10px;align-items:baseline">
-      <a href="/">twonelab</a>
+      <a href="/">다다노트</a>
       <span style="opacity:.5">/</span>
       <span style="color:var(--ink)">Archive</span>
     </div>
