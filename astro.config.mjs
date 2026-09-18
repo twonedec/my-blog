@@ -19,12 +19,12 @@ for (const file of fs.readdirSync(POSTS_DIR)) {
          || fm.match(/^date:\s*["']?(\d{4}-\d{2}-\d{2})/m);
   if (!m) continue;
   const iso = new Date(m[1] + 'T00:00:00Z').toISOString();
-  lastmodByUrl[`https://dadanote.net/posts/${file.replace(/\.md$/, '')}/`] = iso;
+  lastmodByUrl[`https://twoneworks.com/posts/${file.replace(/\.md$/, '')}/`] = iso;
   if (iso > latestMod) latestMod = iso;
 }
 
 export default defineConfig({
-  site: 'https://dadanote.net',
+  site: 'https://twoneworks.com',
   trailingSlash: 'always',
   integrations: [sitemap({
     serialize(item) {

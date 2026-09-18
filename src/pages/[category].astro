@@ -68,7 +68,7 @@ const otherCats = Object.entries(catMap).filter(([slug]) => allowedSlugs.include
 const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.').replace(/\s/g, '');
 ---
 
-<Layout title={`${config.label} — 다다노트`} currentCategorySlug={category}>
+<Layout title={`${config.label} — twonelab`} currentCategorySlug={category}>
 <style>
 /* ── Accent scoping ─────────────────────────────── */
 .page-travel { --c-accent: var(--c-travel); }
@@ -294,7 +294,7 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
 <header class="cat-masthead">
   <div class="cat-strip">
     <div class="crumb">
-      <a href="/">다다노트</a>
+      <a href="/">twonelab</a>
       <span class="sep">/</span>
       <span style="color:var(--ink)">{config.label}</span>
     </div>
@@ -398,7 +398,7 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
 <section class="cat-cta">
   <div class="cat-cta-text reveal">
     <h3>다음은 어떤 <em>호흡</em>으로<br>읽어보시겠어요?</h3>
-    <p>네 개의 카테고리, 서로 다른 결의 글들. 어디로 가도 다다노트의 같은 목소리가 이어집니다.</p>
+    <p>전문적인 개발과 기술 장비, 서로 다른 결의 기록. 어디로 가도 twonelab의 깊이 있는 실전 엔지니어링이 이어집니다.</p>
   </div>
   <div class="cat-cta-links reveal" style="transition-delay:.12s">
     {otherCats.map(([slug, c]) => (

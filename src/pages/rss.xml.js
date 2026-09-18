@@ -6,8 +6,8 @@ export async function GET(context) {
   const sorted = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
-    title: '다다노트',
-    description: '엔지니어링, 개발, 자동화, 테크 장비 — 직접 만들고 오래 써본 기록.',
+    title: 'twonelab',
+    description: 'Twoneworks 공식 기술 자료실 & 엔지니어링 아카이브 — 직접 만들고 검증한 실전 기록.',
     site: context.site,
     items: sorted.map(post => ({
       title: post.data.title,

@@ -35,9 +35,10 @@ const countByCat: Record<string, number> = {};
 allPosts.forEach(p => {
   countByCat[p.data.category] = (countByCat[p.data.category] ?? 0) + 1;
 });
+const allLab = await getCollection('lab', ({ data }) => !data.draft);
 ---
 
-<Layout title="다다노트 — 직접 만드는 개발자 아빠의 기록">
+<Layout title="twonelab — Twoneworks 공식 기술 자료실 & 엔지니어링 아카이브">
 <style>
 /* ── Masthead ───────────────────────────────────────── */
 .masthead {
@@ -270,28 +271,28 @@ allPosts.forEach(p => {
 <!-- Masthead -->
 <section class="masthead">
   <div class="masthead-strip reveal">
-    <span>다다노트 &nbsp;·&nbsp; DADANOTE</span>
+    <span>TWONELAB &nbsp;·&nbsp; TWONEWORKS</span>
     <span>{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()}</span>
   </div>
 
   <div class="masthead-inner">
     <div>
-      <p class="hero-eyebrow reveal">MAKER'S NOTE · 다다노트</p>
+      <p class="hero-eyebrow reveal">TECH LAB & ENGINEERING NOTE · TWONELAB</p>
       <h1 class="hero-title">
         <span class="word" id="hw0"><span>만들고,</span></span><br>
-        <span class="word" id="hw1"><span><em>써보고,</em></span></span><br>
-        <span class="word" id="hw2"><span>기록한다.</span></span>
+        <span class="word" id="hw1"><span><em>검증하고,</em></span></span><br>
+        <span class="word" id="hw2"><span>공유한다.</span></span>
       </h1>
     </div>
     <div class="hero-meta reveal" style="transition-delay:.4s">
       <p class="hero-body">
-        필요한 도구는 직접 코딩해 만들고, 장비는 오래 고민해 들인 뒤 솔직하게 씁니다.
-        <em style="font-family:var(--serif);font-style:italic"> — 개발자 아빠가 일상의 문제를 푸는 기록, 다다노트입니다.</em>
+        필요한 도구는 직접 코딩해 만들고, 시스템은 실전에서 검증합니다.
+        <em style="font-family:var(--serif);font-style:italic"> — Twoneworks 공식 기술 자료실 & 엔지니어링 아카이브, twonelab입니다.</em>
       </p>
       <div class="hero-stats">
-        <span>{allPosts.length}편의 글</span>
-        <span>4개의 카테고리</span>
-        <span>기록 중</span>
+        <span>{allPosts.length}편의 기술 아카이브</span>
+        <span>{allLab.length}개의 Lab 배포 자료</span>
+        <span>실전 엔지니어링</span>
       </div>
     </div>
   </div>
@@ -334,7 +335,7 @@ allPosts.forEach(p => {
 <!-- Category Directory -->
 <section class="catdir">
   <div class="section-head reveal">
-    <h2 class="section-title">직접 만들고, 써보고, <em>다녀온 기록</em></h2>
+    <h2 class="section-title">직접 만들고, 검증하고, <em>기록한 기술</em></h2>
     <a href="/archive" class="more-link">모두 보기 →</a>
   </div>
 
