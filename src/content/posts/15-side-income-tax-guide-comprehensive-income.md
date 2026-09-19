@@ -3,6 +3,7 @@ title: "직장인 부수입 세무 상식: 3.3% 원천징수, 5월 종합소득�
 summary: "부수입이 생기면 가장 불안한 것이 '회사에 통보되는지'와 '세금 신고' 문제입니다. 사업소득 3.3% 원천징수 개념부터 건강보험료 연 2,000만 원 기준, 5월 종합소득세 홈택스 신고법까지 명쾌하게 정리합니다."
 date: 2026-09-19
 category: "Side Income"
+image: "/images/side-income/15-side-income-tax-comprehensive.png"
 draft: false
 tags: ["부수입세금", "종합소득세", "3.3원천징수", "직장인부업", "건강보험료"]
 ---

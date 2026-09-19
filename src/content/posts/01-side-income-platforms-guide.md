@@ -3,6 +3,7 @@ title: "직장인 현실 부수입 4대 플랫폼 총정리: 쿠팡, 애드센�
 summary: "월급 외에 매달 10만 원, 30만 원의 부수입 파이프라인을 구축하려는 초보자를 위해, 쿠팡 파트너스·구글 애드센스·크몽·네이버 블로그 4대 실전 플랫폼의 현실적인 수익 구조와 장단점을 비교 분석합니다."
 date: 2026-09-01
 category: "Side Income"
+image: "/images/side-income/01-side-income-platforms.png"
 draft: false
 tags: ["부수입", "직장인부업", "애드센스", "쿠팡파트너스", "크몽", "네이버블로그"]
 ---

@@ -3,6 +3,7 @@ title: "네이버 애드포스트 승인 기준과 방문자별 현실적인 수
 summary: "네이버 블로그의 공식 광고 수익 시스템인 '애드포스트'의 승인 조건(개설 90일, 글 50개 등)과 일일 방문자 수 500명, 2,000명, 5,000명 기준의 실제 통장 입금액을 투명하게 공개합니다."
 date: 2026-09-17
 category: "Side Income"
+image: "/images/side-income/13-naver-adpost-earnings-reality.png"
 draft: false
 tags: ["네이버블로그", "애드포스트", "애드포스트수익", "블로그부수입"]
 ---

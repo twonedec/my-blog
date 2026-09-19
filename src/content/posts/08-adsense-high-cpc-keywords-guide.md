@@ -3,6 +3,7 @@ title: "애드센스 고단가 키워드(CPC) 발굴 원리와 키워드 분석 
 summary: "같은 방문자 수라도 블로그 수익이 10배 차이 나는 이유는 바로 CPC(클릭당 단가)에 있습니다. 고단가 광고가 붙는 키워드의 원리와 초보자도 쉽게 따라 하는 키워드 분석법을 소개합니다."
 date: 2026-09-11
 category: "Side Income"
+image: "/images/side-income/08-adsense-high-cpc-keywords.png"
 draft: false
 tags: ["애드센스", "CPC", "고단가키워드", "키워드분석", "부수입"]
 ---

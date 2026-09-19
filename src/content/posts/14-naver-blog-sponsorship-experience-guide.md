@@ -3,6 +3,7 @@ title: "네이버 블로그 체험단 및 협찬 신청법: 생활비 50만 원 
 summary: "통장에 현금이 꽂히지 않아도 외식비, 식료품비, 미용비, 육아용품 비용을 전액 세이브할 수 있는 네이버 블로그 체험단 플랫폼(레뷰 등)의 선정 기준과 선정 노하우를 정리합니다."
 date: 2026-09-18
 category: "Side Income"
+image: "/images/side-income/14-naver-blog-sponsorship.png"
 draft: false
 tags: ["네이버블로그", "블로그체험단", "레뷰", "생활비절약", "부수입"]
 ---

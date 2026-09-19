@@ -3,6 +3,7 @@ title: "쿠팡 파트너스 저품질 피하는 법: 링크 도배 방지와 안
 summary: "네이버 블로그나 티스토리에 쿠팡 링크를 잘못 걸었다가 검색 누락(저품질)을 겪는 이유와, 블로그 지수를 지키면서 안전하게 제휴 마케팅을 전개하는 실전 노하우를 정리합니다."
 date: 2026-09-03
 category: "Side Income"
+image: "/images/side-income/03-coupang-partners-low-quality.png"
 draft: false
 tags: ["쿠팡파트너스", "저품질탈출", "블로그운영", "제휴마케팅"]
 ---

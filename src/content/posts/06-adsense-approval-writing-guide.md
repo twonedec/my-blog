@@ -3,6 +3,7 @@ title: "구글 애드센스 한 번에 승인받는 글 작성법: E-E-A-T 준�
 summary: "속칭 '애드고시'라 불리는 구글 애드센스 승인을 통과하기 위한 핵심 글쓰기 공식(1,500자 이상, 명확한 H2 구조, 단일 주제 집중, 필수 정책 페이지 세팅)을 실전 예시와 함께 공개합니다."
 date: 2026-09-08
 category: "Side Income"
+image: "/images/side-income/06-adsense-approval-writing.png"
 draft: false
 tags: ["애드센스", "애드센스승인", "블로그글쓰기", "E-E-A-T", "부수입"]
 ---

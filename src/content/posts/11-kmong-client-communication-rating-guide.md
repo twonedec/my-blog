@@ -3,6 +3,7 @@ title: "크몽 의뢰인 소통법과 평점 5점 유지 노하우: 분쟁 방�
 summary: "크몽 판매자로서 겪을 수 있는 무한 수정 요구, 소통 오류, 평점 테러를 사전에 차단하는 스마트한 커뮤니케이션 기술과 분쟁 방지 실전 팁을 공유합니다."
 date: 2026-09-15
 category: "Side Income"
+image: "/images/side-income/11-kmong-client-communication.png"
 draft: false
 tags: ["크몽", "클라이언트소통", "평점관리", "프리랜서", "부수입"]
 ---

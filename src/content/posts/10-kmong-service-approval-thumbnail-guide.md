@@ -3,6 +3,7 @@ title: "크몽 서비스 등록 및 승인 가이드: 첫 주문을 부르는 �
 summary: "크몽에 서비스를 등록할 때 자주 겪는 반려 사유를 피하고, 경쟁 서비스들 사이에서 의뢰인의 시선을 사로잡는 썸네일 디자인 규격과 고전환 상세페이지 구조를 알아봅니다."
 date: 2026-09-14
 category: "Side Income"
+image: "/images/side-income/10-kmong-service-approval-thumbnail.png"
 draft: false
 tags: ["크몽", "크몽승인", "썸네일제작", "상세페이지", "부수입"]
 ---

@@ -3,6 +3,7 @@ title: "구글 애드센스 승인 거절 시 단골 사유 3가지와 완벽 �
 summary: "애드센스 신청 후 '가치 없는 콘텐츠', '사이트 다운/탐색 불가' 등의 사유로 탈락 메일을 받았다면 어떻게 대처해야 할까요? 각 거절 사유별 원인 분석과 즉각적인 개선 방법을 정리합니다."
 date: 2026-09-09
 category: "Side Income"
+image: "/images/side-income/07-adsense-rejection-solution.png"
 draft: false
 tags: ["애드센스", "애드센스거절", "가치없는콘텐츠", "애드센스재신청"]
 ---

@@ -3,6 +3,7 @@ title: "네이버 블로그 시작과 알고리즘의 진실: C-Rank와 DIA+ 로
 summary: "네이버 블로그 상위 노출을 결정하는 출처 신뢰도(C-Rank)와 문서 적합도(D.I.A.+) 알고리즘의 원리를 파헤치고, 신규 블로그가 검색 1면에 오르기 위한 현실적인 글쓰기 전략을 정리합니다."
 date: 2026-09-16
 category: "Side Income"
+image: "/images/side-income/12-naver-blog-algorithm.png"
 draft: false
 tags: ["네이버블로그", "블로그알고리즘", "CRank", "다이아로직", "스마트블록"]
 ---

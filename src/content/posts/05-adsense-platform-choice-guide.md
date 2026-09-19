@@ -3,6 +3,7 @@ title: "구글 애드센스 블로그 첫 시작: 티스토리 vs 워드프레�
 summary: "애드센스 수익형 블로그를 구축하려는 초보자를 위해 카카오 티스토리, 설치형 워드프레스, 정적 사이트(Astro 등)의 초기 세팅 난이도, 호스팅 비용, 장기 안정성을 현실적으로 비교해 드립니다."
 date: 2026-09-06
 category: "Side Income"
+image: "/images/side-income/05-adsense-platform-choice.png"
 draft: false
 tags: ["애드센스", "티스토리", "워드프레스", "블로그플랫폼", "부수입"]
 ---

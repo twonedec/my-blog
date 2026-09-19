@@ -3,6 +3,7 @@ title: "직장인 크몽 재능마켓 시작하기: 무자본 지식 서비스 �
 summary: "회사에서 매일 다루는 엑셀 양식, 기획서 작성법, 번역이나 디자인 기술을 크몽에서 수익화하는 방법! 재고 부담 없는 무자본 디지털 상품 기획 노하우를 정리합니다."
 date: 2026-09-12
 category: "Side Income"
+image: "/images/side-income/09-kmong-freelance-startup.png"
 draft: false
 tags: ["크몽", "재능마켓", "직장인부업", "지식창업", "부수입"]
 ---

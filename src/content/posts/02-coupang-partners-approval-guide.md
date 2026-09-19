@@ -3,6 +3,7 @@ title: "쿠팡 파트너스 시작 가이드: 가입부터 최종 승인(매출 
 summary: "쿠팡 파트너스를 처음 시작할 때 겪는 활동 채널 등록, 공정위 문구 증빙, 그리고 최종 승인 조건인 누적 결제금액 15만 원 달성 노하우를 단계별로 상세히 정리합니다."
 date: 2026-09-02
 category: "Side Income"
+image: "/images/side-income/02-coupang-partners-approval.png"
 draft: false
 tags: ["쿠팡파트너스", "부수입", "제휴마케팅", "쿠팡파트너스승인"]
 ---

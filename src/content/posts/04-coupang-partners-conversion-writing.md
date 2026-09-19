@@ -3,6 +3,7 @@ title: "쿠팡 파트너스 구매 전환율을 높이는 글쓰기 구조와 �
 summary: "아무리 방문자가 많아도 클릭과 구매가 발생하지 않는다면 글의 구조가 문제입니다. 단순 스펙 복사를 벗어나 구매 전환율을 3배 이상 끌어올리는 비교 분석 글쓰기 공식을 공개합니다."
 date: 2026-09-05
 category: "Side Income"
+image: "/images/side-income/04-coupang-partners-conversion.png"
 draft: false
 tags: ["쿠팡파트너스", "구매전환율", "글쓰기노하우", "마케팅"]
 ---
