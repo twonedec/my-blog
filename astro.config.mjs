@@ -45,5 +45,6 @@ export default defineConfig({
     '/tech-gear/': '/side-income/',
     '/travel-kids/': '/side-income/',
     '/life-policy/': '/side-income/',
+    '/sitemap.xml': '/sitemap-index.xml',
   },
 });
