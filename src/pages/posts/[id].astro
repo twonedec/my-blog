@@ -27,10 +27,7 @@ const formattedDate = post.data.date.toLocaleDateString('ko-KR', {
 });
 
 const catSlug: Record<string, string> = {
-  'Travel & Kids': 'travel-kids',
-  'Life & Policy': 'life-policy',
-  'Tech & Gear':   'tech-gear',
-  'Dev & Quant':   'dev-quant',
+  'Side Income':   'side-income',
 };
 const backHref = `/${catSlug[post.data.category] ?? ''}/`;
 ---

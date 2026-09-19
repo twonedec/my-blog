@@ -14,20 +14,12 @@ const fmtDate  = (d: Date)      => d.toLocaleDateString('ko-KR', { year: 'numeri
 
 const categories = [
   {
-    slug:  'dev-quant',
-    label: 'Dev & Quant',
-    ko:    '개발과 분석',
-    cls:   'dev',
+    slug:  'side-income',
+    label: 'Side Income',
+    ko:    '직장인 현실 부수입',
+    cls:   'income',
     num:   '01',
-    desc:  '필요한 도구를 직접 코딩으로 만듭니다. 자동화 시스템, 주식 분석 파이프라인, 생활 속 작은 프로그램 — 만들고 굴려보고 다시 고치는 기록입니다.',
-  },
-  {
-    slug:  'tech-gear',
-    label: 'Tech & Gear',
-    ko:    '테크와 장비',
-    cls:   'tech',
-    num:   '02',
-    desc:  '충동구매보다 비교가 먼저입니다. 카메라·렌즈·맥미니·NAS까지, 오래 고민하고 직접 써본 뒤 솔직하게 리뷰합니다.',
+    desc:  '쿠팡 파트너스, 구글 애드센스, 크몽, 네이버 블로그까지. 과장된 환상 대신 직장인의 현실적인 여건에서 지속 가능한 4대 부수입 플랫폼의 실전 운영법과 리스크를 객관적으로 분석합니다.',
   },
 ];
 
@@ -37,7 +29,7 @@ allPosts.forEach(p => {
 });
 ---
 
-<Layout title="다다노트 — 직접 만드는 개발자 아빠의 기록">
+<Layout title="다다노트 — 직장인 현실 부수입 실전 가이드">
 <style>
 /* ── Masthead ───────────────────────────────────────── */
 .masthead {
@@ -276,22 +268,22 @@ allPosts.forEach(p => {
 
   <div class="masthead-inner">
     <div>
-      <p class="hero-eyebrow reveal">MAKER'S NOTE · 다다노트</p>
+      <p class="hero-eyebrow reveal">SIDE INCOME ARCHIVE · 다다노트</p>
       <h1 class="hero-title">
-        <span class="word" id="hw0"><span>만들고,</span></span><br>
-        <span class="word" id="hw1"><span><em>써보고,</em></span></span><br>
+        <span class="word" id="hw0"><span>시도하고,</span></span><br>
+        <span class="word" id="hw1"><span><em>검증하고,</em></span></span><br>
         <span class="word" id="hw2"><span>기록한다.</span></span>
       </h1>
     </div>
     <div class="hero-meta reveal" style="transition-delay:.4s">
       <p class="hero-body">
-        필요한 도구는 직접 코딩해 만들고, 장비는 오래 고민해 들인 뒤 솔직하게 씁니다.
-        <em style="font-family:var(--serif);font-style:italic"> — 개발자 아빠가 일상의 문제를 푸는 기록, 다다노트입니다.</em>
+        과장된 수익 인증이나 막연한 환상 대신, 직장인의 여건에서 지속 가능한 4대 부수입 플랫폼의 현실적인 운영법을 다룹니다.
+        <em style="font-family:var(--serif);font-style:italic"> — 직접 부딪혀보고 검증한 실전 기록, 다다노트입니다.</em>
       </p>
       <div class="hero-stats">
-        <span>{allPosts.length}편의 글</span>
-        <span>4개의 카테고리</span>
-        <span>기록 중</span>
+        <span>{allPosts.length}편의 가이드</span>
+        <span>4대 플랫폼 분석</span>
+        <span>실전 기록 중</span>
       </div>
     </div>
   </div>
@@ -334,7 +326,7 @@ allPosts.forEach(p => {
 <!-- Category Directory -->
 <section class="catdir">
   <div class="section-head reveal">
-    <h2 class="section-title">직접 만들고, 써보고, <em>다녀온 기록</em></h2>
+    <h2 class="section-title">직장인 현실 부수입 <em>실전 가이드</em></h2>
     <a href="/archive" class="more-link">모두 보기 →</a>
   </div>
 

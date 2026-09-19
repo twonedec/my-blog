@@ -10,10 +10,7 @@ const posts    = allPosts.sort((a, b) =>
 const readMin = (body: string) => Math.max(1, Math.ceil(body.split(/\s+/).length / 200));
 
 const catCls = (cat: string) => {
-  if (cat.startsWith('Travel')) return 'travel';
-  if (cat.startsWith('Life'))   return 'life';
-  if (cat.startsWith('Tech'))   return 'tech';
-  if (cat.startsWith('Dev'))    return 'dev';
+  if (cat.startsWith('Side')) return 'income';
   return '';
 };
 

@@ -7,7 +7,7 @@ export async function GET(context) {
 
   return rss({
     title: '다다노트',
-    description: '엔지니어링, 개발, 자동화, 테크 장비 — 직접 만들고 오래 써본 기록.',
+    description: '직장인 현실 부수입 실전 가이드 — 쿠팡 파트너스, 애드센스, 크몽, 네이버 블로그.',
     site: context.site,
     items: sorted.map(post => ({
       title: post.data.title,

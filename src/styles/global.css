@@ -24,6 +24,7 @@
   --c-life:   oklch(0.55 0.10 60);
   --c-tech:   oklch(0.42 0.10 265);
   --c-dev:    oklch(0.45 0.05 145);
+  --c-income: oklch(0.48 0.12 155);
 
   --ease-out:  cubic-bezier(.22,.6,.36,1);
   --ease-expo: cubic-bezier(.16,1,.3,1);
@@ -83,6 +84,8 @@ body.cursor-active #cursor-ring { width: 24px; height: 24px; opacity: .6; }
 .cat.life   { color: var(--c-life);   }
 .cat.tech   { color: var(--c-tech);   }
 .cat.dev    { color: var(--c-dev);    }
+.cat.income { color: var(--c-income); }
+.cat.side   { color: var(--c-income); }
 
 /* ── Nav ─────────────────────────────────────────────────────── */
 .site-nav {

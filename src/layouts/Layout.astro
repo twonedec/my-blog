@@ -10,7 +10,7 @@ interface Props {
 
 const {
   title,
-  description = "직접 만드는 개발자 아빠의 기록 — 자동화·퀀트 개발, 테크 장비 리뷰. 다다노트",
+  description = "직장인 현실 부수입 실전 가이드 — 쿠팡 파트너스, 구글 애드센스, 크몽, 네이버 블로그. 다다노트",
   ogImage,
   currentCategorySlug,
 } = Astro.props;
@@ -21,8 +21,7 @@ const ogImageURL = ogImage
   : new URL('/thumbnail.png', Astro.site).href;
 
 const categories = [
-  { slug: 'dev-quant', label: 'Dev & Quant' },
-  { slug: 'tech-gear', label: 'Tech & Gear' },
+  { slug: 'side-income', label: 'Side Income' },
 ];
 
 const isPost = !!ogImage;
@@ -143,7 +142,7 @@ const isPost = !!ogImage;
         <span class="nav-mark" style="width:24px;height:24px;font-size:14px">d</span>
         <span>다다노트</span>
       </div>
-      <p class="colophon">필요한 도구는 직접 만들고,<br>장비는 오래 써본 뒤 씁니다.<br>개발자 아빠의 기록.</p>
+      <p class="colophon">직장인을 위한 현실적인 부수입 실전 연구 노트.<br>과장된 환상 대신 직접 검증하고 기록합니다.<br>다다노트.</p>
     </div>
     <div>
       <h6>Categories</h6>

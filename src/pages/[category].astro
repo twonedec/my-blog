@@ -6,47 +6,19 @@ const catMap: Record<string, {
   label: string; cls: string; num: string; ko: string;
   headline: string; enSub: string; desc: string;
 }> = {
-  'travel-kids': {
-    label:    'Travel & Kids',
-    cls:      'travel',
-    num:      '03',
-    ko:       '여행과 아이',
-    headline: '여행과 <em>아이</em>,<br>그리고 <em>속도</em>에 대하여',
-    enSub:    'Notes on family trips, slow travel, and places we keep returning to',
-    desc:     '온 가족이 함께한 장기여행과, 아이가 처음으로 본 풍경들. 빡빡한 일정 대신 같은 장소를 반복해서 찾는 우리만의 여행 방식을 기록합니다.',
-  },
-  'life-policy': {
-    label:    'Life & Policy',
-    cls:      'life',
-    num:      '04',
-    ko:       '생활과 정책',
-    headline: '받을 수 있는 <em>것들</em>,<br>그리고 몰라서 <em>지나친</em> 것들에 대하여',
-    enSub:    'Small notes on living, budgets, and quiet policies',
-    desc:     '육아기 단축근무를 신청하면서 처음으로 제도를 제대로 들여다봤습니다. 알고 나면 간단한데, 모르면 그냥 넘어가게 되는 것들. 정책과 지원금, 절세와 보험을 직접 신청해보며 정리합니다.',
-  },
-  'tech-gear': {
-    label:    'Tech & Gear',
-    cls:      'tech',
-    num:      '02',
-    ko:       '테크와 장비',
-    headline: '오래 <em>고민</em>하고,<br>오래 <em>쓰는</em> 것들에 대하여',
-    enSub:    'Reviews and reflections on tools that earn a place on the desk',
-    desc:     '충동구매보다는 비교가 먼저입니다. 아이를 찍기 위해 카메라를 골랐고, 집에서 음악을 듣기 위해 턴테이블을 들였습니다. 사기 전에 고민한 것들, 써보고 나서 솔직하게 씁니다.',
-  },
-  'dev-quant': {
-    label:    'Dev & Quant',
-    cls:      'dev',
+  'side-income': {
+    label:    'Side Income',
+    cls:      'income',
     num:      '01',
-    ko:       '개발과 분석',
-    headline: '필요한 건 <em>직접</em><br><em>만들어</em> 씁니다',
-    enSub:    'Building tools from scratch — automation, data pipelines, and quant experiments',
-    desc:     '비전공자지만 일상의 불편함을 코드로 풉니다. 예약 관리 시스템, 텔레그램 자동 브리핑, 그리고 코스피 전 종목을 스캔하는 주식 분석 파이프라인까지 — 직접 만들고, 굴려보고, 망하면 다시 고치는 과정을 기록합니다. (투자 관련 글은 방법론·개발 기록이며, 종목 추천이 아닙니다.)',
+    ko:       '현실 부수입',
+    headline: '직장인을 위한 <em>현실 부수입</em>,<br>그리고 <em>지속 가능한</em> 실행에 대하여',
+    enSub:    'Practical guide to realistic side incomes — Coupang Partners, AdSense, Kmong, and Naver Blog',
+    desc:     '남들의 과장된 수익 인증이나 막연한 환상 대신, 직장인이 퇴근 후 1~2시간으로 직접 시도하고 검증해볼 수 있는 4대 부수입 플랫폼의 실전 노하우와 주의사항을 객관적으로 정리합니다.',
   },
 };
 
 export async function getStaticPaths() {
-  const catMap2 = ['tech-gear', 'dev-quant'];
-  return catMap2.map(slug => ({ params: { category: slug } }));
+  return [{ params: { category: 'side-income' } }];
 }
 
 const { category } = Astro.params;
@@ -63,7 +35,7 @@ const listPosts = posts.slice(1);
 const readMin = (body: string) => Math.max(1, Math.ceil(body.split(/\s+/).length / 200));
 const fmtDate = (d: Date) => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
-const allowedSlugs = ['tech-gear', 'dev-quant'];
+const allowedSlugs = ['side-income'];
 const otherCats = Object.entries(catMap).filter(([slug]) => allowedSlugs.includes(slug) && slug !== category);
 const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.').replace(/\s/g, '');
 ---
@@ -75,6 +47,7 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
 .page-life   { --c-accent: var(--c-life);   }
 .page-tech   { --c-accent: var(--c-tech);   }
 .page-dev    { --c-accent: var(--c-dev);    }
+.page-income { --c-accent: var(--c-income); }
 
 /* ── Category masthead ──────────────────────────── */
 .cat-masthead {
@@ -397,19 +370,24 @@ const updatedStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', mon
 <!-- Cross-category CTA -->
 <section class="cat-cta">
   <div class="cat-cta-text reveal">
-    <h3>다음은 어떤 <em>호흡</em>으로<br>읽어보시겠어요?</h3>
-    <p>네 개의 카테고리, 서로 다른 결의 글들. 어디로 가도 다다노트의 같은 목소리가 이어집니다.</p>
+    <h3>체계적인 <em>실전 가이드</em>로<br>시작해보세요</h3>
+    <p>쿠팡 파트너스부터 애드센스, 크몽, 블로그까지. 단계별 분석과 실제 시도 기록을 차례대로 읽어보실 수 있습니다.</p>
   </div>
   <div class="cat-cta-links reveal" style="transition-delay:.12s">
-    {otherCats.map(([slug, c]) => (
-      <a href={`/${slug}/`}>
-        <div class="lbl">
-          <span>{c.num} Category</span>
-          <strong>{c.label} — {c.ko}</strong>
-        </div>
-        <span class="arr">→</span>
-      </a>
-    ))}
+    <a href="/archive">
+      <div class="lbl">
+        <span>Full Archive</span>
+        <strong>전체 글 아카이브 보기</strong>
+      </div>
+      <span class="arr">→</span>
+    </a>
+    <a href="/about">
+      <div class="lbl">
+        <span>About Dadanote</span>
+        <strong>블로그 소개 및 운영 원칙</strong>
+      </div>
+      <span class="arr">→</span>
+    </a>
   </div>
 </section>
 

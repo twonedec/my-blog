@@ -47,10 +47,7 @@ import Layout from '../layouts/Layout.astro';
   text-transform: uppercase; white-space: nowrap; margin-top: 4px;
   padding: 3px 8px; border-radius: 4px;
 }
-.badge.travel { color: var(--c-travel); background: oklch(from var(--c-travel) l c h / .1); }
-.badge.life   { color: var(--c-life);   background: oklch(from var(--c-life) l c h / .1); }
-.badge.tech   { color: var(--c-tech);   background: oklch(from var(--c-tech) l c h / .1); }
-.badge.dev    { color: var(--c-dev);    background: oklch(from var(--c-dev) l c h / .1); }
+.badge.income { color: var(--c-income); background: oklch(from var(--c-income) l c h / .1); }
 .contact-link {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: var(--sans); font-size: 14px; font-weight: 500;
@@ -66,48 +63,48 @@ import Layout from '../layouts/Layout.astro';
 <div class="about-wrap">
   <p class="about-kicker reveal">About</p>
   <h1 class="about-title reveal" style="transition-delay:.06s">
-    필요한 건 직접<br><em>만들어 쓰는 아빠</em>
+    현실적인 부수입을<br><em>연구하고 기록합니다</em>
   </h1>
   <p class="about-lead reveal" style="transition-delay:.1s">
-    비전공자로 시작해, 일상의 불편함을 코드로 풉니다. 직접 만든 자동화 시스템과 오래 써본 테크 장비 이야기 — 다다노트는 그 과정을 솔직하게 남기는 엔지니어링 기록입니다.
+    퇴근 후 1~2시간, 직장인의 현실적인 여건 속에서 지속 가능한 파이프라인을 찾습니다. 과장된 수익 인증이나 막연한 낙관 대신, 4대 플랫폼(쿠팡 파트너스, 구글 애드센스, 크몽, 네이버 블로그)을 직접 부딪치며 검증한 객관적 가이드를 제공합니다.
   </p>
 
   <div class="about-body">
     <div class="about-section reveal">
-      <h2>무엇을 쓰나</h2>
-      <p>다다노트의 중심은 <strong>직접 만들고 직접 써본 것</strong>입니다. 누구나 쓸 수 있는 일반론 대신, 제가 시간과 돈을 들여 부딪힌 과정을 그대로 기록합니다.</p>
+      <h2>무엇을 다루는가</h2>
+      <p>다다노트의 핵심 원칙은 <strong>검증된 사실과 실전 경험의 공유</strong>입니다. 비현실적인 '월 천만 원 자동 수익' 환상을 걷어내고, 직장인이 안정적으로 시도할 수 있는 현실적인 접근법을 정리합니다.</p>
       <ul class="cat-list">
         <li>
-          <span class="badge dev">Dev & Quant</span>
-          이 블로그의 핵심입니다. 예약·일정 관리 시스템, 텔레그램 자동 브리핑, 코스피 전 종목을 스캔하는 주식 분석 파이프라인까지 직접 코딩해 만들었습니다. 만들고 굴려보고, 망하면 다시 고치는 과정을 코드와 함께 남깁니다.
-        </li>
-        <li>
-          <span class="badge tech">Tech & Gear</span>
-          충동구매보다 비교가 먼저입니다. 맥미니, NAS, 카메라, 렌즈, 영상 장비까지 — 사기 전에 오래 고민한 것과 써보고 나서 느낀 점을 솔직하게 씁니다.
+          <span class="badge income">Side Income</span>
+          <div>
+            <strong>현실 부수입 4대 플랫폼:</strong>
+            쿠팡 파트너스(제휴 마케팅), 구글 애드센스(콘텐츠 수익화), 크몽(재능 및 서비스 판매), 네이버 블로그(체험단 및 애드포스트)의 가입부터 승인, 운영 전략, 저품질 리스크 관리, 세무 상식까지 단계별로 상세히 다룹니다.
+          </div>
         </li>
       </ul>
     </div>
 
     <div class="about-section reveal">
-      <h2>운영자</h2>
-      <p><strong>다다아빠</strong> · twonedec</p>
-      <p>두 딸을 키우며 일상의 자동화와 기록의 가치를 믿는 직장인이자 개발자입니다. 비전공자로 시작해 필요한 도구를 직접 만들어 쓰는 것을 즐깁니다.</p>
-      <p>직접 NAS를 구축해 가족의 사진과 영상을 관리하고, 파이썬으로 주식 분석 시스템과 각종 자동화 도구를 만들어 운영합니다. 제가 먼저 깊게 고민하고 실제로 만들어 굴려본 것들만, 성공과 실패를 함께 투명하게 공유합니다.</p>
+      <h2>운영 원칙과 철학</h2>
+      <p><strong>1. 투명성과 객관성:</strong> 불필요한 유료 강의 홍보나 과장된 수익 캡처를 배제하고, 실제 전환율, 클릭당 단가(CPC), 수수료율 등 객관적인 수치와 플랫폼 공식 정책을 바탕으로 작성합니다.</p>
+      <p><strong>2. 리스크 우선 점검:</strong> 플랫폼별 계정 제재(어뷰징 주의), 저품질 알고리즘, 세금(종합소득세 및 사업소득 신고) 등 놓치기 쉬운 위험 요소를 사전에 철저히 안내합니다.</p>
+      <p><strong>3. 시간 효율성:</strong> 본업을 유지해야 하는 직장인의 특성을 고려하여, 최소 시간으로 최대의 효율을 낼 수 있는 실전 워크플로우를 연구합니다.</p>
     </div>
 
     <div class="about-section reveal">
-      <h2>운영 목적</h2>
-      <p>제가 겪은 시행착오가 누군가에게는 시간과 돈을 아껴주는 단서가 되기를 바랍니다. 특히 직접 만들어 쓰는 것을 좋아하는 분들, 그리고 아이를 키우며 개발·IT 기기·재테크에 관심 있는 분들께 도움이 되었으면 합니다.</p>
+      <h2>운영자 소개</h2>
+      <p><strong>다다노트 운영진</strong> (twonedec)</p>
+      <p>낮에는 본업에 집중하고, 저녁에는 자신만의 부수입 파이프라인을 연구하는 직장인이자 메이커입니다. 직접 발로 뛰고 테스트하며 얻은 경험과 인사이트를 투명하게 기록합니다.</p>
     </div>
 
     <div class="about-section reveal">
-      <h2>투자 관련 글에 대하여</h2>
-      <p>주식·퀀트 관련 글은 <strong>제가 만든 프로그램의 개발 기록이자 방법론 설명</strong>입니다. 특정 종목의 매수·매도를 권유하는 글이 아니며, 어떤 종목명이 등장하더라도 시스템 동작을 설명하기 위한 예시일 뿐입니다. 모든 투자 판단과 그 결과의 책임은 전적으로 투자자 본인에게 있습니다.</p>
+      <h2>콘텐츠 및 법적 고지 (Disclaimer)</h2>
+      <p>본 블로그의 모든 글은 정보 제공 및 경험 공유를 목적으로 하며, 특정 수익이나 결과를 보장하지 않습니다. 플랫폼의 정책과 알고리즘은 수시로 변경될 수 있으므로, 최종 실행 전 해당 플랫폼의 공식 가이드라인과 최신 약관을 반드시 확인하시기 바랍니다. 또한 세무 및 법률 관련 내용은 일반적인 참고 자료이며, 개별 세무 처리는 공인 전문가와 상담하시기를 권장합니다.</p>
     </div>
 
     <div class="about-section reveal">
       <h2>Contact</h2>
-      <p>콘텐츠에 대한 문의나 제안은 이메일로 연락해주세요.</p>
+      <p>콘텐츠 정정 요청, 제휴 문의, 기타 의견은 이메일로 보내주시기 바랍니다.</p>
       <a href="mailto:admin@dadanote.net" class="contact-link">
         admin@dadanote.net →
       </a>
