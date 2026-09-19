@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import remarkGfm from 'remark-gfm';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +29,10 @@ if (fs.existsSync(POSTS_DIR)) {
 export default defineConfig({
   site: 'https://dadanote.net',
   trailingSlash: 'always',
+  markdown: {
+    gfm: false,
+    remarkPlugins: [[remarkGfm, { singleTilde: false }]],
+  },
   integrations: [sitemap({
     serialize(item) {
       const lm = lastmodByUrl[item.url] || latestMod;
