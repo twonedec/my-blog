@@ -16,6 +16,8 @@ tags: ["네이버블로그", "블로그알고리즘", "CRank", "다이아로직"
 
 ## 1. 네이버 검색의 양대 축: C-Rank vs DIA+ 로직
 
+![네이버 블로그 C-Rank 및 DIA+ 듀얼 알고리즘 구조도](/images/side-income/naver-crank-dia.png)
+
 네이버 검색 순위는 크게 두 가지 관점의 합산 점수로 결정됩니다.
 
 ### ① C-Rank (Creator Rank, 출처의 신뢰도)
