@@ -73,23 +73,26 @@ const pageDesc = "2026년 최신 인상 요율(국민연금 9.5%, 건강보험 7
           <div class="form-group half">
             <label for="family-count">부양가족 수 (본인 포함)</label>
             <select id="family-count" class="calc-select">
-              <option value="1" selected>1인 (미혼 / 맞벌이 부부)</option>
-              <option value="2">2인 (외벌이 부부 / 부모 1인)</option>
-              <option value="3">3인 (외벌이 부부 + 자녀 1인)</option>
-              <option value="4">4인 (외벌이 부부 + 자녀 2인)</option>
-              <option value="5">5인 이상</option>
+              <option value="1" selected>1명 (본인만)</option>
+              <option value="2">2명 (본인 + 1명)</option>
+              <option value="3">3명 (본인 + 2명)</option>
+              <option value="4">4명 (본인 + 3명)</option>
+              <option value="5">5명 이상</option>
             </select>
           </div>
           <div class="form-group half">
             <label for="child-count">8세~20세 자녀 수</label>
             <select id="child-count" class="calc-select">
-              <option value="0" selected>0명</option>
+              <option value="0" selected>0명 (자녀 없음)</option>
               <option value="1">1명</option>
               <option value="2">2명</option>
               <option value="3">3명 이상</option>
             </select>
           </div>
         </div>
+        <p class="family-hint">
+          💡 <strong>1인 가구</strong> 또는 <strong>맞벌이 부부</strong>는 <code>1명(본인만)</code>을 선택하세요. 배우자가 소득이 없는 <strong>외벌이 부부</strong>는 <code>2명(본인+배우자)</code>, 자녀나 부모님까지 함께 부양한다면 그 인원수만큼 선택하시면 됩니다.
+        </p>
 
         <!-- Maternity / Paternity Leave Simulation Toggle -->
         <div class="special-mode-box">
@@ -514,7 +517,21 @@ const pageDesc = "2026년 최신 인상 요율(국민연금 9.5%, 건강보험 7
 .form-row {
   display: flex;
   gap: 14px;
+  margin-bottom: 14px;
+}
+.family-hint {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.55;
   margin-bottom: 20px;
+}
+.family-hint code {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--bg-soft);
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: var(--ink);
 }
 .form-group.half { flex: 1; margin-bottom: 0; }
 
