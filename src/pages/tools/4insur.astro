@@ -52,14 +52,6 @@ const pageDesc = "2026년 최신 인상 요율(국민연금 9.5%, 건강보험 7
             />
             <span class="unit">원</span>
           </div>
-          <!-- Quick Preset Buttons -->
-          <div class="preset-btns">
-            <button type="button" class="preset-btn" data-val="2500000">250만</button>
-            <button type="button" class="preset-btn active" data-val="3500000">350만</button>
-            <button type="button" class="preset-btn" data-val="4000000">400만</button>
-            <button type="button" class="preset-btn" data-val="5000000">500만</button>
-            <button type="button" class="preset-btn" data-val="6000000">600만</button>
-          </div>
         </div>
 
         <!-- Tax Free Meal Allowance -->
@@ -476,34 +468,6 @@ const pageDesc = "2026년 최신 인상 요율(국민연금 9.5%, 건강보험 7
   font-weight: 600;
   color: var(--muted);
   pointer-events: none;
-}
-
-/* Preset Buttons */
-.preset-btns {
-  display: flex;
-  gap: 6px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-.preset-btn {
-  background: var(--bg-soft);
-  border: 1px solid var(--line);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink-2);
-  cursor: pointer;
-  transition: all .15s;
-}
-.preset-btn:hover {
-  background: var(--line);
-  color: var(--ink);
-}
-.preset-btn.active {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
 }
 
 /* Checkbox */
@@ -1124,19 +1088,6 @@ childSelect?.addEventListener('change', calculateAll);
 parentalCheck?.addEventListener('change', calculateAll);
 leaveMonthsSelect?.addEventListener('change', calculateAll);
 
-// Preset buttons
-document.querySelectorAll('.preset-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const val = parseInt(btn.getAttribute('data-val') ?? '3500000', 10);
-    if (salaryInput) {
-      salaryInput.value = val.toLocaleString('ko-KR');
-      calculateAll();
-    }
-  });
-});
-
 // Reset
 resetBtn?.addEventListener('click', () => {
   if (salaryInput) salaryInput.value = '3,500,000';
@@ -1145,8 +1096,6 @@ resetBtn?.addEventListener('click', () => {
   if (childSelect) childSelect.value = '0';
   if (parentalCheck) parentalCheck.checked = false;
   if (leaveMonthsSelect) leaveMonthsSelect.value = '12';
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.preset-btn[data-val="3500000"]')?.classList.add('active');
   calculateAll();
 });
 
