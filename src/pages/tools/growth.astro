@@ -177,7 +177,7 @@ const pageDesc = "질병관리청·대한소아청소년과학회 2017 소아청
 .calc-page-wrap { max-width: 1060px; margin: 0 auto; padding: 40px 24px 100px; }
 
 .calc-breadcrumb {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px;
   font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
   color: var(--muted); margin-bottom: 24px;
 }
@@ -187,12 +187,13 @@ const pageDesc = "질병관리청·대한소아청소년과학회 2017 소아청
 
 .calc-header { margin-bottom: 32px; }
 .calc-badge {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: flex-start; gap: 6px;
   background: oklch(0.94 0.03 155); color: var(--c-income, #16a34a);
-  padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: .04em;
-  margin-bottom: 12px;
+  padding: 6px 12px; border-radius: 14px; font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  line-height: 1.5; margin-bottom: 12px;
+  max-width: 100%; box-sizing: border-box;
 }
-.calc-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.calc-badge .dot { flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-top: 5px; }
 .calc-title {
   font-family: var(--serif); font-size: clamp(28px, 3.6vw, 40px); font-weight: 400;
   line-height: 1.25; letter-spacing: -.02em; color: var(--ink); margin-bottom: 14px;
@@ -224,6 +225,15 @@ const pageDesc = "질병관리청·대한소아청소년과학회 2017 소아청
   outline: none; transition: border-color .2s, box-shadow .2s;
 }
 .calc-input:focus { border-color: var(--ink); background: #fff; box-shadow: 0 0 0 3px oklch(0.20 0.005 270 / .08); }
+
+/* 날짜 입력은 단위 라벨(cm/kg)이 없으므로 오른쪽 여백을 줄여 네이티브 날짜 UI가 잘리지 않게 함 */
+input[type="date"].calc-input {
+  padding: 0 12px;
+  font-size: 15px;
+}
+@media (max-width: 480px) {
+  input[type="date"].calc-input { font-size: 14px; padding: 0 8px; }
+}
 .input-unit-wrap { position: relative; display: flex; align-items: center; }
 .input-unit-wrap .unit { position: absolute; right: 16px; font-size: 13px; font-weight: 600; color: var(--muted); pointer-events: none; }
 
