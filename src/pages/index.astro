@@ -5,436 +5,298 @@ import { getCollection } from 'astro:content';
 const allPosts = await getCollection('posts', ({ data }) => !data.draft);
 const posts    = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const pick  = posts[0];
-const bento = posts.slice(1, 6);
+const pick = posts[0];          // 최신 대표 글 1편
+const recentList = posts.slice(1, 4); // 최근 글 3편
 
-const readMin  = (body: string) => Math.max(1, Math.ceil(body.replace(/\s+/g, '').length / 700));
-const catClass = (cat: string)  => cat.toLowerCase().split(' ')[0];
-const fmtDate  = (d: Date)      => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
-
-const categories = [
-  {
-    slug:  'side-income',
-    label: 'Side Income',
-    ko:    '직장인 현실 부수입',
-    cls:   'income',
-    num:   '01',
-    desc:  '쿠팡 파트너스, 구글 애드센스, 크몽, 네이버 블로그까지. 과장된 환상 대신 직장인의 현실적인 여건에서 지속 가능한 4대 부수입 플랫폼의 실전 운영법과 리스크를 객관적으로 분석합니다.',
-  },
-];
-
-const countByCat: Record<string, number> = {};
-allPosts.forEach(p => {
-  countByCat[p.data.category] = (countByCat[p.data.category] ?? 0) + 1;
-});
+const readMin = (body: string) => Math.max(1, Math.ceil(body.replace(/\s+/g, '').length / 700));
+const fmtDate = (d: Date)      => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 
 <Layout title="다다노트 — 직장인 현실 부수입 실전 가이드">
 <style>
-/* ── Masthead ───────────────────────────────────────── */
-.masthead {
-  padding: 72px 56px 60px;
+/* ── Minimal Hub Layout ──────────────────────────────── */
+.hub-wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 64px 32px 96px;
+}
+
+/* 1. Header */
+.hub-header {
+  padding-bottom: 40px;
   border-bottom: 1px solid var(--line);
+  margin-bottom: 44px;
 }
-.masthead-strip {
-  display: flex; justify-content: space-between; align-items: baseline;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 16px; margin-bottom: 52px;
-  font-family: var(--mono); font-size: 10.5px; color: var(--muted);
-  letter-spacing: .09em; text-transform: uppercase;
+.hub-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 16px;
 }
-.masthead-strip .center-it {
-  font-family: var(--serif); font-style: italic;
-  text-transform: none; font-size: 13px;
+.hub-header h1 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin-bottom: 14px;
 }
-.masthead-inner {
-  display: grid; grid-template-columns: 1fr 380px; gap: 80px; align-items: end;
+.hub-header h1 em {
+  font-style: italic;
+  color: var(--ink-2);
 }
-.hero-eyebrow {
-  font-size: 11px; font-weight: 600; letter-spacing: .22em;
-  text-transform: uppercase; color: var(--muted); margin-bottom: 28px;
+.hub-header p {
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  font-weight: 300;
 }
-.hero-title {
-  font-family: var(--serif); font-weight: 300;
-  font-size: clamp(64px, 7vw, 96px);
-  line-height: .98; letter-spacing: -.025em; color: var(--ink);
-}
-.hero-title .word { display: inline-block; overflow: hidden; }
-.hero-title .word span {
-  display: inline-block; transform: translateY(110%);
-  transition: transform .9s var(--ease-expo);
-}
-.hero-title .word span.in { transform: translateY(0); }
-.hero-title em { font-style: italic; color: var(--ink-2); font-weight: 300; }
-.hero-meta { display: flex; flex-direction: column; gap: 18px; padding-bottom: 10px; }
-.hero-body {
-  font-family: var(--serif); font-size: 18px; line-height: 1.6;
-  color: var(--ink-2); font-weight: 300; text-wrap: pretty;
-}
-.hero-stats {
-  display: flex; gap: 24px; font-size: 11.5px;
-  color: var(--muted); letter-spacing: .04em;
-}
-.hero-stats span { display: flex; align-items: center; gap: 8px; }
-.hero-stats span::before {
-  content: ""; display: inline-block; width: 1px; height: 12px; background: var(--line-s);
-}
-.hero-stats span:first-child::before { display: none; }
 
-/* ── Editor's Pick ──────────────────────────────────── */
-.pick { padding: 72px 56px 80px; }
-.pick-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
-.pick-img {
-  border-radius: 4px; overflow: hidden; aspect-ratio: 5/4; position: relative;
-  background: oklch(0.88 0.04 65);
+/* 2. Featured Focus (최신 대표 글 1편) */
+.hub-featured {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 36px 40px;
+  margin-bottom: 44px;
+  transition: border-color .2s;
 }
-.pick-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out); }
-.pick-img:hover img { transform: scale(1.04); }
-.pick-ph { width: 100%; height: 100%; background: oklch(0.88 0.04 65); }
-.pick-kicker { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
-.pick-kicker .rule { flex: 1; height: 1px; background: var(--line-s); }
-.pick-title {
-  font-family: var(--serif); font-weight: 400;
-  font-size: clamp(30px, 3.2vw, 44px);
-  line-height: 1.08; letter-spacing: -.018em;
-  margin-bottom: 22px; text-wrap: balance;
-}
-.pick-body {
-  font-family: var(--serif); font-size: 17px; line-height: 1.7;
-  color: var(--ink-2); margin-bottom: 32px; font-weight: 300;
-}
-.pick-foot { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--muted); }
-.pick-foot .read-link {
-  margin-left: auto; font-size: 13px; color: var(--ink); font-weight: 500;
-  border-bottom: 1px solid var(--ink); padding-bottom: 2px; transition: opacity .2s;
-}
-.pick-foot .read-link:hover { opacity: .6; }
-
-/* ── Category directory ─────────────────────────────── */
-.catdir { padding: 0 56px 80px; }
-.catdir-row {
-  display: grid;
-  grid-template-columns: 72px 1fr auto auto;
-  align-items: center; gap: 36px;
-  padding: 28px 0; border-bottom: 1px solid var(--line);
-  position: relative; transition: background .2s;
-}
-.catdir-row:last-child { border-bottom: none; }
-.catdir-row::before {
-  content: ""; position: absolute; inset: 0;
-  background: var(--bg-soft); opacity: 0; transition: opacity .3s;
-  pointer-events: none;
-}
-.catdir-row:hover::before { opacity: 1; }
-.catdir-num {
-  font-family: var(--serif); font-style: italic;
-  font-size: 26px; color: var(--faint); font-weight: 300;
-}
-.catdir-names h3 {
-  font-family: var(--serif); font-weight: 400;
-  font-size: clamp(28px, 3vw, 40px);
-  letter-spacing: -.015em; line-height: 1.05; margin-bottom: 4px;
-}
-.catdir-desc {
-  font-family: var(--serif); font-size: 15px;
-  color: var(--ink-2); max-width: 380px; line-height: 1.5; font-weight: 300;
-}
-.catdir-count {
-  font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap;
-}
-.catdir-arrow {
-  font-size: 16px; color: var(--muted);
-  transition: transform .3s var(--ease-out), color .2s;
-}
-.catdir-row:hover .catdir-arrow { transform: translateX(6px); color: var(--ink); }
-
-/* ── Bento grid ─────────────────────────────────────── */
-.bento { padding: 0 56px 96px; }
-.bento-grid {
-  display: grid;
-  grid-template-columns: 1.45fr 1fr 1fr;
-  grid-auto-rows: auto;
-  gap: 24px;
-}
-.card {
-  background: var(--bg-elev); border: 1px solid var(--line);
-  border-radius: 12px; overflow: hidden;
-  display: flex; flex-direction: column;
-  transition: transform .4s var(--ease-expo), box-shadow .4s var(--ease-expo), border-color .3s;
-  will-change: transform;
-}
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 48px -24px oklch(0.20 0.02 270 / .3);
+.hub-featured:hover {
   border-color: var(--line-s);
 }
-.card .thumb { overflow: hidden; aspect-ratio: 16/10; position: relative; }
-.card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out); }
-.card .thumb .ph { width: 100%; height: 100%; }
-.card:hover .thumb img { transform: scale(1.04); }
-.card .body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-.card .meta { display: flex; align-items: center; gap: 12px; }
-.card .meta time { font-size: 11px; color: var(--faint); }
-.card h3 {
-  font-family: var(--serif); font-weight: 400;
-  letter-spacing: -.012em; line-height: 1.22;
-  color: var(--ink); text-wrap: balance;
+.featured-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .15em;
+  color: var(--c-income);
+  text-transform: uppercase;
+  margin-bottom: 12px;
 }
-.card .summary {
-  font-size: 13.5px; color: var(--ink-2); line-height: 1.65;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1;
+.hub-featured h2 {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin-bottom: 12px;
 }
-.card .read {
-  font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px;
-  margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); transition: color .2s;
+.hub-featured p {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  line-height: 1.65;
+  margin-bottom: 20px;
 }
-.card:hover .read { color: var(--ink); }
-.card.lg { grid-row: span 2; }
-.card.lg h3 { font-size: 24px; }
-.card.lg .summary { -webkit-line-clamp: 3; }
-.card.lg .thumb { aspect-ratio: auto; flex: 1; min-height: 220px; }
-.card.lg .thumb img,
-.card.lg .thumb .ph { height: 100%; }
-.card.more-tile {
-  grid-column: span 2; background: var(--bg-soft); border: 1px solid var(--line);
-  padding: 38px 44px; position: relative; display: flex; align-items: center;
-  min-height: 220px;
-  transition: background .35s var(--ease-out), transform .35s var(--ease-out), border-color .35s var(--ease-out);
+.featured-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--muted);
 }
-.card.more-tile:hover { background: var(--bg-elev); border-color: var(--line-s); transform: translateY(-4px); }
-.card.more-tile .more-tile-inner { display: flex; flex-direction: column; gap: 14px; width: 100%; }
-.card.more-tile .more-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
-.card.more-tile .more-headline {
-  font-family: var(--serif); font-size: 30px; font-weight: 300;
-  line-height: 1.22; letter-spacing: -.012em; color: var(--ink);
+.featured-link {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
 }
-.card.more-tile .more-headline em { font-style: italic; color: var(--ink-2); }
-.card.more-tile .more-arrow {
-  position: absolute; right: 44px; bottom: 38px;
-  font-family: var(--serif); font-size: 44px; font-weight: 200; line-height: 1;
-  color: var(--ink); transition: transform .4s var(--ease-out);
-}
-.card.more-tile:hover .more-arrow { transform: translateX(8px); }
-.card.dark-tile {
-  background: var(--ink); border-color: transparent; color: var(--bg-elev);
-  justify-content: space-between; padding: 28px;
-  display: flex; flex-direction: column; gap: 20px;
-}
-.card.dark-tile h3 {
-  font-family: var(--serif); font-size: 22px; font-weight: 300;
-  line-height: 1.2; letter-spacing: -.01em; color: var(--bg-elev);
-}
-.card.dark-tile em { font-style: italic; color: oklch(0.88 0.06 75); }
-.card.dark-tile .sub-link {
-  font-size: 13px; border-bottom: 1px solid rgba(255,255,255,.6);
-  padding-bottom: 2px; color: rgba(255,255,255,.85); align-self: flex-start; transition: opacity .2s;
-}
-.card.dark-tile:hover { transform: translateY(-4px); box-shadow: 0 20px 48px -24px rgba(0,0,0,.5); }
 
-/* placeholder color variants */
-.ph-warm  { background: oklch(0.88 0.04 65); }
-.ph-cool  { background: oklch(0.86 0.04 220); }
-.ph-olive { background: oklch(0.84 0.04 130); }
-.ph-dusk  { background: oklch(0.60 0.06 35); }
-.ph-deep  { background: oklch(0.28 0.05 240); }
-
-/* ── Responsive ─────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .masthead-inner { grid-template-columns: 1fr; gap: 40px; }
-  .bento-grid { grid-template-columns: 1fr 1fr; }
-  .card.lg { grid-column: span 2; grid-row: span 1; }
-  .card.more-tile { grid-column: span 2; }
+/* 3. Utility Tools Strip (실전 도구) */
+.tools-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 48px;
 }
+.tool-box {
+  padding: 20px 24px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all .2s;
+}
+.tool-box:hover {
+  background: var(--bg-elev);
+  border-color: var(--line-s);
+}
+.tool-box h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.tool-box p {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.tool-arrow {
+  font-size: 16px;
+  color: var(--muted);
+  transition: transform .2s, color .2s;
+}
+.tool-box:hover .tool-arrow {
+  transform: translateX(4px);
+  color: var(--ink);
+}
+
+/* 4. Recent Updates (최근 글 3편만 미니멀하게) */
+.recent-section {
+  padding-top: 12px;
+}
+.section-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+.section-title-bar h3 {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.section-title-bar a {
+  font-size: 12.5px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line-s);
+  padding-bottom: 2px;
+}
+.section-title-bar a:hover {
+  color: var(--ink);
+}
+
+.recent-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  align-items: baseline;
+  gap: 20px;
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--line);
+  transition: background-color .15s;
+  border-radius: 4px;
+}
+.recent-row:hover {
+  background-color: var(--bg-soft);
+}
+.recent-date {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.recent-title {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-weight: 400;
+  color: var(--ink);
+}
+.recent-arrow {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* 5. Bottom Guide */
+.hub-footer {
+  margin-top: 48px;
+  padding: 24px;
+  background: var(--bg-soft);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.hub-footer a {
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+  margin-left: 6px;
+}
+
 @media (max-width: 768px) {
-  .masthead, .pick, .catdir, .bento { padding-left: 20px; padding-right: 20px; }
-  .masthead { padding-top: 48px; padding-bottom: 40px; }
-  .masthead-strip { display: none; }
-  .pick-inner { grid-template-columns: 1fr; gap: 32px; }
-  .pick-img { aspect-ratio: 16/9; }
-  .bento-grid { grid-template-columns: 1fr; }
-  .card.lg, .card.more-tile { grid-column: span 1; }
-  .catdir-row { grid-template-columns: 48px 1fr auto; gap: 16px; }
-  .catdir-desc, .catdir-count { display: none; }
-  .catdir-names h3 { font-size: 22px; }
+  .hub-wrap { padding: 40px 20px 60px; }
+  .tools-strip { grid-template-columns: 1fr; }
+  .recent-row { grid-template-columns: 1fr; gap: 4px; }
+  .recent-date { display: none; }
 }
 </style>
 
-<!-- Masthead -->
-<section class="masthead">
-  <div class="masthead-strip reveal">
-    <span>다다노트 &nbsp;·&nbsp; DADANOTE</span>
-    <span>{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()}</span>
-  </div>
+<div class="hub-wrap">
+  <!-- 1. 담백한 헤더 -->
+  <header class="hub-header reveal">
+    <p class="hub-meta">DADANOTE · REAL SIDE INCOME ARCHIVE</p>
+    <h1>시도하고, <em>검증하고,</em> 기록한다.</h1>
+    <p>
+      과장된 수익 인증이나 막연한 환상 대신, 직장인의 여건에서 지속 가능한 현실 부수입의 실전 운영법과 검증 데이터를 기록합니다.
+    </p>
+  </header>
 
-  <div class="masthead-inner">
-    <div>
-      <p class="hero-eyebrow reveal">SIDE INCOME ARCHIVE · 다다노트</p>
-      <h1 class="hero-title">
-        <span class="word" id="hw0"><span>시도하고,</span></span><br>
-        <span class="word" id="hw1"><span><em>검증하고,</em></span></span><br>
-        <span class="word" id="hw2"><span>기록한다.</span></span>
-      </h1>
-    </div>
-    <div class="hero-meta reveal" style="transition-delay:.4s">
-      <p class="hero-body">
-        과장된 수익 인증이나 막연한 환상 대신, 직장인의 여건에서 지속 가능한 4대 부수입 플랫폼의 현실적인 운영법을 다룹니다.
-        <em style="font-family:var(--serif);font-style:italic"> — 직접 부딪혀보고 검증한 실전 기록, 다다노트입니다.</em>
-      </p>
-      <div class="hero-stats">
-        <span>{allPosts.length}편의 가이드</span>
-        <span>4대 플랫폼 분석</span>
-        <span>실전 기록 중</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Editor's Pick -->
-{pick && (
-  <section class="pick">
-    <div class="section-head reveal">
-      <h2 class="section-title">가장 최근의 <em>기록</em></h2>
-    </div>
-    <div class="pick-inner" style="margin-top:52px">
-      <a href={`/posts/${pick.id}/`} class="pick-img reveal">
-        {pick.data.image
-          ? <img src={pick.data.image} alt={pick.data.title} loading="eager" />
-          : <div class="pick-ph"></div>
-        }
+  <!-- 2. 최신 대표 글 (1편 포커스) -->
+  {pick && (
+    <article class="hub-featured reveal">
+      <p class="featured-label">LATEST ISSUE · 최신 실전 가이드</p>
+      <a href={`/posts/${pick.id}/`}>
+        <h2>{pick.data.title}</h2>
       </a>
+      <p>{pick.data.summary}</p>
+      <div class="featured-foot">
+        <span>{fmtDate(pick.data.date)} · {readMin(pick.body ?? '')}분 소요</span>
+        <a href={`/posts/${pick.id}/`} class="featured-link">가이드 전문 읽기 →</a>
+      </div>
+    </article>
+  )}
+
+  <!-- 3. 실전 계산기 도구 2종 -->
+  <section class="tools-strip reveal">
+    <a href="/tools/4insur/" class="tool-box">
       <div>
-        <div class="pick-kicker reveal">
-          <span style="font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)">최근 기록</span>
-          <span class="rule"></span>
-          <span class={`cat ${catClass(pick.data.category)}`}><span class="dot"></span>{pick.data.category}</span>
-        </div>
-        <a href={`/posts/${pick.id}/`}>
-          <h2 class="pick-title reveal" style="transition-delay:.1s">{pick.data.title}</h2>
-        </a>
-        <p class="pick-body reveal" style="transition-delay:.2s">{pick.data.summary}</p>
-        <div class="pick-foot reveal" style="transition-delay:.3s">
-          <time>{fmtDate(pick.data.date)}</time>
-          <span style="color:var(--line-s)">·</span>
-          <span>{readMin(pick.body ?? '')}분 분량</span>
-          <a href={`/posts/${pick.id}/`} class="read-link">전문 읽기 →</a>
-        </div>
+        <h4>직장인 4대보험 & 실수령 계산기</h4>
+        <p>부수입 2,000만 원 건보료 기준 및 실수령액 산출</p>
       </div>
-    </div>
-  </section>
-)}
-
-<!-- Category Directory -->
-<section class="catdir">
-  <div class="section-head reveal">
-    <h2 class="section-title">직장인 현실 부수입 <em>실전 가이드</em></h2>
-    <a href="/archive" class="more-link">모두 보기 →</a>
-  </div>
-
-  {categories.map((c, i) => (
-    <a href={`/${c.slug}/`}
-       class="catdir-row reveal"
-       style={`transition-delay:${(i * 0.08).toFixed(2)}s`}>
-      <span class="catdir-num">{c.num}</span>
-      <div class="catdir-names">
-        <div class={`cat ${c.cls}`} style="margin-bottom:7px"><span class="dot"></span>{c.label}</div>
-        <h3>{c.ko}</h3>
-      </div>
-      <p class="catdir-desc">{c.desc}</p>
-      <span class="catdir-count">{countByCat[c.label] ?? 0} POSTS</span>
-      <span class="catdir-arrow">→</span>
+      <span class="tool-arrow">→</span>
     </a>
-  ))}
-</section>
+    <a href="/tools/growth/" class="tool-box">
+      <div>
+        <h4>우리아이 성장 백분위 계산기</h4>
+        <p>질병관리청 최신 도표 기반 키·몸무게 정밀 백분위</p>
+      </div>
+      <span class="tool-arrow">→</span>
+    </a>
+  </section>
 
-<!-- Bento grid -->
-{bento.length > 0 && (
-  <section class="bento">
-    <div class="section-head reveal" style="margin-bottom:32px">
-      <h2 class="section-title">최근의 <em>기록들</em></h2>
-      <a href="/archive" class="more-link">전체보기 →</a>
+  <!-- 4. 최근 발행 기록 (딱 3편만 컴팩트하게) -->
+  <section class="recent-section reveal">
+    <div class="section-title-bar">
+      <h3>최근 발행 기록</h3>
+      <a href="/side-income/">Side Income에서 전체 16편 보기 →</a>
     </div>
 
-    <div class="bento-grid">
-      <!-- Large card: first bento post -->
-      <a href={`/posts/${bento[0].id}/`} class="card lg reveal">
-        <div class="thumb">
-          {bento[0].data.image
-            ? <img src={bento[0].data.image} alt={bento[0].data.title} loading="lazy" />
-            : <div class={`ph ph-warm`}></div>
-          }
-        </div>
-        <div class="body">
-          <div class="meta">
-            <span class={`cat ${catClass(bento[0].data.category)}`}><span class="dot"></span>{bento[0].data.category}</span>
-            <time>{bento[0].data.date.toLocaleDateString('ko-KR', {year:'numeric',month:'numeric',day:'numeric'})}</time>
-          </div>
-          <h3>{bento[0].data.title}</h3>
-          <p class="summary">{bento[0].data.summary}</p>
-          <span class="read">자세히 보기 →</span>
-        </div>
-      </a>
-
-      <!-- Small cards -->
-      {bento.slice(1).map((post, i) => {
-        const phClasses = ['ph-cool', 'ph-olive', 'ph-dusk', 'ph-deep'];
-        return (
-          <a href={`/posts/${post.id}/`}
-             class="card reveal"
-             style={`transition-delay:${((i + 1) * 0.07).toFixed(2)}s`}>
-            <div class="thumb">
-              {post.data.image
-                ? <img src={post.data.image} alt={post.data.title} loading="lazy" />
-                : <div class={`ph ${phClasses[i % phClasses.length]}`}></div>
-              }
-            </div>
-            <div class="body">
-              <div class="meta">
-                <span class={`cat ${catClass(post.data.category)}`}><span class="dot"></span>{post.data.category}</span>
-                <time>{post.data.date.toLocaleDateString('ko-KR', {year:'numeric',month:'numeric',day:'numeric'})}</time>
-              </div>
-              <h3>{post.data.title}</h3>
-              <p class="summary">{post.data.summary}</p>
-              <span class="read">자세히 보기 →</span>
-            </div>
-          </a>
-        );
-      })}
-
-      <!-- More CTA -->
-      <a href="/archive" class="card more-tile reveal" style="transition-delay:.1s">
-        <div class="more-tile-inner">
-          <p class="more-eyebrow">ARCHIVE</p>
-          <h3 class="more-headline">남은 <em>{Math.max(0, allPosts.length - 1 - bento.length)}편</em>의 기록을<br>천천히 둘러보기</h3>
-        </div>
-        <span class="more-arrow" aria-hidden="true">→</span>
-      </a>
-
-      <!-- Dark tile - Random post -->
-      <a href="#" id="random-tile" class="card dark-tile reveal" style="transition-delay:.17s">
-        <div>
-          <p style="font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:14px">RANDOM</p>
-          <h3>읽을 글이<br><em>없다면,</em><br>이건 어때요?</h3>
-        </div>
-        <span class="sub-link">랜덤 글 보기 →</span>
-      </a>
-      <script define:vars={{ postIds: allPosts.map(p => p.id) }}>
-        document.getElementById('random-tile')?.addEventListener('click', e => {
-          e.preventDefault();
-          const id = postIds[Math.floor(Math.random() * postIds.length)];
-          window.location.href = '/posts/' + id;
-        });
-      </script>
+    <div class="recent-list">
+      {recentList.map(post => (
+        <a href={`/posts/${post.id}/`} class="recent-row">
+          <span class="recent-date">{fmtDate(post.data.date)}</span>
+          <span class="recent-title">{post.data.title}</span>
+          <span class="recent-arrow">→</span>
+        </a>
+      ))}
     </div>
   </section>
-)}
 
-<script>
-  /* Hero word reveal */
-  ['hw0','hw1','hw2'].forEach((id, i) => {
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) el.querySelector('span')?.classList.add('in');
-    }, 200 + i * 200);
-  });
-</script>
+  <!-- 5. 하단 안내 -->
+  <div class="hub-footer reveal">
+    플랫폼별 태그 필터(쿠팡, 애드센스, 크몽, 네이버)와 전체 목차는
+    <a href="/side-income/">Side Income 전체 보관함</a>에서 확인하실 수 있습니다.
+  </div>
+</div>
 </Layout>

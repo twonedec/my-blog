@@ -56,3 +56,13 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 **적용 범위**: 다음 글부터만 적용. 기존 1~16번 글은 URL 변경 비용(링크 끊김)이 더 커서 그대로 둔다.
 
 **대표 이미지**: `public/images/side-income/*.png` 썸네일에 있던 "DADANOTE · VOL.NN" 배지는 전부 "DADANOTE"로 정리했다(번호 표시 자체를 없앰). 새 이미지를 만들 때도 번호를 박아넣지 않는다.
+
+### 홈페이지 레이아웃 — 미니멀 쇼케이스 허브 (2026-09-25 결정)
+
+현재 애드센스 심사를 위해 카테고리가 `Side Income` 1개로 단일화되어 있는 상태에서, 홈 화면과 카테고리 상세 페이지(`/side-income/`)의 중복을 해소하고 역할을 명확히 분리했다:
+- **홈 화면 (`src/pages/index.astro`)**: 가벼운 1페이지 쇼케이스 허브.
+  - 다다노트 에디토리얼 인트로
+  - 최신 대표 가이드 1편 포커스
+  - 다다노트 전용 실전 계산기 2종 (4대보험 & 성장 계산기)
+  - 최근 발행 기록 3편 및 Side Income 전체 보관소 안내 링크
+- **Side Income 페이지 (`src/pages/[category].astro`)**: 전체 글을 태그 필터(쿠팡, 애드센스, 크몽, 네이버)로 정밀하게 탐색하는 전문 라이브러리 역할 전담.
