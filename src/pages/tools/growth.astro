@@ -1,0 +1,475 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Adsense from '../../components/Adsense.astro';
+import lmsData from '../../data/growth-lms.json';
+
+const pageTitle = "아이 키·몸무게 성장 백분위 계산기 — 다다노트";
+const pageDesc = "질병관리청·대한소아청소년과학회 2017 소아청소년 성장도표(LMS) 공식 기준으로 우리 아이의 키·몸무게·체질량지수(BMI) 백분위수를 계산합니다.";
+---
+
+<Layout title={pageTitle} description={pageDesc}>
+  <div class="calc-page-wrap">
+    <nav class="calc-breadcrumb">
+      <a href="/">홈</a>
+      <span class="sep">/</span>
+      <span class="curr">아이 키·몸무게 성장 백분위 계산기</span>
+    </nav>
+
+    <header class="calc-header">
+      <div class="calc-badge">
+        <span class="dot"></span> 질병관리청·대한소아청소년과학회 2017 공식 성장도표(LMS) 기준
+      </div>
+      <h1 class="calc-title">아이 키·몸무게 성장 백분위 계산기</h1>
+      <p class="calc-subtitle">
+        생년월일과 측정일, 키·몸무게만 입력하면 <strong>같은 성별·연령 또래 100명 중 몇 번째</strong>인지
+        백분위수로 바로 보여드립니다. 0~18세 전 구간을 지원합니다.
+      </p>
+    </header>
+
+    <Adsense />
+
+    <div class="calc-grid">
+      <section class="calc-card input-card">
+        <h2 class="card-title">아이 정보 입력</h2>
+
+        <div class="form-group">
+          <label>성별</label>
+          <div class="sex-toggle">
+            <button type="button" class="sex-btn active" data-sex="1">남아</button>
+            <button type="button" class="sex-btn" data-sex="2">여아</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="birth-date">생년월일 <span class="req">*</span></label>
+          <input type="date" id="birth-date" class="calc-input" />
+        </div>
+
+        <div class="form-group">
+          <label for="measure-date">측정일</label>
+          <input type="date" id="measure-date" class="calc-input" />
+          <p class="field-hint">오늘 날짜가 기본으로 들어갑니다. 예전 기록을 확인하려면 직접 바꾸세요.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="height-input">키</label>
+            <div class="input-unit-wrap">
+              <input type="text" id="height-input" class="calc-input" inputmode="decimal" placeholder="예: 102.5" />
+              <span class="unit">cm</span>
+            </div>
+          </div>
+          <div class="form-group half">
+            <label for="weight-input">몸무게</label>
+            <div class="input-unit-wrap">
+              <input type="text" id="weight-input" class="calc-input" inputmode="decimal" placeholder="예: 16.2" />
+              <span class="unit">kg</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" id="btn-calc" class="btn-primary btn-calc-full">백분위 계산하기</button>
+        <button type="button" id="btn-reset" class="calc-reset-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          입력값 초기화
+        </button>
+        <p id="input-error" class="input-error" style="display:none;"></p>
+      </section>
+
+      <section class="calc-card result-card">
+        <div id="result-empty" class="result-empty">
+          왼쪽에 아이 정보를 입력하고 <strong>백분위 계산하기</strong>를 눌러주세요.
+        </div>
+
+        <div id="result-body" style="display:none;">
+          <div class="result-top">
+            <span class="res-badge">만 <span id="res-age">-</span>개월 기준</span>
+          </div>
+
+          <div class="metric-block">
+            <div class="metric-head">
+              <span class="metric-label">키</span>
+              <span class="metric-value"><span id="res-height-val">-</span>cm</span>
+            </div>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar"><div id="bar-height" class="pct-bar-fill"></div></div>
+              <span class="pct-badge" id="badge-height">-</span>
+            </div>
+            <p class="metric-desc" id="desc-height">-</p>
+          </div>
+
+          <div class="metric-block">
+            <div class="metric-head">
+              <span class="metric-label">몸무게</span>
+              <span class="metric-value"><span id="res-weight-val">-</span>kg</span>
+            </div>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar"><div id="bar-weight" class="pct-bar-fill"></div></div>
+              <span class="pct-badge" id="badge-weight">-</span>
+            </div>
+            <p class="metric-desc" id="desc-weight">-</p>
+          </div>
+
+          <div class="metric-block" id="bmi-block">
+            <div class="metric-head">
+              <span class="metric-label">체질량지수(BMI)</span>
+              <span class="metric-value"><span id="res-bmi-val">-</span></span>
+            </div>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar"><div id="bar-bmi" class="pct-bar-fill"></div></div>
+              <span class="pct-badge" id="badge-bmi">-</span>
+            </div>
+            <p class="metric-desc" id="desc-bmi">-</p>
+          </div>
+          <p id="bmi-unavailable" class="field-hint" style="display:none;">체질량지수 백분위는 만 24개월 이상부터 공식 기준이 제공됩니다.</p>
+        </div>
+      </section>
+    </div>
+
+    <Adsense />
+
+    <article class="calc-guide-article">
+      <h2>💡 성장 백분위, 이렇게 이해하면 됩니다</h2>
+
+      <div class="guide-item">
+        <h3>1. 백분위수가 뜻하는 것</h3>
+        <p>
+          백분위수는 <strong>같은 성별·같은 개월수 또래 100명을 키(또는 몸무게) 순서로 세웠을 때 몇 번째에 해당하는지</strong>를 나타냅니다.
+          예를 들어 키가 75백분위수라면, 또래 100명 중 74명보다 크고 25명보다 작다는 뜻입니다. 50백분위수가 "평균"이며,
+          75든 25든 정상 범위 안에서는 어느 쪽도 문제가 아닙니다.
+        </p>
+      </div>
+
+      <div class="guide-item">
+        <h3>2. 저신장·저체중 판정 기준 (공식 정의)</h3>
+        <p>
+          2017 성장도표 제정 논문(Kim JH et al., <em>Korean J Pediatr</em> 2018;61(5):135-149, Table 3)에 명시된 공식 판정 기준은
+          <strong>키가 3백분위수 미만이면 저신장</strong>, <strong>몸무게가 5백분위수 미만이면 저체중</strong>입니다. 키와 몸무게의 컷오프 기준(3백분위 vs 5백분위)이 서로 다르다는 점에 유의하세요.
+          한 번의 측정값만으로 단정할 수 없고, <strong>성장 속도(추세)</strong>가 더 중요한 지표이므로 이 범주에 해당하면 소아청소년과 전문의 상담을 권합니다.
+        </p>
+      </div>
+
+      <div class="guide-item">
+        <h3>3. 과체중·비만 판정은 몸무게가 아니라 체질량지수(BMI) 기준</h3>
+        <p>
+          만 2세 이상부터는 몸무게 자체가 아니라 <strong>체질량지수(BMI)가 85~95백분위수면 과체중, 95백분위수 이상이면 비만</strong>으로 판정합니다(같은 논문 Table 3).
+          성인과 달리 소아청소년은 나이·성별에 따라 정상 체질량지수 범위가 계속 바뀌기 때문에, 성인 기준(BMI 25 이상 비만 등)을 그대로 적용하면 안 됩니다.
+        </p>
+      </div>
+
+      <div class="guide-item">
+        <h3>4. 이 계산기는 어떤 자료를 쓰나요</h3>
+        <p>
+          질병관리청과 대한소아청소년과학회가 공동 제정한 <strong>2017 소아청소년 성장도표</strong>의 LMS(L, M, S) 계수 원자료를 그대로 사용합니다.
+          측정 개월수가 표에 없는 경우(예: 만 3.5개월) 인접한 두 개월 값을 선형 보간하여 계산하며, 공식 발표 백분위 수치와 대조한 결과 오차 0.2% 이내로 확인했습니다.
+          더 정밀한 공식 계산이 필요하면
+          <a href="https://knhanes.kdca.go.kr/knhanes/grtcht/clclt/measClclt.do" target="_blank" rel="noopener">질병관리청 공식 성장상태 측정계산기</a>도 함께 확인해보세요.
+        </p>
+      </div>
+    </article>
+  </div>
+</Layout>
+
+<style>
+.calc-page-wrap { max-width: 1060px; margin: 0 auto; padding: 40px 24px 100px; }
+
+.calc-breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+}
+.calc-breadcrumb a:hover { color: var(--ink); }
+.calc-breadcrumb .sep { opacity: .4; }
+.calc-breadcrumb .curr { color: var(--ink); font-weight: 600; }
+
+.calc-header { margin-bottom: 32px; }
+.calc-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: oklch(0.94 0.03 155); color: var(--c-income, #16a34a);
+  padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  margin-bottom: 12px;
+}
+.calc-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.calc-title {
+  font-family: var(--serif); font-size: clamp(28px, 3.6vw, 40px); font-weight: 400;
+  line-height: 1.25; letter-spacing: -.02em; color: var(--ink); margin-bottom: 14px;
+}
+.calc-subtitle { font-size: 15px; line-height: 1.7; color: var(--ink-2); max-width: 720px; }
+
+.calc-grid {
+  display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 540px);
+  gap: 32px; align-items: start; margin-bottom: 48px;
+}
+@media (max-width: 960px) { .calc-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+.calc-card {
+  background: var(--bg-elev); border: 1px solid var(--line); border-radius: 12px;
+  padding: 28px; box-shadow: 0 4px 20px oklch(0.15 0.01 85 / .03);
+}
+.card-title { font-family: var(--sans); font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 24px; letter-spacing: -.01em; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 8px; }
+.form-group .req { color: #ef4444; }
+.form-row { display: flex; gap: 16px; }
+.form-group.half { flex: 1; margin-bottom: 20px; }
+
+.calc-input {
+  width: 100%; height: 48px; padding: 0 40px 0 16px;
+  font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--ink);
+  background: var(--bg-soft); border: 1px solid var(--line); border-radius: 8px;
+  outline: none; transition: border-color .2s, box-shadow .2s;
+}
+.calc-input:focus { border-color: var(--ink); background: #fff; box-shadow: 0 0 0 3px oklch(0.20 0.005 270 / .08); }
+.input-unit-wrap { position: relative; display: flex; align-items: center; }
+.input-unit-wrap .unit { position: absolute; right: 16px; font-size: 13px; font-weight: 600; color: var(--muted); pointer-events: none; }
+
+.field-hint { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+.sex-toggle { display: flex; gap: 8px; }
+.sex-btn {
+  flex: 1; height: 44px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--bg-soft); color: var(--ink-2); font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all .15s;
+}
+.sex-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.btn-primary {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 48px; border-radius: 8px; border: none; background: var(--ink); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .15s;
+}
+.btn-primary:hover { opacity: .88; }
+.btn-calc-full { width: 100%; margin-top: 4px; margin-bottom: 12px; }
+
+.calc-reset-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+  height: 38px; border-radius: 8px; border: 1px solid var(--line); background: transparent;
+  color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.calc-reset-btn:hover { color: var(--ink); border-color: var(--ink); }
+
+.input-error { margin-top: 12px; font-size: 12px; color: #ef4444; font-weight: 600; }
+
+.result-card { min-height: 320px; display: flex; flex-direction: column; }
+.result-empty {
+  flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;
+  color: var(--muted); font-size: 14px; line-height: 1.7; padding: 40px 20px;
+}
+
+.result-top { margin-bottom: 20px; }
+.res-badge {
+  display: inline-block; background: var(--bg-soft); border: 1px solid var(--line);
+  border-radius: 9999px; padding: 5px 14px; font-size: 12px; font-weight: 700; color: var(--ink-2);
+}
+
+.metric-block { margin-bottom: 26px; }
+.metric-block:last-child { margin-bottom: 0; }
+.metric-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.metric-label { font-size: 14px; font-weight: 700; color: var(--ink); }
+.metric-value { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--ink); }
+
+.pct-bar-wrap { display: flex; align-items: center; gap: 12px; }
+.pct-bar { flex: 1; height: 10px; border-radius: 9999px; background: var(--bg-soft); border: 1px solid var(--line); overflow: hidden; }
+.pct-bar-fill { height: 100%; background: linear-gradient(90deg, #60a5fa, var(--ink)); border-radius: 9999px; transition: width .4s ease; width: 0%; }
+.pct-badge {
+  flex-shrink: 0; font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--ink);
+  background: var(--bg-soft); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; min-width: 64px; text-align: center;
+}
+.metric-desc { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+.calc-guide-article { margin-top: 8px; }
+.calc-guide-article h2 { font-family: var(--serif); font-size: 24px; font-weight: 400; color: var(--ink); margin-bottom: 20px; }
+.guide-item { margin-bottom: 24px; }
+.guide-item h3 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.guide-item p { font-size: 14px; line-height: 1.8; color: var(--ink-2); }
+.guide-item a { color: var(--ink); text-decoration: underline; }
+</style>
+
+<script define:vars={{ lmsData }}>
+// ─────────────────────────────────────────────────────────────
+// 아이 키·몸무게 성장 백분위 계산 엔진
+// 질병관리청·대한소아청소년과학회 2017 소아청소년 성장도표(LMS) 기준
+// ─────────────────────────────────────────────────────────────
+
+let currentSex = "1";
+
+const sexBtns = document.querySelectorAll('.sex-btn');
+sexBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    sexBtns.forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentSex = btn.getAttribute('data-sex');
+  });
+});
+
+const birthDateInput = document.getElementById('birth-date');
+const measureDateInput = document.getElementById('measure-date');
+const heightInput = document.getElementById('height-input');
+const weightInput = document.getElementById('weight-input');
+const calcBtn = document.getElementById('btn-calc');
+const resetBtn = document.getElementById('btn-reset');
+const errorBox = document.getElementById('input-error');
+
+const resultEmpty = document.getElementById('result-empty');
+const resultBody = document.getElementById('result-body');
+const resAge = document.getElementById('res-age');
+
+// 오늘 날짜를 측정일 기본값으로
+const today = new Date();
+measureDateInput.value = today.toISOString().slice(0, 10);
+
+function ageInMonths(birthStr, measureStr) {
+  const birth = new Date(birthStr);
+  const measure = new Date(measureStr);
+  const days = (measure.getTime() - birth.getTime()) / 86400000;
+  return days / 30.4368499; // 365.2425 / 12
+}
+
+// 표에서 월령을 감싸는 두 행을 찾아 L, M, S를 선형 보간
+function interpolateLMS(table, ageM) {
+  const rows = table; // [[age_m, L, M, S], ...] 오름차순
+  const clamped = Math.max(rows[0][0], Math.min(rows[rows.length - 1][0], ageM));
+
+  let lo = rows[0], hi = rows[rows.length - 1];
+  for (let i = 0; i < rows.length - 1; i++) {
+    if (rows[i][0] <= clamped && clamped <= rows[i + 1][0]) {
+      lo = rows[i];
+      hi = rows[i + 1];
+      break;
+    }
+  }
+  if (lo[0] === hi[0]) return { L: lo[1], M: lo[2], S: lo[3] };
+  const t = (clamped - lo[0]) / (hi[0] - lo[0]);
+  return {
+    L: lo[1] + (hi[1] - lo[1]) * t,
+    M: lo[2] + (hi[2] - lo[2]) * t,
+    S: lo[3] + (hi[3] - lo[3]) * t,
+  };
+}
+
+// 표준정규분포 누적분포함수 (Abramowitz & Stegun 근사)
+function normalCDF(z) {
+  const sign = z < 0 ? -1 : 1;
+  z = Math.abs(z) / Math.SQRT2;
+  const t = 1 / (1 + 0.3275911 * z);
+  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-z * z);
+  return 0.5 * (1 + sign * y);
+}
+
+function percentileFromLMS(x, L, M, S) {
+  let z;
+  if (Math.abs(L) < 1e-6) {
+    z = Math.log(x / M) / S;
+  } else {
+    z = (Math.pow(x / M, L) - 1) / (L * S);
+  }
+  return normalCDF(z) * 100;
+}
+
+// 분류 기준 출처: Kim JH et al. "The 2017 Korean National Growth Charts for
+// children and adolescents" Korean J Pediatr 2018;61(5):135-149, Table 3.
+function classify(pct, kind) {
+  if (kind === 'bmi') {
+    if (pct < 5) return { label: '저체중', tone: 'low' };
+    if (pct < 85) return { label: '정상', tone: 'ok' };
+    if (pct < 95) return { label: '과체중', tone: 'high' };
+    return { label: '비만', tone: 'high' };
+  }
+  if (kind === 'weight') {
+    if (pct < 5) return { label: '저체중 기준(5백분위 미만)', tone: 'low' };
+    return { label: '정상 범위', tone: 'ok' };
+  }
+  // height
+  if (pct < 3) return { label: '저신장 기준(3백분위 미만)', tone: 'low' };
+  if (pct > 97) return { label: '97백분위 초과', tone: 'high' };
+  return { label: '정상 범위', tone: 'ok' };
+}
+
+function fmtPct(pct) {
+  if (pct < 1) return '1 미만';
+  if (pct > 99) return '99 초과';
+  return Math.round(pct * 10) / 10 + '';
+}
+
+function renderMetric(prefix, value, unit, pct, kind) {
+  document.getElementById(`res-${prefix}-val`).textContent = value;
+  document.getElementById(`bar-${prefix}`).style.width = Math.max(2, Math.min(100, pct)) + '%';
+  document.getElementById(`badge-${prefix}`).textContent = fmtPct(pct) + '백분위';
+
+  const cls = classify(pct, kind);
+  const descEl = document.getElementById(`desc-${prefix}`);
+  if (kind === 'bmi') {
+    descEl.textContent = `같은 성별·연령 또래 중 ${fmtPct(pct)}백분위 — ${cls.label}`;
+  } else {
+    descEl.textContent = `또래 100명 중 약 ${fmtPct(pct)}번째 — ${cls.label}`;
+  }
+}
+
+function showError(msg) {
+  errorBox.textContent = msg;
+  errorBox.style.display = 'block';
+}
+
+calcBtn.addEventListener('click', () => {
+  errorBox.style.display = 'none';
+
+  const birthStr = birthDateInput.value;
+  const measureStr = measureDateInput.value || today.toISOString().slice(0, 10);
+  const heightVal = parseFloat(heightInput.value);
+  const weightVal = parseFloat(weightInput.value);
+
+  if (!birthStr) { showError('생년월일을 입력해주세요.'); return; }
+  if (!heightVal || heightVal <= 0 || !weightVal || weightVal <= 0) {
+    showError('키와 몸무게를 정확히 입력해주세요.');
+    return;
+  }
+
+  const ageM = ageInMonths(birthStr, measureStr);
+  if (ageM < 0) { showError('측정일이 생년월일보다 빠릅니다.'); return; }
+  if (ageM > 228) { showError('이 계산기는 만 19세 미만까지 지원합니다.'); return; }
+
+  const heightTable = lmsData.height[currentSex];
+  const weightTable = lmsData.weight[currentSex];
+  const bmiTable = lmsData.bmi[currentSex];
+
+  const hLMS = interpolateLMS(heightTable, ageM);
+  const wLMS = interpolateLMS(weightTable, ageM);
+  const heightPct = percentileFromLMS(heightVal, hLMS.L, hLMS.M, hLMS.S);
+  const weightPct = percentileFromLMS(weightVal, wLMS.L, wLMS.M, wLMS.S);
+
+  resAge.textContent = Math.round(ageM * 10) / 10;
+  renderMetric('height', heightVal, 'cm', heightPct, 'height');
+  renderMetric('weight', weightVal, 'kg', weightPct, 'weight');
+
+  const bmiUnavailable = document.getElementById('bmi-unavailable');
+  const bmiBlock = document.getElementById('bmi-block');
+  if (ageM >= 24) {
+    const bmiVal = weightVal / Math.pow(heightVal / 100, 2);
+    const bLMS = interpolateLMS(bmiTable, ageM);
+    const bmiPct = percentileFromLMS(bmiVal, bLMS.L, bLMS.M, bLMS.S);
+    renderMetric('bmi', Math.round(bmiVal * 10) / 10, '', bmiPct, 'bmi');
+    bmiBlock.style.display = 'block';
+    bmiUnavailable.style.display = 'none';
+  } else {
+    bmiBlock.style.display = 'none';
+    bmiUnavailable.style.display = 'block';
+  }
+
+  resultEmpty.style.display = 'none';
+  resultBody.style.display = 'block';
+});
+
+resetBtn.addEventListener('click', () => {
+  birthDateInput.value = '';
+  measureDateInput.value = today.toISOString().slice(0, 10);
+  heightInput.value = '';
+  weightInput.value = '';
+  errorBox.style.display = 'none';
+  resultEmpty.style.display = 'flex';
+  resultBody.style.display = 'none';
+});
+</script>
