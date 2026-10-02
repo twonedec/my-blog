@@ -170,11 +170,76 @@ const pageDesc = "질병관리청·대한소아청소년과학회 2017 소아청
         </p>
       </div>
     </article>
+
+    <!-- 4대보험 & 실수령액 계산기 추천 배너 (상호 링크) -->
+    <section class="tool-crosslink-card">
+      <div class="crosslink-left">
+        <span class="crosslink-badge">💰 직장인 맞춤 추천</span>
+        <h3 class="crosslink-title">2026 4대보험 & 월급 실수령액 계산기</h3>
+        <p class="crosslink-desc">2026년 개정 요율(국민연금 9.5%, 건강보험 7.19%)과 비과세 식대 20만 원, 육아휴직 복직 감면까지 1초 만에 확인해 보세요.</p>
+      </div>
+      <a href="/tools/4insur/" class="crosslink-btn">실수령액 계산하기 →</a>
+    </section>
   </div>
 </Layout>
 
 <style>
 .calc-page-wrap { max-width: 1060px; margin: 0 auto; padding: 40px 24px 100px; }
+
+/* 상호 연계 배너 */
+.tool-crosslink-card {
+  margin-top: 32px;
+  background: var(--bg-elev);
+  border: 1.5px solid var(--line-s);
+  border-radius: 14px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+  flex-wrap: wrap;
+}
+.crosslink-badge {
+  font-size: 11px;
+  font-family: var(--mono);
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--c-income, #16a34a);
+  display: block;
+  margin-bottom: 6px;
+}
+.crosslink-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.crosslink-desc {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  max-width: 640px;
+}
+.crosslink-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 20px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.crosslink-btn:hover {
+  background: oklch(0.12 0.005 270);
+  transform: translateY(-2px);
+}
 
 .calc-breadcrumb {
   display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px;
