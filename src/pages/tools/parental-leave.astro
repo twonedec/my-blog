@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Adsense from '../../components/Adsense.astro';
 
 const pageTitle = "2026 육아휴직 & 단축근무 급여 통합 계산기 — 다다노트";
-const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(월 최대 250만원·사후지급금 폐지 100% 매월 수령), 6+6 부모육아휴직제(월 최대 450만원), 육아기 단축근무 정부지원금 및 회사 급여 세후 실수령액을 1초 만에 자동 계산합니다.";
+const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(월 최대 250만원·사후지급금 폐지 100% 매월 수령), 6+6 부모육아휴직제(배우자 사용기간 연동 최대 450만원), 육아기 단축근무 정부지원금 및 회사 급여 세후 실수령액을 1초 만에 자동 계산합니다.";
 ---
 
 <Layout title={pageTitle} description={pageDesc} ogImage="/og/parental-leave.png">
@@ -20,27 +20,25 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     <!-- Header -->
     <header class="calc-header">
       <div class="calc-badge">
-        <span class="dot"></span> 2026 고용보험 최신 개정 · 사후지급금 전면 폐지 · 6+6 부모휴직 반영
+        <span class="dot"></span> 2026 고용보험 최신 개정 · 사후지급금 전면 폐지 · 6+6 부모휴직 특례 완벽 반영
       </div>
       <h1 class="calc-title">육아휴직 & 단축근무 급여 계산기</h1>
       <p class="calc-subtitle">
-        내 월 통상임금만 넣으면 <strong>일반 육아휴직(월 최대 250만원)</strong>, 
-        <strong>6+6 부모육아휴직제(월 최대 450만원)</strong>, 
-        그리고 <strong>육아기 단축근무 시 정부지원금과 회사 급여 세후 실수령액</strong>을 즉시 산출해 드립니다.
+        내 월 통상임금과 배우자 휴직 기간을 입력하면 <strong>육아휴직 급여(일반 & 6+6 특례 자동 판정)</strong>와 
+        <strong>육아기 단축근무 시 정부지원금 + 회사 급여 세후 실수령액</strong>을 즉시 산출해 드립니다.
       </p>
     </header>
 
     <Adsense />
 
     <!-- ═════════════════════════════════════════════════════════════
-         모드 탭 선택 바
+         모드 탭 선택 바 (육아휴직 vs 단축근무 vs 비교)
          ═════════════════════════════════════════════════════════════ -->
     <div class="tabs-nav-wrap">
       <div class="tabs-nav">
-        <button type="button" class="tab-item active" data-tab="normal">일반 육아휴직</button>
-        <button type="button" class="tab-item" data-tab="six">6+6 부모휴직</button>
-        <button type="button" class="tab-item" data-tab="short">육아기 단축근무</button>
-        <button type="button" class="tab-item" data-tab="compare">휴직 vs 단축 비교</button>
+        <button type="button" class="tab-item active" data-tab="leave">👶 육아휴직 급여 (일반 & 6+6 통합)</button>
+        <button type="button" class="tab-item" data-tab="short">💼 육아기 근로시간 단축</button>
+        <button type="button" class="tab-item" data-tab="compare">⚖️ 휴직 vs 단축 수입 비교</button>
       </div>
     </div>
 
@@ -52,7 +50,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
       <section class="calc-card input-card">
         <div class="panel-header-row">
           <h2 class="panel-section-title">
-            <span class="icon">💼</span> 급여 및 조건 설정
+            <span class="icon">⚙️</span> 급여 및 조건 설정
           </h2>
           <button type="button" id="btn-reset" class="calc-reset-btn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -67,8 +65,8 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
           <!-- 통상임금 입력 -->
           <div class="form-item">
             <label for="monthly-salary">
-              <span>월 통상임금 (기본급 + 고정수당) <span class="req">*</span></span>
-              <span class="sub-hint">휴직 전 3개월 평균 통상임금</span>
+              <span>내 월 통상임금 (기본급 + 고정수당) <span class="req">*</span></span>
+              <span class="sub-hint">휴직 전 3개월 평균 세전 통상임금</span>
             </label>
             <div class="input-unit-box">
               <input 
@@ -89,13 +87,13 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
             </div>
           </div>
 
-          <!-- 사용 개월 수 선택 -->
-          <div class="form-item" id="group-months">
+          <!-- 내 휴직 예정 기간 -->
+          <div class="form-item" id="group-my-months">
             <label>
-              <span>휴직 예정 기간</span>
-              <span class="sub-hint">부모 1인 기본 1년, 최대 1년 6개월</span>
+              <span>내 휴직 예정 기간</span>
+              <span class="sub-hint">부모 1인 기본 1년 (부모 모두 3개월 이상 시 1년 6개월 연장)</span>
             </label>
-            <div class="seg-group" id="seg-months">
+            <div class="seg-group" id="seg-my-months">
               <button type="button" class="seg-btn" data-months="3">3개월</button>
               <button type="button" class="seg-btn" data-months="6">6개월</button>
               <button type="button" class="seg-btn active" data-months="12">12개월 (1년)</button>
@@ -103,40 +101,58 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
             </div>
           </div>
 
-          <!-- 탭 2: 6+6 부모휴직 자녀 연령 확인 -->
-          <div class="form-item conditional-box" id="section-six-options" style="display:none;">
-            <label>
-              <span>자녀 연령 확인 (6+6 요건)</span>
-              <span class="sub-hint">생후 18개월 이내 자녀 필수</span>
-            </label>
-            <div class="seg-group">
-              <button type="button" class="seg-btn active" id="btn-age-yes">생후 18개월 이내 (6+6 적용)</button>
-              <button type="button" class="seg-btn" id="btn-age-no">18개월 초과 (일반 기준 적용)</button>
+          <!-- [핵심] 육아휴직 탭 전용: 6+6 부모휴직 옵션 박스 -->
+          <div class="spouse-leave-box" id="section-spouse-options">
+            <div class="switch-row">
+              <div class="switch-label-area">
+                <span class="switch-title">👩‍👧‍👦 6+6 부모육아휴직제 적용</span>
+                <span class="switch-desc">자녀 생후 18개월 이내이며, 배우자도 함께/순차적으로 육아휴직을 사용함</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="check-spouse-used" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <!-- 배우자 휴직 개월 수 선택 (체크 시 활성화) -->
+            <div class="spouse-months-subpanel" id="spouse-months-subpanel">
+              <div class="form-item" style="margin-bottom: 0;">
+                <label>
+                  <span>배우자의 육아휴직 사용 기간</span>
+                  <span class="sub-hint">배우자가 사용한 기간까지만 6+6 특례 상한 적용</span>
+                </label>
+                <div class="seg-group-sm" id="seg-spouse-months">
+                  <button type="button" class="seg-btn-sm" data-smonths="1">1개월</button>
+                  <button type="button" class="seg-btn-sm" data-smonths="2">2개월</button>
+                  <button type="button" class="seg-btn-sm" data-smonths="3">3개월</button>
+                  <button type="button" class="seg-btn-sm" data-smonths="4">4개월</button>
+                  <button type="button" class="seg-btn-sm" data-smonths="5">5개월</button>
+                  <button type="button" class="seg-btn-sm active" data-smonths="6">6개월 이상</button>
+                </div>
+                <p class="rule-hint-text" id="six-rule-hint">
+                  ℹ️ 배우자가 <strong>6개월 이상</strong> 사용하므로 내 휴직 기간 중 <strong>첫 6개월 전체</strong>에 6+6 특례(월 최대 250만~450만원)가 적용됩니다.
+                </p>
+              </div>
             </div>
           </div>
 
-          <!-- 탭 3: 단축근무 시간 설정 -->
+          <!-- 단축근무 탭 전용: 단축근무 시간 설정 -->
           <div class="form-item conditional-box" id="section-short-options" style="display:none;">
             <label>
-              <span>단축 근로 시간 선택</span>
-              <span class="sub-hint">기존 주 40시간(하루 8시간) 기준</span>
+              <span>하루 단축할 근로 시간</span>
+              <span class="sub-hint">주 40시간(하루 8시간) 근무 기준</span>
             </label>
             <div class="seg-group" id="seg-short-hours">
-              <button type="button" class="seg-btn" data-hours="1">하루 1시간 (주 35h)</button>
-              <button type="button" class="seg-btn active" data-hours="2">하루 2시간 (주 30h)</button>
-              <button type="button" class="seg-btn" data-hours="3">하루 3시간 (주 25h)</button>
+              <button type="button" class="seg-btn" data-hours="1">하루 1시간 단축 (주 35h)</button>
+              <button type="button" class="seg-btn active" data-hours="2">하루 2시간 단축 (주 30h)</button>
+              <button type="button" class="seg-btn" data-hours="3">하루 3시간 단축 (주 25h)</button>
             </div>
           </div>
 
           <!-- 콜아웃 안내문 -->
           <div class="info-callout" id="callout-notice">
             <strong>💡 2026 핵심 개정 안내:</strong><br>
-            복직 6개월 후 돌려받던 <strong>사후지급금(25%)이 전면 폐지</strong>되어, 휴직 기간 동안 전액 100% 매월 즉시 입금됩니다!
-          </div>
-
-          <div class="warning-callout" id="callout-warning" style="display:none;">
-            <strong>⚠️ 6+6 부모휴직 안내:</strong><br>
-            부모가 순차적 또는 동시에 휴직할 때 적용되며, 두 번째 사용자의 휴직 개월 수에 따라 부모 각각 월 최대 450만원(1~6개월 단계적 인상)까지 보장됩니다.
+            복직 6개월 후 돌려받던 <strong>사후지급금(25%)이 전면 폐지</strong>되어, 휴직 기간 동안 전액 100% 매월 즉시 통장에 입금됩니다!
           </div>
 
           <div class="info-callout short-callout" id="callout-short" style="display:none;">
@@ -156,13 +172,13 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
 
         <!-- 히어로 총액 배너 -->
         <div class="res-hero-box">
-          <div class="hero-top-tag" id="summary-title">일반 육아휴직 총 수령액 (12개월)</div>
+          <div class="hero-top-tag" id="summary-title">육아휴직 총 수령액 (12개월)</div>
           <div class="res-hero-amount">
-            <span id="total-display" class="hero-number">23,100,000</span>
+            <span id="total-display" class="hero-number">20,500,000</span>
             <span class="hero-unit">원</span>
           </div>
           <p class="hero-caption" id="summary-sub">
-            월 평균 약 1,925,000원 입금 (사후지급금 폐지 100% 전액 수령)
+            사후지급금 폐지 100% 전액 매월 통장 즉시 지급
           </p>
         </div>
 
@@ -198,7 +214,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
         <!-- 월별 상세 타임라인 -->
         <div class="timeline-container" id="timeline-container">
           <div class="timeline-header">
-            🗓️ 월별 정부 지원금 지급 내역
+            🗓️ 월별 지원금 및 상한액 적용 내역
           </div>
           <div class="timeline-list" id="timeline-list">
             <!-- JS 렌더링 -->
@@ -266,7 +282,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
                   <td>월 70만 원</td>
                 </tr>
                 <tr>
-                  <td><strong>7~12개월 차</strong></td>
+                  <td><strong>7~12개월 차 (이후)</strong></td>
                   <td>통상임금 80%</td>
                   <td><strong>월 최대 160만 원</strong></td>
                   <td>월 70만 원</td>
@@ -280,9 +296,9 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
         </div>
 
         <div class="guide-content-card">
-          <h3 class="guide-card-title">2. '6+6 부모육아휴직제' 특례</h3>
+          <h3 class="guide-card-title">2. '6+6 부모육아휴직제' 특례 적용 원리</h3>
           <p class="guide-card-desc">
-            생후 18개월 이내 자녀를 두고 부모가 동시 또는 순차적으로 육아휴직을 사용하는 경우, 첫 6개월 동안 부모 각각에게 더 높은 상한액이 적용됩니다.
+            자녀가 생후 18개월 이내일 때 부모가 동시 또는 순차적으로 사용할 경우, <strong>두 부모의 사용 기간 중 겹치는 개월 수(두 번째 사용자의 사용 기간)</strong>만큼 6+6 특례 상한이 적용됩니다.
           </p>
           <ul class="guide-bullet-list">
             <li><strong>1개월 차:</strong> 월 상한 250만 원 (부모 각각)</li>
@@ -291,7 +307,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
             <li><strong>4개월 차:</strong> 월 상한 350만 원</li>
             <li><strong>5개월 차:</strong> 월 상한 400만 원</li>
             <li><strong>6개월 차:</strong> <strong>월 상한 450만 원</strong></li>
-            <li><strong>부부 합산 최대 혜택:</strong> 부모 모두 통상임금이 충분한 경우, 첫 6개월간 부부 합산 최대 <strong>4,000만 원</strong>까지 수령 가능합니다.</li>
+            <li>⚠️ <strong>주의:</strong> 배우자가 3개월만 휴직했다면, 내가 6개월을 휴직하더라도 <strong>첫 3개월까지만 6+6 특례</strong>를 받고, 4~6개월차는 일반 상한(월 200만원)이 적용됩니다.</li>
           </ul>
         </div>
 
@@ -638,23 +654,129 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
+/* Spouse Leave Box (6+6 Option in Same Tab) */
+.spouse-leave-box {
+  background: var(--bg-soft);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  transition: border-color .15s;
+}
+.spouse-leave-box.active {
+  border-color: #fbcfe8;
+  background: #fdf2f8;
+}
+.switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.switch-label-area {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.switch-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.switch-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 24px;
+}
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #db2777;
+}
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+.spouse-months-subpanel {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(0,0,0,0.08);
+}
+.seg-group-sm {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  padding: 2px;
+  border-radius: 8px;
+  gap: 2px;
+  margin-top: 6px;
+}
+.seg-btn-sm {
+  padding: 7px 2px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.seg-btn-sm.active {
+  background: #db2777;
+  color: #ffffff;
+  font-weight: 700;
+}
+.rule-hint-text {
+  font-size: 12px;
+  color: #be185d;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
 /* Callouts */
-.info-callout, .warning-callout {
+.info-callout {
   padding: 13px 15px;
   border-radius: 10px;
   font-size: 12.5px;
   line-height: 1.6;
   margin-top: 14px;
-}
-.info-callout {
   background: #eff6ff;
   border: 1px solid #bfdbfe;
   color: #1e40af;
-}
-.warning-callout {
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  color: #92400e;
 }
 .short-callout {
   background: #f0fdf4;
@@ -1063,10 +1185,11 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
 
 <script is:inline>
   // 상태 변수
-  let currentTab = 'normal'; // 'normal', 'six', 'short', 'compare'
-  let selectedMonths = 12;
-  let isChildUnder18m = true;
-  let shortHoursPerDay = 2; // 하루 2시간 단축
+  let currentTab = 'leave'; // 'leave', 'short', 'compare'
+  let myLeaveMonths = 12; // 내 휴직 기간 (3, 6, 12, 18)
+  let spouseLeaveUsed = true; // 배우자 6+6 사용 여부
+  let spouseLeaveMonths = 6; // 배우자 휴직 개월 수 (1~6)
+  let shortHoursPerDay = 2; // 하루 단축 시간 (주 10시간)
   let taxMode = 'net'; // 'net' or 'gross'
 
   // 엘리먼트 참조
@@ -1074,21 +1197,24 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   const btnReset = document.getElementById('btn-reset');
   const tabButtons = document.querySelectorAll('.tab-item');
   const quickSalaryBtns = document.querySelectorAll('.btn-quick');
-  const monthBtns = document.querySelectorAll('#seg-months .seg-btn');
+  const myMonthBtns = document.querySelectorAll('#seg-my-months .seg-btn');
+  const spouseMonthBtns = document.querySelectorAll('#seg-spouse-months .seg-btn-sm');
+  const checkSpouseUsed = document.getElementById('check-spouse-used');
+  const spouseMonthsSubpanel = document.getElementById('spouse-months-subpanel');
+  const spouseLeaveBox = document.getElementById('section-spouse-options');
+  const sixRuleHint = document.getElementById('six-rule-hint');
+
+  const sectionSpouseOptions = document.getElementById('section-spouse-options');
+  const sectionShortOptions = document.getElementById('section-short-options');
+  const groupMyMonths = document.getElementById('group-my-months');
   const shortHourBtns = document.querySelectorAll('#seg-short-hours .seg-btn');
 
-  const sectionSixOptions = document.getElementById('section-six-options');
-  const sectionShortOptions = document.getElementById('section-short-options');
-  const groupMonths = document.getElementById('group-months');
   const calloutNotice = document.getElementById('callout-notice');
-  const calloutWarning = document.getElementById('callout-warning');
   const calloutShort = document.getElementById('callout-short');
   const shortTaxCard = document.getElementById('short-tax-card');
   const timelineContainer = document.getElementById('timeline-container');
   const compareContainer = document.getElementById('compare-container');
 
-  const btnAgeYes = document.getElementById('btn-age-yes');
-  const btnAgeNo = document.getElementById('btn-age-no');
   const btnTaxNet = document.getElementById('btn-tax-net');
   const btnTaxGross = document.getElementById('btn-tax-gross');
 
@@ -1105,7 +1231,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   const govPayDisplay = document.getElementById('gov-pay-display');
   const finalTakeHomeDisplay = document.getElementById('final-take-home-display');
 
-  // 금액 포맷터
+  // 금액 취득
   function getSalary() {
     const raw = monthlySalaryInput.value.replace(/[^0-9]/g, '');
     return parseInt(raw, 10) || 0;
@@ -1116,7 +1242,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     calculate();
   }
 
-  // 4대보험 & 근로소득세 예상 공제액 간이 산출
+  // 4대보험 & 소득세 예상 공제액 간이 계산
   function estimateDeductions(gross) {
     if (gross <= 0) return { totalDeduct: 0, netPay: 0 };
     const pension = Math.round(Math.min(gross, 6170000) * 0.045);
@@ -1137,14 +1263,26 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     return { totalDeduct, netPay: Math.max(0, gross - totalDeduct) };
   }
 
-  // 메인 연산
+  // 힌트 텍스트 업데이트
+  function updateSpouseHint() {
+    if (!spouseLeaveUsed) {
+      sixRuleHint.textContent = `ℹ️ 배우자 미사용으로 일반 육아휴직 상한(1~3개월 250만, 4~6개월 200만, 7개월 이후 160만)이 적용됩니다.`;
+      return;
+    }
+    const effectiveMonths = Math.min(myLeaveMonths, spouseLeaveMonths, 6);
+    if (effectiveMonths < myLeaveMonths && myLeaveMonths <= 6) {
+      sixRuleHint.innerHTML = `ℹ️ 배우자가 <strong>${spouseLeaveMonths}개월</strong> 사용하므로, 내 휴직 중 <strong>1~${effectiveMonths}개월차</strong>만 6+6 특례 상한이 적용되고 <strong>${effectiveMonths + 1}~${myLeaveMonths}개월차</strong>는 일반 상한(월 200만원)이 적용됩니다.`;
+    } else {
+      sixRuleHint.innerHTML = `ℹ️ 배우자가 <strong>${spouseLeaveMonths}개월</strong> 사용하므로 내 휴직 중 <strong>첫 ${effectiveMonths}개월</strong>에 6+6 단계적 특례 상한(최대 450만원)이 적용됩니다.`;
+    }
+  }
+
+  // 메인 계산 실행
   function calculate() {
     const salary = getSalary();
 
-    if (currentTab === 'normal') {
-      calcNormal(salary);
-    } else if (currentTab === 'six') {
-      calcSixPlusSix(salary);
+    if (currentTab === 'leave') {
+      calcParentalLeave(salary);
     } else if (currentTab === 'short') {
       calcShortWork(salary);
     } else if (currentTab === 'compare') {
@@ -1152,31 +1290,46 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     }
   }
 
-  // 1. 일반 육아휴직
-  function calcNormal(salary) {
+  // 1. 육아휴직 급여 계산 (일반 & 6+6 통합 판정)
+  function calcParentalLeave(salary) {
     let total = 0;
     const rows = [];
+    const sixCaps = [2500000, 2500000, 3000000, 3500000, 4000000, 4500000];
+    
+    // 6+6 특례가 적용되는 개월 수 = min(내 기간, 배우자 기간, 6)
+    const effectiveSixMonths = spouseLeaveUsed ? Math.min(myLeaveMonths, spouseLeaveMonths, 6) : 0;
 
-    for (let m = 1; m <= selectedMonths; m++) {
+    for (let m = 1; m <= myLeaveMonths; m++) {
       let maxCap = 1600000;
       let rate = 0.8;
       let tag = '통상 80%';
       let tagClass = '';
 
-      if (m <= 3) {
-        maxCap = 2500000;
+      if (spouseLeaveUsed && m <= effectiveSixMonths) {
+        // 6+6 부모휴직 특례 적용 구간 (100% 지급, 단계별 상한)
+        maxCap = sixCaps[m - 1];
         rate = 1.0;
-        tag = '1~3개월 (상한 250만)';
-        tagClass = 'tag-high';
-      } else if (m <= 6) {
-        maxCap = 2000000;
-        rate = 1.0;
-        tag = '4~6개월 (상한 200만)';
+        tag = `6+6 특례 ${m}개월차 (상한 ${maxCap / 10000}만)`;
         tagClass = 'tag-bonus';
       } else {
-        maxCap = 1600000;
-        rate = 0.8;
-        tag = '7개월 이후 (상한 160만)';
+        // 일반 육아휴직 기준 적용 구간
+        if (m <= 3) {
+          maxCap = 2500000;
+          rate = 1.0;
+          tag = '1~3개월 일반 (상한 250만)';
+          tagClass = 'tag-high';
+        } else if (m <= 6) {
+          maxCap = 2000000;
+          rate = 1.0;
+          tag = (spouseLeaveUsed && m > effectiveSixMonths) 
+            ? `배우자 기간 초과 (일반 상한 200만)` 
+            : '4~6개월 일반 (상한 200만)';
+          tagClass = 'tag-high';
+        } else {
+          maxCap = 1600000;
+          rate = 0.8;
+          tag = '7개월 이후 (상한 160만)';
+        }
       }
 
       let calculated = Math.round(salary * rate);
@@ -1186,47 +1339,15 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
       rows.push({ month: m, actual, tag, tagClass });
     }
 
-    summaryTitle.textContent = `일반 육아휴직 총 수령액 (${selectedMonths}개월)`;
+    const typeStr = spouseLeaveUsed ? `6+6 부모휴직 (${effectiveSixMonths}개월 적용)` : '일반 육아휴직';
+    summaryTitle.textContent = `${typeStr} 총 예상 수령액 (${myLeaveMonths}개월)`;
     totalDisplay.textContent = total.toLocaleString('ko-KR');
-    summarySub.textContent = `월 평균 약 ${Math.round(total / selectedMonths).toLocaleString('ko-KR')}원 입금 (사후지급금 폐지 전액 수령)`;
+    summarySub.textContent = `월 평균 약 ${Math.round(total / myLeaveMonths).toLocaleString('ko-KR')}원 입금 (사후지급금 폐지 100% 매월 전액 수령)`;
 
     renderTimeline(rows);
   }
 
-  // 2. 6+6 부모휴직
-  function calcSixPlusSix(salary) {
-    const caps = [2500000, 2500000, 3000000, 3500000, 4000000, 4500000];
-    let total = 0;
-    const rows = [];
-
-    for (let m = 1; m <= selectedMonths; m++) {
-      let actual = 0;
-      let tag = '';
-      let tagClass = '';
-
-      if (isChildUnder18m && m <= 6) {
-        const cap = caps[m - 1];
-        actual = Math.min(Math.max(salary, 700000), cap);
-        tag = `6+6 ${m}개월차 (상한 ${cap / 10000}만)`;
-        tagClass = 'tag-bonus';
-      } else {
-        const cap = 1600000;
-        actual = Math.min(Math.max(Math.round(salary * 0.8), 700000), cap);
-        tag = (m <= 6) ? '18개월 초과 (일반 적용)' : '7개월 이후 일반 상한 (160만)';
-      }
-
-      total += actual;
-      rows.push({ month: m, actual, tag, tagClass });
-    }
-
-    summaryTitle.textContent = `6+6 부모휴직 총 수령액 (${selectedMonths}개월)`;
-    totalDisplay.textContent = total.toLocaleString('ko-KR');
-    summarySub.textContent = `첫 6개월간 부모 각각 최대 2,050만원 지원 혜택 적용`;
-
-    renderTimeline(rows);
-  }
-
-  // 3. 육아기 단축근무
+  // 2. 육아기 근로시간 단축 급여
   function calcShortWork(salary) {
     const weeklyReduce = shortHoursPerDay * 5; // 하루 2시간 x 5일 = 주 10시간
     const workedHours = 40 - weeklyReduce; // 주 30시간 근무
@@ -1260,7 +1381,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     finalTakeHomeDisplay.textContent = `약 ${totalTakeHomeMonth.toLocaleString('ko-KR')}원 / 월`;
 
     const rows = [];
-    for (let m = 1; m <= selectedMonths; m++) {
+    for (let m = 1; m <= myLeaveMonths; m++) {
       rows.push({
         month: m,
         actual: govTotalMonth,
@@ -1271,7 +1392,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     renderTimeline(rows);
   }
 
-  // 4. 휴직 vs 단축 비교
+  // 3. 휴직 vs 단축 비교
   function calcCompare(salary) {
     const leaveEarly = Math.min(salary, 2500000);
     const leaveMid = Math.min(salary, 2000000);
@@ -1290,7 +1411,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     const short1Year = shortTotalMonth * 12;
     const diff = short1Year - leave1Year;
 
-    summaryTitle.textContent = `1년 기준 수입 차이 (단축근무 vs 전일휴직)`;
+    summaryTitle.textContent = `1년 기준 수입 차이 (단축근무 vs 일반휴직)`;
     totalDisplay.textContent = `+${diff.toLocaleString('ko-KR')}`;
     summarySub.textContent = `단축근무(하루 ${shortHoursPerDay}시간) 선택 시 전일 휴직 대비 연간 약 ${Math.round(diff/10000)}만원 수입 증가 (회사 세전 예상치 포함)`;
 
@@ -1343,21 +1464,25 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     });
   }
 
-  // 탭 변경 리스너
+  // 탭 변경
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       tabButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentTab = btn.getAttribute('data-tab');
 
-      sectionSixOptions.style.display = (currentTab === 'six') ? 'block' : 'none';
-      sectionShortOptions.style.display = (currentTab === 'short' || currentTab === 'compare') ? 'block' : 'none';
-      groupMonths.style.display = (currentTab === 'compare') ? 'none' : 'block';
-      calloutWarning.style.display = (currentTab === 'six') ? 'block' : 'none';
-      calloutShort.style.display = (currentTab === 'short' || currentTab === 'compare') ? 'block' : 'none';
-      shortTaxCard.style.display = (currentTab === 'short') ? 'block' : 'none';
+      const isLeave = (currentTab === 'leave');
+      const isShort = (currentTab === 'short');
+      const isCompare = (currentTab === 'compare');
 
-      if (currentTab === 'compare') {
+      sectionSpouseOptions.style.display = isLeave ? 'block' : 'none';
+      groupMyMonths.style.display = isCompare ? 'none' : 'block';
+      sectionShortOptions.style.display = (isShort || isCompare) ? 'block' : 'none';
+      calloutNotice.style.display = isLeave ? 'block' : 'none';
+      calloutShort.style.display = (isShort || isCompare) ? 'block' : 'none';
+      shortTaxCard.style.display = isShort ? 'block' : 'none';
+
+      if (isCompare) {
         timelineContainer.style.display = 'none';
         compareContainer.style.display = 'block';
       } else {
@@ -1365,6 +1490,26 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
         compareContainer.style.display = 'none';
       }
 
+      calculate();
+    });
+  });
+
+  // 배우자 6+6 토글
+  checkSpouseUsed.addEventListener('change', (e) => {
+    spouseLeaveUsed = e.target.checked;
+    spouseMonthsSubpanel.style.display = spouseLeaveUsed ? 'block' : 'none';
+    spouseLeaveBox.classList.toggle('active', spouseLeaveUsed);
+    updateSpouseHint();
+    calculate();
+  });
+
+  // 배우자 개월 수 버튼
+  spouseMonthBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      spouseMonthBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      spouseLeaveMonths = parseInt(btn.getAttribute('data-smonths'), 10);
+      updateSpouseHint();
       calculate();
     });
   });
@@ -1385,28 +1530,15 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     });
   });
 
-  // 개월 수 버튼
-  monthBtns.forEach(btn => {
+  // 내 개월 수 버튼
+  myMonthBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      monthBtns.forEach(b => b.classList.remove('active'));
+      myMonthBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      selectedMonths = parseInt(btn.getAttribute('data-months'), 10);
+      myLeaveMonths = parseInt(btn.getAttribute('data-months'), 10);
+      updateSpouseHint();
       calculate();
     });
-  });
-
-  // 자녀 연령 버튼
-  btnAgeYes.addEventListener('click', () => {
-    isChildUnder18m = true;
-    btnAgeYes.classList.add('active');
-    btnAgeNo.classList.remove('active');
-    calculate();
-  });
-  btnAgeNo.addEventListener('click', () => {
-    isChildUnder18m = false;
-    btnAgeNo.classList.add('active');
-    btnAgeYes.classList.remove('active');
-    calculate();
   });
 
   // 단축 시간 버튼
@@ -1442,6 +1574,8 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     setFormattedSalary(3500000);
   });
 
-  // 초기 실행
+  // 초기 상태 세팅
+  spouseLeaveBox.classList.add('active');
+  updateSpouseHint();
   calculate();
 </script>
