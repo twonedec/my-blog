@@ -1,0 +1,1447 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Adsense from '../../components/Adsense.astro';
+
+const pageTitle = "2026 육아휴직 & 단축근무 급여 통합 계산기 — 다다노트";
+const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(월 최대 250만원·사후지급금 폐지 100% 매월 수령), 6+6 부모육아휴직제(월 최대 450만원), 육아기 단축근무 정부지원금 및 회사 급여 세후 실수령액을 1초 만에 자동 계산합니다.";
+---
+
+<Layout title={pageTitle} description={pageDesc} ogImage="/og/parental-leave.png">
+  <div class="calc-page-wrap">
+    <!-- Breadcrumb -->
+    <nav class="calc-breadcrumb">
+      <a href="/">홈</a>
+      <span class="sep">/</span>
+      <a href="/tools/">계산기</a>
+      <span class="sep">/</span>
+      <span class="curr">2026 육아휴직 & 단축근무 계산기</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="calc-header">
+      <div class="calc-badge">
+        <span class="dot"></span> 2026 고용보험 최신 개정 · 사후지급금 전면 폐지 · 6+6 부모휴직 반영
+      </div>
+      <h1 class="calc-title">육아휴직 & 단축근무 급여 계산기</h1>
+      <p class="calc-subtitle">
+        내 월 통상임금만 넣으면 <strong>일반 육아휴직(월 최대 250만원)</strong>, 
+        <strong>6+6 부모육아휴직제(월 최대 450만원)</strong>, 
+        그리고 <strong>육아기 단축근무 시 정부지원금과 회사 급여 세후 실수령액</strong>을 즉시 산출해 드립니다.
+      </p>
+    </header>
+
+    <Adsense />
+
+    <!-- ═════════════════════════════════════════════════════════════
+         모드 탭 선택 바
+         ═════════════════════════════════════════════════════════════ -->
+    <div class="tabs-nav-wrap">
+      <div class="tabs-nav">
+        <button type="button" class="tab-item active" data-tab="normal">일반 육아휴직</button>
+        <button type="button" class="tab-item" data-tab="six">6+6 부모휴직</button>
+        <button type="button" class="tab-item" data-tab="short">육아기 단축근무</button>
+        <button type="button" class="tab-item" data-tab="compare">휴직 vs 단축 비교</button>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════
+         메인 그리드 (입력 패널 + 결과 리포트)
+         ═════════════════════════════════════════════════════════════ -->
+    <div class="calc-main-grid">
+      <!-- 1. 좌측 입력 패널 -->
+      <section class="calc-card input-card">
+        <div class="panel-header-row">
+          <h2 class="panel-section-title">
+            <span class="icon">💼</span> 급여 및 조건 설정
+          </h2>
+          <button type="button" id="btn-reset" class="calc-reset-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+            초기화
+          </button>
+        </div>
+
+        <div class="input-form">
+          <!-- 통상임금 입력 -->
+          <div class="form-item">
+            <label for="monthly-salary">
+              <span>월 통상임금 (기본급 + 고정수당) <span class="req">*</span></span>
+              <span class="sub-hint">휴직 전 3개월 평균 통상임금</span>
+            </label>
+            <div class="input-unit-box">
+              <input 
+                type="text" 
+                id="monthly-salary" 
+                class="h-input" 
+                value="3,500,000" 
+                inputmode="numeric"
+              />
+              <span class="unit">원</span>
+            </div>
+            <div class="quick-salary-tags">
+              <button type="button" class="btn-quick" data-val="2500000">250만</button>
+              <button type="button" class="btn-quick" data-val="3000000">300만</button>
+              <button type="button" class="btn-quick" data-val="3500000">350만</button>
+              <button type="button" class="btn-quick" data-val="4000000">400만</button>
+              <button type="button" class="btn-quick" data-val="5000000">500만</button>
+            </div>
+          </div>
+
+          <!-- 사용 개월 수 선택 -->
+          <div class="form-item" id="group-months">
+            <label>
+              <span>휴직 예정 기간</span>
+              <span class="sub-hint">부모 1인 기본 1년, 최대 1년 6개월</span>
+            </label>
+            <div class="seg-group" id="seg-months">
+              <button type="button" class="seg-btn" data-months="3">3개월</button>
+              <button type="button" class="seg-btn" data-months="6">6개월</button>
+              <button type="button" class="seg-btn active" data-months="12">12개월 (1년)</button>
+              <button type="button" class="seg-btn" data-months="18">18개월 (연장)</button>
+            </div>
+          </div>
+
+          <!-- 탭 2: 6+6 부모휴직 자녀 연령 확인 -->
+          <div class="form-item conditional-box" id="section-six-options" style="display:none;">
+            <label>
+              <span>자녀 연령 확인 (6+6 요건)</span>
+              <span class="sub-hint">생후 18개월 이내 자녀 필수</span>
+            </label>
+            <div class="seg-group">
+              <button type="button" class="seg-btn active" id="btn-age-yes">생후 18개월 이내 (6+6 적용)</button>
+              <button type="button" class="seg-btn" id="btn-age-no">18개월 초과 (일반 기준 적용)</button>
+            </div>
+          </div>
+
+          <!-- 탭 3: 단축근무 시간 설정 -->
+          <div class="form-item conditional-box" id="section-short-options" style="display:none;">
+            <label>
+              <span>단축 근로 시간 선택</span>
+              <span class="sub-hint">기존 주 40시간(하루 8시간) 기준</span>
+            </label>
+            <div class="seg-group" id="seg-short-hours">
+              <button type="button" class="seg-btn" data-hours="1">하루 1시간 (주 35h)</button>
+              <button type="button" class="seg-btn active" data-hours="2">하루 2시간 (주 30h)</button>
+              <button type="button" class="seg-btn" data-hours="3">하루 3시간 (주 25h)</button>
+            </div>
+          </div>
+
+          <!-- 콜아웃 안내문 -->
+          <div class="info-callout" id="callout-notice">
+            <strong>💡 2026 핵심 개정 안내:</strong><br>
+            복직 6개월 후 돌려받던 <strong>사후지급금(25%)이 전면 폐지</strong>되어, 휴직 기간 동안 전액 100% 매월 즉시 입금됩니다!
+          </div>
+
+          <div class="warning-callout" id="callout-warning" style="display:none;">
+            <strong>⚠️ 6+6 부모휴직 안내:</strong><br>
+            부모가 순차적 또는 동시에 휴직할 때 적용되며, 두 번째 사용자의 휴직 개월 수에 따라 부모 각각 월 최대 450만원(1~6개월 단계적 인상)까지 보장됩니다.
+          </div>
+
+          <div class="info-callout short-callout" id="callout-short" style="display:none;">
+            <strong>💼 단축 급여 수령 안내:</strong><br>
+            <strong>정부 지원금</strong>은 고용보험법에 따른 비과세 100% 실수령액입니다. <strong>회사 급여</strong>는 소정근로시간 비례치이며, 4대보험/소득세 공제 모드를 선택해 예상 실수령액을 함께 비교할 수 있습니다.
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. 우측 결과 리포트 패널 -->
+      <section class="calc-card result-card" id="result-anchor">
+        <div class="panel-header-row">
+          <h2 class="panel-section-title">
+            <span class="icon">📊</span> 예상 수령액 리포트
+          </h2>
+        </div>
+
+        <!-- 히어로 총액 배너 -->
+        <div class="res-hero-box">
+          <div class="hero-top-tag" id="summary-title">일반 육아휴직 총 수령액 (12개월)</div>
+          <div class="res-hero-amount">
+            <span id="total-display" class="hero-number">23,100,000</span>
+            <span class="hero-unit">원</span>
+          </div>
+          <p class="hero-caption" id="summary-sub">
+            월 평균 약 1,925,000원 입금 (사후지급금 폐지 100% 전액 수령)
+          </p>
+        </div>
+
+        <!-- 단축근무 전용: 세전 vs 세후 실수령 브레이크다운 카드 -->
+        <div class="short-tax-card" id="short-tax-card" style="display:none;">
+          <div class="tax-header-row">
+            <span class="tax-card-title">💳 내 통장 실제 입금액 (회사 + 정부)</span>
+            <div class="tax-toggle-group">
+              <button type="button" id="btn-tax-net" class="tax-btn active">세후(실수령)</button>
+              <button type="button" id="btn-tax-gross" class="tax-btn">세전</button>
+            </div>
+          </div>
+          <div class="tax-breakdown-list">
+            <div class="tax-row">
+              <span class="t-label">• 회사 지급 급여 (<span id="company-tax-label">세후 예상</span>):</span>
+              <strong class="t-val" id="company-pay-display">약 2,367,000원</strong>
+            </div>
+            <div class="tax-row deduct" id="company-deduct-row">
+              <span class="t-label">└ 4대보험 & 근로소득세 예상 공제:</span>
+              <span class="t-val" id="company-deduct-display">약 -258,000원</span>
+            </div>
+            <div class="tax-row gov">
+              <span class="t-label">• 정부 지원금 (고용보험 비과세 100%):</span>
+              <strong class="t-val text-green" id="gov-pay-display">+462,500원</strong>
+            </div>
+            <div class="tax-row total">
+              <span class="t-label">= 매월 실제 통장 입금 총액:</span>
+              <strong class="t-val text-primary" id="final-take-home-display">약 2,829,500원 / 월</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 월별 상세 타임라인 -->
+        <div class="timeline-container" id="timeline-container">
+          <div class="timeline-header">
+            🗓️ 월별 정부 지원금 지급 내역
+          </div>
+          <div class="timeline-list" id="timeline-list">
+            <!-- JS 렌더링 -->
+          </div>
+        </div>
+
+        <!-- 휴직 vs 단축 비교 테이블 (비교 탭) -->
+        <div class="compare-container" id="compare-container" style="display:none;">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>회사 급여</th>
+                <th>정부 지원금</th>
+                <th style="text-align:right;">월 총 실수령</th>
+              </tr>
+            </thead>
+            <tbody id="compare-body">
+              <!-- JS 렌더링 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════════
+         2026 법률 가이드 & 팩트체크 아코디언
+         ═════════════════════════════════════════════════════════════ -->
+    <section class="calc-guide-section">
+      <div class="guide-header">
+        <span class="guide-badge">2026 법정 핵심 기준</span>
+        <h2 class="guide-main-title">육아휴직 & 단축근무 제도 총정리 가이드</h2>
+        <p class="guide-main-desc">
+          2025~2026년 대폭 개편된 모성보호 및 고용보험법 최신 개정 내용을 알기 쉽게 정리해 드립니다.
+        </p>
+      </div>
+
+      <div class="guide-grid">
+        <div class="guide-content-card">
+          <h3 class="guide-card-title">1. 2026년 육아휴직급여 상한액 개정 및 사후지급금 폐지</h3>
+          <p class="guide-card-desc">
+            기존 월 150만원에 묶여 있던 일반 육아휴직 상한이 기간별로 대폭 상향되었습니다.
+          </p>
+          <div class="guide-table-wrap">
+            <table class="guide-table">
+              <thead>
+                <tr>
+                  <th>휴직 기간</th>
+                  <th>지급률</th>
+                  <th>월 상한액</th>
+                  <th>월 하한액</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1~3개월 차</strong></td>
+                  <td>통상임금 100%</td>
+                  <td><strong>월 최대 250만 원</strong></td>
+                  <td>월 70만 원</td>
+                </tr>
+                <tr>
+                  <td><strong>4~6개월 차</strong></td>
+                  <td>통상임금 100%</td>
+                  <td><strong>월 최대 200만 원</strong></td>
+                  <td>월 70만 원</td>
+                </tr>
+                <tr>
+                  <td><strong>7~12개월 차</strong></td>
+                  <td>통상임금 80%</td>
+                  <td><strong>월 최대 160만 원</strong></td>
+                  <td>월 70만 원</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="guide-tip-text">
+            💡 <strong>사후지급금 폐지:</strong> 종전에는 급여의 25%를 떼어두었다가 복직 후 6개월을 근무해야 지급했으나, 현재는 휴직 기간 중 <strong>매월 100% 전액 입금</strong>됩니다.
+          </p>
+        </div>
+
+        <div class="guide-content-card">
+          <h3 class="guide-card-title">2. '6+6 부모육아휴직제' 특례</h3>
+          <p class="guide-card-desc">
+            생후 18개월 이내 자녀를 두고 부모가 동시 또는 순차적으로 육아휴직을 사용하는 경우, 첫 6개월 동안 부모 각각에게 더 높은 상한액이 적용됩니다.
+          </p>
+          <ul class="guide-bullet-list">
+            <li><strong>1개월 차:</strong> 월 상한 250만 원 (부모 각각)</li>
+            <li><strong>2개월 차:</strong> 월 상한 250만 원</li>
+            <li><strong>3개월 차:</strong> 월 상한 300만 원</li>
+            <li><strong>4개월 차:</strong> 월 상한 350만 원</li>
+            <li><strong>5개월 차:</strong> 월 상한 400만 원</li>
+            <li><strong>6개월 차:</strong> <strong>월 상한 450만 원</strong></li>
+            <li><strong>부부 합산 최대 혜택:</strong> 부모 모두 통상임금이 충분한 경우, 첫 6개월간 부부 합산 최대 <strong>4,000만 원</strong>까지 수령 가능합니다.</li>
+          </ul>
+        </div>
+
+        <div class="guide-content-card">
+          <h3 class="guide-card-title">3. 육아기 근로시간 단축 급여 및 소득 보전</h3>
+          <p class="guide-card-desc">
+            전일 휴직 대신 일하면서 돌봄을 병행하는 경우, 단축된 시간에 대해 고용보험에서 보조금을 지급합니다.
+          </p>
+          <ul class="guide-bullet-list">
+            <li><strong>최초 단축 5시간:</strong> 통상임금 100% 기준 (월 상한 220만 원 한도)으로 지원</li>
+            <li><strong>초과 단축 시간:</strong> 통상임금 80% 기준 (월 상한 150만 원 한도)으로 지원</li>
+            <li><strong>소득 보전율:</strong> 일한 시간만큼은 회사에서 기본 급여를 수령하므로, 하루 2시간 단축(주 30h) 시 통상임금의 <strong>90~95% 수준</strong> 실수령액이 유지됩니다.</li>
+          </ul>
+        </div>
+
+        <div class="guide-content-card">
+          <h3 class="guide-card-title">4. 단기 육아휴직 & 기간 연장 (최대 1년 6개월)</h3>
+          <p class="guide-card-desc">
+            돌봄 공백에 유연하게 대응할 수 있는 다양한 신규 제도가 안착되었습니다.
+          </p>
+          <ul class="guide-bullet-list">
+            <li><strong>단기 육아휴직 (연 1회):</strong> 초등학교 입학식, 방학, 질병 등으로 돌봄이 필요할 때 1~2주(7일 또는 14일) 단위로 사용 가능하며, 정규 분할 사용 횟수를 차감하지 않습니다.</li>
+            <li><strong>휴직 기간 연장:</strong> 부모 모두가 각각 3개월 이상 육아휴직을 사용한 경우, 1인당 최대 <strong>1년 6개월(부부 합산 3년)</strong>까지 연장 가능합니다.</li>
+            <li><strong>분할 사용 횟수:</strong> 총 3회 분할(4회 사용)까지 자유롭게 나누어 사용할 수 있습니다.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="guide-content-card faq-card">
+        <h3 class="guide-card-title">자주 묻는 질문 (FAQ)</h3>
+        <div class="faq-list">
+          <details class="calc-guide-accordion" open>
+            <summary class="guide-summary">
+              <span class="summary-left">
+                <span class="guide-icon">❓</span>
+                <span class="summary-title">육아휴직급여는 신청 후 언제 입금되나요?</span>
+              </span>
+              <span class="accordion-arrow">▼</span>
+            </summary>
+            <div class="guide-answer">
+              <p>법정 처리 기한은 접수일로부터 영업일 기준 14일 이내(약 3주)입니다. 실제로는 관할 고용센터 사정에 따라 평균 7~10일 안팎이면 입금되며, 첫 달 이후 매월 연속으로 신청하면 처리 기간이 더욱 단축됩니다. 단, 사업주(회사)가 고용센터에 <strong>'육아휴직 확인서'</strong>를 먼저 접수해야만 근로자가 온라인 신청을 진행할 수 있으므로 휴직 즉시 회사에 요청하는 것이 좋습니다.</p>
+            </div>
+          </details>
+
+          <details class="calc-guide-accordion">
+            <summary class="guide-summary">
+              <span class="summary-left">
+                <span class="guide-icon">❓</span>
+                <span class="summary-title">육아휴직 중 4대보험(건강보험, 국민연금)은 어떻게 처리되나요?</span>
+              </span>
+              <span class="accordion-arrow">▼</span>
+            </summary>
+            <div class="guide-answer">
+              <p><strong>국민연금</strong>은 '납부예외'를 신청하여 휴직 기간 동안 보험료가 청구되지 않습니다. <strong>건강보험</strong>은 '납부유예'를 신청하여 매달 빠져나가지 않도록 유예한 뒤, 복직하는 달에 정산합니다. 특히 육아휴직 복직 시 건강보험료는 <strong>최대 60% 법정 감면 혜택</strong>이 주어지며 최대 10회 분할 납부도 가능합니다.</p>
+            </div>
+          </details>
+
+          <details class="calc-guide-accordion">
+            <summary class="guide-summary">
+              <span class="summary-left">
+                <span class="guide-icon">❓</span>
+                <span class="summary-title">육아휴직 기간도 퇴직금 산정 근속연수에 포함되나요?</span>
+              </span>
+              <span class="accordion-arrow">▼</span>
+            </summary>
+            <div class="guide-answer">
+              <p>네, 100% 포함됩니다. 남녀고용평등법 제19조에 따라 육아휴직 기간은 계속근로기간에 산입되므로 근속연수가 늘어납니다. 또한 휴직 직후 퇴사하더라도 퇴직금은 휴직 전 정상 근무했던 3개월간의 평균임금을 기준으로 산정하므로 불이익이 전혀 없습니다.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 다른 계산기 연결 배너 -->
+    <div class="calc-link-banner">
+      <div class="link-banner-inner">
+        <div class="link-banner-text">
+          <span class="lb-badge">연관 계산기</span>
+          <h3>복직 후 월급 실수령액이나 연차수당이 궁금하신가요?</h3>
+          <p>2026년 최신 4대보험 요율과 연차수당 계산기로 복직 후 소득과 보상을 미리 확인해보세요.</p>
+        </div>
+        <div class="link-banner-buttons">
+          <a href="/tools/4insur/" class="lb-btn primary">4대보험 & 실수령액 계산기 →</a>
+          <a href="/tools/annual-leave/" class="lb-btn secondary">연차수당 계산기 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+/* Base Wrap */
+.calc-page-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 20px 100px;
+}
+
+/* Breadcrumb */
+.calc-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.calc-breadcrumb a { color: var(--muted); text-decoration: none; }
+.calc-breadcrumb a:hover { color: var(--ink); }
+.calc-breadcrumb .sep { opacity: .4; }
+.calc-breadcrumb .curr { color: var(--ink); font-weight: 600; }
+
+/* Header */
+.calc-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.calc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1d4ed8;
+  margin-bottom: 12px;
+}
+.calc-badge .dot {
+  width: 7px;
+  height: 7px;
+  background: #3b82f6;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+.calc-title {
+  font-family: var(--serif);
+  font-size: clamp(26px, 3.4vw, 36px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  margin-bottom: 10px;
+}
+.calc-subtitle {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Tabs Nav */
+.tabs-nav-wrap {
+  margin-bottom: 24px;
+}
+.tabs-nav {
+  display: flex;
+  background: var(--bg-soft);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  gap: 4px;
+}
+.tab-item {
+  flex: 1;
+  padding: 11px 8px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.tab-item.active {
+  background: var(--bg-elev);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* Main Grid */
+.calc-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+@media (max-width: 840px) {
+  .calc-main-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* Cards */
+.calc-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+.panel-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.panel-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.calc-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.calc-reset-btn:hover {
+  background: var(--bg-soft);
+  color: var(--ink);
+}
+
+/* Form */
+.form-item {
+  margin-bottom: 20px;
+}
+.form-item label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.sub-hint {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: normal;
+}
+.req { color: #ef4444; }
+
+.input-unit-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.h-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 42px 0 14px;
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--bg-soft);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .15s;
+}
+.h-input:focus {
+  background: var(--bg-elev);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+.input-unit-box .unit {
+  position: absolute;
+  right: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.quick-salary-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.btn-quick {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-quick:hover {
+  background: var(--line);
+  color: var(--ink);
+}
+
+/* Segmented Buttons */
+.seg-group {
+  display: flex;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  padding: 3px;
+  border-radius: 10px;
+  gap: 3px;
+}
+.seg-btn {
+  flex: 1;
+  padding: 9px 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.seg-btn.active {
+  background: var(--bg-elev);
+  color: #1d4ed8;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* Callouts */
+.info-callout, .warning-callout {
+  padding: 13px 15px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  margin-top: 14px;
+}
+.info-callout {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+}
+.warning-callout {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+.short-callout {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+/* Result Card */
+.res-hero-box {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.hero-top-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.res-hero-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  margin: 6px 0;
+}
+.hero-number {
+  font-family: var(--mono);
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 800;
+  color: #1d4ed8;
+  letter-spacing: -.02em;
+}
+.hero-unit {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.hero-caption {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+/* Short Tax Card */
+.short-tax-card {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.tax-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.tax-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.tax-toggle-group {
+  display: inline-flex;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  padding: 2px;
+  border-radius: 6px;
+}
+.tax-btn {
+  border: none;
+  background: transparent;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.tax-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+}
+.tax-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 13px;
+}
+.tax-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tax-row .t-val {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--ink);
+}
+.tax-row.deduct {
+  font-size: 12px;
+  color: #ef4444;
+  padding-left: 12px;
+}
+.tax-row.gov .text-green { color: #059669; }
+.tax-row.total {
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.tax-row.total .text-primary { color: #1d4ed8; }
+
+/* Timeline */
+.timeline-header {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+:global(.timeline-item) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+:global(.timeline-month) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--ink);
+}
+:global(.timeline-tag) {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background: var(--bg-elev);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+:global(.timeline-tag.tag-high) {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+  font-weight: 700;
+}
+:global(.timeline-tag.tag-bonus) {
+  background: #fdf2f8;
+  color: #db2777;
+  border-color: #fbcfe8;
+  font-weight: 700;
+}
+:global(.timeline-val) {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Compare Table */
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.comp-table th, .comp-table td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+.comp-table th {
+  background: var(--bg-soft);
+  font-weight: 700;
+  color: var(--ink);
+}
+:global(.comp-table tr.highlight-row) {
+  background: #f0fdf4;
+}
+:global(.comp-table td.amount) {
+  font-family: var(--mono);
+  text-align: right;
+  font-weight: 700;
+}
+
+/* Guide Section */
+.calc-guide-section {
+  margin-top: 56px;
+  border-top: 1px solid var(--line);
+  padding-top: 40px;
+}
+.guide-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.guide-badge {
+  display: inline-block;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.guide-main-title {
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.8vw, 28px);
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.guide-main-desc {
+  font-size: 14.5px;
+  color: var(--muted);
+}
+.guide-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+@media (max-width: 768px) {
+  .guide-grid { grid-template-columns: 1fr; }
+}
+.guide-content-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+.guide-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.guide-card-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.guide-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 12px;
+}
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.guide-table th, .guide-table td {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.guide-table th { background: var(--bg-soft); font-weight: 700; }
+.guide-tip-text {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg-soft);
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.guide-bullet-list {
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+.guide-bullet-list li strong { color: var(--ink); }
+
+/* FAQ */
+.faq-card {
+  margin-top: 20px;
+}
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+.calc-guide-accordion {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  overflow: hidden;
+}
+.guide-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  list-style: none;
+}
+.guide-summary::-webkit-details-marker { display: none; }
+.summary-left { display: flex; align-items: center; gap: 8px; }
+.accordion-arrow { font-size: 11px; color: var(--muted); transition: transform .2s; }
+.calc-guide-accordion[open] .accordion-arrow { transform: rotate(180deg); }
+.guide-answer {
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--bg-elev);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+/* Banner */
+.calc-link-banner {
+  margin-top: 48px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-radius: 16px;
+  padding: 32px 28px;
+  color: #ffffff;
+}
+.link-banner-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+@media (max-width: 720px) {
+  .link-banner-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+.lb-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  margin-bottom: 8px;
+}
+.link-banner-text h3 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.link-banner-text p {
+  font-size: 13px;
+  opacity: .8;
+  line-height: 1.5;
+}
+.link-banner-buttons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+@media (max-width: 720px) {
+  .link-banner-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+.lb-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  transition: all .15s;
+}
+.lb-btn.primary {
+  background: #3b82f6;
+  color: #ffffff;
+}
+.lb-btn.primary:hover { background: #2563eb; }
+.lb-btn.secondary {
+  background: rgba(255,255,255,0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.lb-btn.secondary:hover { background: rgba(255,255,255,0.2); }
+</style>
+
+<script is:inline>
+  // 상태 변수
+  let currentTab = 'normal'; // 'normal', 'six', 'short', 'compare'
+  let selectedMonths = 12;
+  let isChildUnder18m = true;
+  let shortHoursPerDay = 2; // 하루 2시간 단축
+  let taxMode = 'net'; // 'net' or 'gross'
+
+  // 엘리먼트 참조
+  const monthlySalaryInput = document.getElementById('monthly-salary');
+  const btnReset = document.getElementById('btn-reset');
+  const tabButtons = document.querySelectorAll('.tab-item');
+  const quickSalaryBtns = document.querySelectorAll('.btn-quick');
+  const monthBtns = document.querySelectorAll('#seg-months .seg-btn');
+  const shortHourBtns = document.querySelectorAll('#seg-short-hours .seg-btn');
+
+  const sectionSixOptions = document.getElementById('section-six-options');
+  const sectionShortOptions = document.getElementById('section-short-options');
+  const groupMonths = document.getElementById('group-months');
+  const calloutNotice = document.getElementById('callout-notice');
+  const calloutWarning = document.getElementById('callout-warning');
+  const calloutShort = document.getElementById('callout-short');
+  const shortTaxCard = document.getElementById('short-tax-card');
+  const timelineContainer = document.getElementById('timeline-container');
+  const compareContainer = document.getElementById('compare-container');
+
+  const btnAgeYes = document.getElementById('btn-age-yes');
+  const btnAgeNo = document.getElementById('btn-age-no');
+  const btnTaxNet = document.getElementById('btn-tax-net');
+  const btnTaxGross = document.getElementById('btn-tax-gross');
+
+  const summaryTitle = document.getElementById('summary-title');
+  const totalDisplay = document.getElementById('total-display');
+  const summarySub = document.getElementById('summary-sub');
+  const timelineList = document.getElementById('timeline-list');
+  const compareBody = document.getElementById('compare-body');
+
+  const companyPayDisplay = document.getElementById('company-pay-display');
+  const companyDeductDisplay = document.getElementById('company-deduct-display');
+  const companyDeductRow = document.getElementById('company-deduct-row');
+  const companyTaxLabel = document.getElementById('company-tax-label');
+  const govPayDisplay = document.getElementById('gov-pay-display');
+  const finalTakeHomeDisplay = document.getElementById('final-take-home-display');
+
+  // 금액 포맷터
+  function getSalary() {
+    const raw = monthlySalaryInput.value.replace(/[^0-9]/g, '');
+    return parseInt(raw, 10) || 0;
+  }
+
+  function setFormattedSalary(val) {
+    monthlySalaryInput.value = parseInt(val, 10).toLocaleString('ko-KR');
+    calculate();
+  }
+
+  // 4대보험 & 근로소득세 예상 공제액 간이 산출
+  function estimateDeductions(gross) {
+    if (gross <= 0) return { totalDeduct: 0, netPay: 0 };
+    const pension = Math.round(Math.min(gross, 6170000) * 0.045);
+    const health = Math.round(gross * 0.03545);
+    const care = Math.round(health * 0.1295);
+    const employ = Math.round(gross * 0.009);
+    const insurTotal = pension + health + care + employ;
+
+    let incomeTax = 0;
+    if (gross > 1060000) {
+      if (gross <= 2000000) incomeTax = Math.round((gross - 1060000) * 0.02);
+      else if (gross <= 3000000) incomeTax = Math.round(18800 + (gross - 2000000) * 0.035);
+      else if (gross <= 4000000) incomeTax = Math.round(53800 + (gross - 3000000) * 0.06);
+      else incomeTax = Math.round(113800 + (gross - 4000000) * 0.12);
+    }
+    const totalTax = Math.round(incomeTax * 1.1); // 지방소득세 10%
+    const totalDeduct = insurTotal + totalTax;
+    return { totalDeduct, netPay: Math.max(0, gross - totalDeduct) };
+  }
+
+  // 메인 연산
+  function calculate() {
+    const salary = getSalary();
+
+    if (currentTab === 'normal') {
+      calcNormal(salary);
+    } else if (currentTab === 'six') {
+      calcSixPlusSix(salary);
+    } else if (currentTab === 'short') {
+      calcShortWork(salary);
+    } else if (currentTab === 'compare') {
+      calcCompare(salary);
+    }
+  }
+
+  // 1. 일반 육아휴직
+  function calcNormal(salary) {
+    let total = 0;
+    const rows = [];
+
+    for (let m = 1; m <= selectedMonths; m++) {
+      let maxCap = 1600000;
+      let rate = 0.8;
+      let tag = '통상 80%';
+      let tagClass = '';
+
+      if (m <= 3) {
+        maxCap = 2500000;
+        rate = 1.0;
+        tag = '1~3개월 (상한 250만)';
+        tagClass = 'tag-high';
+      } else if (m <= 6) {
+        maxCap = 2000000;
+        rate = 1.0;
+        tag = '4~6개월 (상한 200만)';
+        tagClass = 'tag-bonus';
+      } else {
+        maxCap = 1600000;
+        rate = 0.8;
+        tag = '7개월 이후 (상한 160만)';
+      }
+
+      let calculated = Math.round(salary * rate);
+      let actual = Math.min(Math.max(calculated, 700000), maxCap);
+      total += actual;
+
+      rows.push({ month: m, actual, tag, tagClass });
+    }
+
+    summaryTitle.textContent = `일반 육아휴직 총 수령액 (${selectedMonths}개월)`;
+    totalDisplay.textContent = total.toLocaleString('ko-KR');
+    summarySub.textContent = `월 평균 약 ${Math.round(total / selectedMonths).toLocaleString('ko-KR')}원 입금 (사후지급금 폐지 전액 수령)`;
+
+    renderTimeline(rows);
+  }
+
+  // 2. 6+6 부모휴직
+  function calcSixPlusSix(salary) {
+    const caps = [2500000, 2500000, 3000000, 3500000, 4000000, 4500000];
+    let total = 0;
+    const rows = [];
+
+    for (let m = 1; m <= selectedMonths; m++) {
+      let actual = 0;
+      let tag = '';
+      let tagClass = '';
+
+      if (isChildUnder18m && m <= 6) {
+        const cap = caps[m - 1];
+        actual = Math.min(Math.max(salary, 700000), cap);
+        tag = `6+6 ${m}개월차 (상한 ${cap / 10000}만)`;
+        tagClass = 'tag-bonus';
+      } else {
+        const cap = 1600000;
+        actual = Math.min(Math.max(Math.round(salary * 0.8), 700000), cap);
+        tag = (m <= 6) ? '18개월 초과 (일반 적용)' : '7개월 이후 일반 상한 (160만)';
+      }
+
+      total += actual;
+      rows.push({ month: m, actual, tag, tagClass });
+    }
+
+    summaryTitle.textContent = `6+6 부모휴직 총 수령액 (${selectedMonths}개월)`;
+    totalDisplay.textContent = total.toLocaleString('ko-KR');
+    summarySub.textContent = `첫 6개월간 부모 각각 최대 2,050만원 지원 혜택 적용`;
+
+    renderTimeline(rows);
+  }
+
+  // 3. 육아기 단축근무
+  function calcShortWork(salary) {
+    const weeklyReduce = shortHoursPerDay * 5; // 하루 2시간 x 5일 = 주 10시간
+    const workedHours = 40 - weeklyReduce; // 주 30시간 근무
+
+    // 회사 지급 월급 = 통상임금 x (근무시간 / 40)
+    const companyPay = Math.round(salary * (workedHours / 40));
+    const { totalDeduct, netPay: companyNet } = estimateDeductions(companyPay);
+    const companyActual = (taxMode === 'net') ? companyNet : companyPay;
+
+    // 정부 지원금 계산
+    const capFirst5 = Math.min(salary, 2200000);
+    const govFirst5 = Math.round(capFirst5 * (Math.min(weeklyReduce, 5) / 40));
+
+    let govRemain = 0;
+    if (weeklyReduce > 5) {
+      const remainHours = weeklyReduce - 5;
+      const capRemain = Math.min(Math.round(salary * 0.8), 1500000);
+      govRemain = Math.round(capRemain * (remainHours / 40));
+    }
+
+    const govTotalMonth = govFirst5 + govRemain;
+    const totalTakeHomeMonth = companyActual + govTotalMonth;
+
+    summaryTitle.textContent = `단축근무 정부 지원금 (고용보험 확정)`;
+    totalDisplay.textContent = `${govTotalMonth.toLocaleString('ko-KR')}`;
+    summarySub.textContent = `+ 회사 급여(${taxMode === 'net' ? '세후 예상' : '세전'}) 약 ${companyActual.toLocaleString('ko-KR')}원 = 월 통장 입금 총 약 ${totalTakeHomeMonth.toLocaleString('ko-KR')}원`;
+
+    companyPayDisplay.textContent = `약 ${companyActual.toLocaleString('ko-KR')}원`;
+    companyDeductDisplay.textContent = `약 -${totalDeduct.toLocaleString('ko-KR')}원`;
+    govPayDisplay.textContent = `+${govTotalMonth.toLocaleString('ko-KR')}원`;
+    finalTakeHomeDisplay.textContent = `약 ${totalTakeHomeMonth.toLocaleString('ko-KR')}원 / 월`;
+
+    const rows = [];
+    for (let m = 1; m <= selectedMonths; m++) {
+      rows.push({
+        month: m,
+        actual: govTotalMonth,
+        tag: `정부지원 확정 (회사 ${taxMode === 'net' ? '세후' : '세전'} 약 +${Math.round(companyActual/10000)}만)`,
+        tagClass: 'tag-bonus'
+      });
+    }
+    renderTimeline(rows);
+  }
+
+  // 4. 휴직 vs 단축 비교
+  function calcCompare(salary) {
+    const leaveEarly = Math.min(salary, 2500000);
+    const leaveMid = Math.min(salary, 2000000);
+    const leaveLate = Math.min(Math.round(salary * 0.8), 1600000);
+
+    const weeklyReduce = shortHoursPerDay * 5;
+    const workedHours = 40 - weeklyReduce;
+    const companyPay = Math.round(salary * (workedHours / 40));
+    const govFirst5 = Math.round(Math.min(salary, 2200000) * (Math.min(weeklyReduce, 5) / 40));
+    const remainHours = Math.max(0, weeklyReduce - 5);
+    const govRemain = Math.round(Math.min(Math.round(salary * 0.8), 1500000) * (remainHours / 40));
+    const govTotalMonth = govFirst5 + govRemain;
+    const shortTotalMonth = companyPay + govTotalMonth;
+
+    const leave1Year = (leaveEarly * 3) + (leaveMid * 3) + (leaveLate * 6);
+    const short1Year = shortTotalMonth * 12;
+    const diff = short1Year - leave1Year;
+
+    summaryTitle.textContent = `1년 기준 수입 차이 (단축근무 vs 전일휴직)`;
+    totalDisplay.textContent = `+${diff.toLocaleString('ko-KR')}`;
+    summarySub.textContent = `단축근무(하루 ${shortHoursPerDay}시간) 선택 시 전일 휴직 대비 연간 약 ${Math.round(diff/10000)}만원 수입 증가 (회사 세전 예상치 포함)`;
+
+    compareBody.innerHTML = `
+      <tr>
+        <td><strong>전일 육아휴직 (1~3개월)</strong></td>
+        <td class="amount" style="color:var(--muted);">-</td>
+        <td class="amount" style="color:#2563eb;">${leaveEarly.toLocaleString('ko-KR')}원</td>
+        <td class="amount" style="color:#2563eb;">${leaveEarly.toLocaleString('ko-KR')}원</td>
+      </tr>
+      <tr>
+        <td><strong>전일 육아휴직 (4~6개월)</strong></td>
+        <td class="amount" style="color:var(--muted);">-</td>
+        <td class="amount" style="color:#2563eb;">${leaveMid.toLocaleString('ko-KR')}원</td>
+        <td class="amount" style="color:#2563eb;">${leaveMid.toLocaleString('ko-KR')}원</td>
+      </tr>
+      <tr>
+        <td><strong>전일 육아휴직 (7~12개월)</strong></td>
+        <td class="amount" style="color:var(--muted);">-</td>
+        <td class="amount" style="color:#2563eb;">${leaveLate.toLocaleString('ko-KR')}원</td>
+        <td class="amount" style="color:#2563eb;">${leaveLate.toLocaleString('ko-KR')}원</td>
+      </tr>
+      <tr class="highlight-row">
+        <td><strong>육아기 단축근무 (하루 ${shortHoursPerDay}h 단축)</strong></td>
+        <td class="amount" style="color:var(--muted);">약 ${companyPay.toLocaleString('ko-KR')}원 <span style="font-size:11px; color:#d97706;">(예상)</span></td>
+        <td class="amount" style="color:#059669;">${govTotalMonth.toLocaleString('ko-KR')}원 <span style="font-size:11px; color:#10b981;">(확정)</span></td>
+        <td class="amount" style="color:#059669; font-weight:800;">약 ${shortTotalMonth.toLocaleString('ko-KR')}원</td>
+      </tr>
+      <tr style="background:var(--bg-soft); font-weight:700;">
+        <td><strong>1년 총 수입 차이</strong></td>
+        <td colspan="2" style="font-size:12px; color:var(--muted);">전일휴직 ${Math.round(leave1Year/10000)}만 vs 단축 약 ${Math.round(short1Year/10000)}만</td>
+        <td class="amount" style="color:#059669; font-size:15px;">+약 ${diff.toLocaleString('ko-KR')}원 이득</td>
+      </tr>
+    `;
+  }
+
+  function renderTimeline(rows) {
+    timelineList.innerHTML = '';
+    rows.forEach(r => {
+      const item = document.createElement('div');
+      item.className = 'timeline-item';
+      item.innerHTML = `
+        <div class="timeline-month">
+          <span>${r.month}개월차</span>
+          <span class="timeline-tag ${r.tagClass}">${r.tag}</span>
+        </div>
+        <div class="timeline-val">${r.actual.toLocaleString('ko-KR')}원</div>
+      `;
+      timelineList.appendChild(item);
+    });
+  }
+
+  // 탭 변경 리스너
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = btn.getAttribute('data-tab');
+
+      sectionSixOptions.style.display = (currentTab === 'six') ? 'block' : 'none';
+      sectionShortOptions.style.display = (currentTab === 'short' || currentTab === 'compare') ? 'block' : 'none';
+      groupMonths.style.display = (currentTab === 'compare') ? 'none' : 'block';
+      calloutWarning.style.display = (currentTab === 'six') ? 'block' : 'none';
+      calloutShort.style.display = (currentTab === 'short' || currentTab === 'compare') ? 'block' : 'none';
+      shortTaxCard.style.display = (currentTab === 'short') ? 'block' : 'none';
+
+      if (currentTab === 'compare') {
+        timelineContainer.style.display = 'none';
+        compareContainer.style.display = 'block';
+      } else {
+        timelineContainer.style.display = 'block';
+        compareContainer.style.display = 'none';
+      }
+
+      calculate();
+    });
+  });
+
+  // 금액 입력 리스너
+  monthlySalaryInput.addEventListener('input', (e) => {
+    let v = e.target.value.replace(/[^0-9]/g, '');
+    if (!v) v = '0';
+    e.target.value = parseInt(v, 10).toLocaleString('ko-KR');
+    calculate();
+  });
+
+  // 퀵 버튼
+  quickSalaryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.getAttribute('data-val');
+      setFormattedSalary(val);
+    });
+  });
+
+  // 개월 수 버튼
+  monthBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      monthBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedMonths = parseInt(btn.getAttribute('data-months'), 10);
+      calculate();
+    });
+  });
+
+  // 자녀 연령 버튼
+  btnAgeYes.addEventListener('click', () => {
+    isChildUnder18m = true;
+    btnAgeYes.classList.add('active');
+    btnAgeNo.classList.remove('active');
+    calculate();
+  });
+  btnAgeNo.addEventListener('click', () => {
+    isChildUnder18m = false;
+    btnAgeNo.classList.add('active');
+    btnAgeYes.classList.remove('active');
+    calculate();
+  });
+
+  // 단축 시간 버튼
+  shortHourBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      shortHourBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      shortHoursPerDay = parseInt(btn.getAttribute('data-hours'), 10);
+      calculate();
+    });
+  });
+
+  // 세전/세후 모드 토글
+  btnTaxNet.addEventListener('click', () => {
+    taxMode = 'net';
+    btnTaxNet.classList.add('active');
+    btnTaxGross.classList.remove('active');
+    companyTaxLabel.textContent = '세후 예상';
+    companyDeductRow.style.display = 'flex';
+    calculate();
+  });
+  btnTaxGross.addEventListener('click', () => {
+    taxMode = 'gross';
+    btnTaxGross.classList.add('active');
+    btnTaxNet.classList.remove('active');
+    companyTaxLabel.textContent = '세전';
+    companyDeductRow.style.display = 'none';
+    calculate();
+  });
+
+  // 리셋 버튼
+  btnReset.addEventListener('click', () => {
+    setFormattedSalary(3500000);
+  });
+
+  // 초기 실행
+  calculate();
+</script>
