@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Adsense from '../../components/Adsense.astro';
 
 const pageTitle = "2026 육아휴직 & 단축근무 급여 통합 계산기 — 다다노트";
-const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(월 최대 250만원·사후지급금 폐지 100% 매월 수령), 6+6 부모육아휴직제(배우자 사용기간 연동 최대 450만원), 육아기 단축근무 정부지원금 및 회사 급여 세후 실수령액을 1초 만에 자동 계산합니다.";
+const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(월 최대 250만원·사후지급금 폐지 100% 매월 수령), 6+6 부모육아휴직제(배우자 사용기간 연동 최대 450만원), 육아기 단축근무 정부지원금(주 5~25시간 단축 자유 선택) 및 회사 급여 세후 실수령액을 1초 만에 자동 계산합니다.";
 ---
 
 <Layout title={pageTitle} description={pageDesc} ogImage="/og/parental-leave.png">
@@ -20,11 +20,11 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     <!-- Header -->
     <header class="calc-header">
       <div class="calc-badge">
-        <span class="dot"></span> 2026 고용보험 최신 개정 · 사후지급금 전면 폐지 · 6+6 부모휴직 특례 완벽 반영
+        <span class="dot"></span> 2026 고용보험 최신 개정 · 사후지급금 전면 폐지 · 6+6 부모휴직 & 주 5~25시간 단축근무 완벽 반영
       </div>
       <h1 class="calc-title">육아휴직 & 단축근무 급여 계산기</h1>
       <p class="calc-subtitle">
-        내 월 통상임금과 배우자 휴직 기간을 입력하면 <strong>육아휴직 급여(일반 & 6+6 특례 자동 판정)</strong>와 
+        내 월 통상임금과 조건을 입력하면 <strong>육아휴직 급여(일반 & 6+6 특례 자동 판정)</strong>와 
         <strong>육아기 단축근무 시 정부지원금 + 회사 급여 세후 실수령액</strong>을 즉시 산출해 드립니다.
       </p>
     </header>
@@ -87,7 +87,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
             </div>
           </div>
 
-          <!-- 내 휴직 예정 기간 -->
+          <!-- [육아휴직 탭 전용] 내 휴직 예정 기간 -->
           <div class="form-item" id="group-my-months">
             <label>
               <span>내 휴직 예정 기간</span>
@@ -101,7 +101,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
             </div>
           </div>
 
-          <!-- [핵심] 육아휴직 탭 전용: 6+6 부모휴직 옵션 박스 -->
+          <!-- [육아휴직 탭 전용] 6+6 부모휴직 옵션 박스 -->
           <div class="spouse-leave-box" id="section-spouse-options">
             <div class="switch-row">
               <div class="switch-label-area">
@@ -136,16 +136,31 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
             </div>
           </div>
 
-          <!-- 단축근무 탭 전용: 단축근무 시간 설정 -->
+          <!-- [단축근무 탭 전용] 단축 근로 시간 정밀 설정 (주 5~25시간 단축, 법정 기준) -->
           <div class="form-item conditional-box" id="section-short-options" style="display:none;">
             <label>
-              <span>하루 단축할 근로 시간</span>
-              <span class="sub-hint">주 40시간(하루 8시간) 근무 기준</span>
+              <span>주당 단축할 근로 시간 선택</span>
+              <span class="sub-hint">법정 기준: 주 5시간 ~ 최대 25시간 단축 (단축 후 주 15~35시간 근무)</span>
             </label>
-            <div class="seg-group" id="seg-short-hours">
-              <button type="button" class="seg-btn" data-hours="1">하루 1시간 단축 (주 35h)</button>
-              <button type="button" class="seg-btn active" data-hours="2">하루 2시간 단축 (주 30h)</button>
-              <button type="button" class="seg-btn" data-hours="3">하루 3시간 단축 (주 25h)</button>
+            
+            <!-- 단축 시간 선택 칩 -->
+            <div class="short-hours-chip-grid" id="seg-short-weekly-chips">
+              <button type="button" class="chip-btn" data-whours="5">주 5h 단축 (하루 1h)</button>
+              <button type="button" class="chip-btn active" data-whours="10">주 10h 단축 (하루 2h)</button>
+              <button type="button" class="chip-btn" data-whours="15">주 15h 단축 (하루 3h)</button>
+              <button type="button" class="chip-btn" data-whours="20">주 20h 단축 (하루 4h)</button>
+              <button type="button" class="chip-btn" data-whours="25">주 25h 단축 (최대)</button>
+            </div>
+
+            <!-- 단축근무 상세 배너 -->
+            <div class="short-status-badge">
+              <div class="ss-row">
+                <span>기존 정규 근로: <strong>주 40시간</strong></span>
+                <span>➔ 단축 후 근로: <strong id="worked-hours-display" class="text-blue">주 30시간 (하루 6h)</strong></span>
+              </div>
+              <div class="ss-formula">
+                💡 <strong>급여 산정 공식:</strong> 최초 10시간분은 <strong>통상임금 100%(상한 250만)</strong> 지원 + 초과 단축분은 <strong>80%(상한 160만)</strong> 정부 지원!
+              </div>
             </div>
           </div>
 
@@ -166,7 +181,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
       <section class="calc-card result-card" id="result-anchor">
         <div class="panel-header-row">
           <h2 class="panel-section-title">
-            <span class="icon">📊</span> 예상 수령액 리포트
+            <span class="icon">📊</span> <span id="report-panel-title">예상 수령액 리포트</span>
           </h2>
         </div>
 
@@ -185,7 +200,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
         <!-- 단축근무 전용: 세전 vs 세후 실수령 브레이크다운 카드 -->
         <div class="short-tax-card" id="short-tax-card" style="display:none;">
           <div class="tax-header-row">
-            <span class="tax-card-title">💳 내 통장 실제 입금액 (회사 + 정부)</span>
+            <span class="tax-card-title">💳 월 실제 통장 입금액 (회사 + 정부)</span>
             <div class="tax-toggle-group">
               <button type="button" id="btn-tax-net" class="tax-btn active">세후(실수령)</button>
               <button type="button" id="btn-tax-gross" class="tax-btn">세전</button>
@@ -202,16 +217,27 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
             </div>
             <div class="tax-row gov">
               <span class="t-label">• 정부 지원금 (고용보험 비과세 100%):</span>
-              <strong class="t-val text-green" id="gov-pay-display">+462,500원</strong>
+              <strong class="t-val text-green" id="gov-pay-display">+625,000원</strong>
             </div>
             <div class="tax-row total">
               <span class="t-label">= 매월 실제 통장 입금 총액:</span>
-              <strong class="t-val text-primary" id="final-take-home-display">약 2,829,500원 / 월</strong>
+              <strong class="t-val text-primary" id="final-take-home-display">약 2,992,000원 / 월</strong>
+            </div>
+          </div>
+
+          <!-- 소득 보전율 안내 바 -->
+          <div class="retention-bar-wrap">
+            <div class="retention-label">
+              <span>기존 풀타임 대비 소득 보전율</span>
+              <strong id="retention-rate-display" class="text-blue">92.5%</strong>
+            </div>
+            <div class="retention-track">
+              <div class="retention-fill" id="retention-fill" style="width: 92.5%;"></div>
             </div>
           </div>
         </div>
 
-        <!-- 월별 상세 타임라인 -->
+        <!-- 월별 상세 타임라인 (육아휴직 전용) -->
         <div class="timeline-container" id="timeline-container">
           <div class="timeline-header">
             🗓️ 월별 지원금 및 상한액 적용 내역
@@ -312,13 +338,14 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
         </div>
 
         <div class="guide-content-card">
-          <h3 class="guide-card-title">3. 육아기 근로시간 단축 급여 및 소득 보전</h3>
+          <h3 class="guide-card-title">3. 육아기 근로시간 단축 급여 및 소득 보전 (주 5~25시간)</h3>
           <p class="guide-card-desc">
             전일 휴직 대신 일하면서 돌봄을 병행하는 경우, 단축된 시간에 대해 고용보험에서 보조금을 지급합니다.
           </p>
           <ul class="guide-bullet-list">
-            <li><strong>최초 단축 5시간:</strong> 통상임금 100% 기준 (월 상한 220만 원 한도)으로 지원</li>
-            <li><strong>초과 단축 시간:</strong> 통상임금 80% 기준 (월 상한 150만 원 한도)으로 지원</li>
+            <li><strong>단축 허용 범위:</strong> 주당 5시간 단축부터 최대 25시간 단축(단축 후 주 15~35시간 근로)까지 가능</li>
+            <li><strong>최초 단축 10시간:</strong> <strong>통상임금 100% 기준 (월 상한 250만 원 한도)</strong>으로 전액 지원</li>
+            <li><strong>초과 단축 시간:</strong> <strong>통상임금 80% 기준 (월 상한 160만 원 한도)</strong>으로 지원</li>
             <li><strong>소득 보전율:</strong> 일한 시간만큼은 회사에서 기본 급여를 수령하므로, 하루 2시간 단축(주 30h) 시 통상임금의 <strong>90~95% 수준</strong> 실수령액이 유지됩니다.</li>
           </ul>
         </div>
@@ -654,7 +681,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
-/* Spouse Leave Box (6+6 Option in Same Tab) */
+/* Spouse Leave Box */
 .spouse-leave-box {
   background: var(--bg-soft);
   border: 1.5px solid var(--line);
@@ -765,6 +792,58 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   color: #be185d;
   margin-top: 8px;
   line-height: 1.5;
+}
+
+/* Reduced Hours Chips Grid */
+.short-hours-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+.chip-btn {
+  background: var(--bg-soft);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+}
+.chip-btn:hover {
+  border-color: #3b82f6;
+}
+.chip-btn.active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.short-status-badge {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+.ss-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.text-blue { color: #2563eb; }
+.ss-formula {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  border-top: 1px dashed var(--line);
+  padding-top: 6px;
 }
 
 /* Callouts */
@@ -896,6 +975,33 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   font-weight: 700;
 }
 .tax-row.total .text-primary { color: #1d4ed8; }
+
+/* Retention Progress Bar */
+.retention-bar-wrap {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+.retention-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.retention-track {
+  width: 100%;
+  height: 8px;
+  background: var(--line);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.retention-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #10b981);
+  border-radius: 9999px;
+  transition: width .3s ease;
+}
 
 /* Timeline */
 .timeline-header {
@@ -1189,7 +1295,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   let myLeaveMonths = 12; // 내 휴직 기간 (3, 6, 12, 18)
   let spouseLeaveUsed = true; // 배우자 6+6 사용 여부
   let spouseLeaveMonths = 6; // 배우자 휴직 개월 수 (1~6)
-  let shortHoursPerDay = 2; // 하루 단축 시간 (주 10시간)
+  let weeklyReduceHours = 10; // 주당 단축 시간 (5, 10, 15, 20, 25)
   let taxMode = 'net'; // 'net' or 'gross'
 
   // 엘리먼트 참조
@@ -1207,7 +1313,8 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   const sectionSpouseOptions = document.getElementById('section-spouse-options');
   const sectionShortOptions = document.getElementById('section-short-options');
   const groupMyMonths = document.getElementById('group-my-months');
-  const shortHourBtns = document.querySelectorAll('#seg-short-hours .seg-btn');
+  const shortWeeklyChips = document.querySelectorAll('#seg-short-weekly-chips .chip-btn');
+  const workedHoursDisplay = document.getElementById('worked-hours-display');
 
   const calloutNotice = document.getElementById('callout-notice');
   const calloutShort = document.getElementById('callout-short');
@@ -1218,6 +1325,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   const btnTaxNet = document.getElementById('btn-tax-net');
   const btnTaxGross = document.getElementById('btn-tax-gross');
 
+  const reportPanelTitle = document.getElementById('report-panel-title');
   const summaryTitle = document.getElementById('summary-title');
   const totalDisplay = document.getElementById('total-display');
   const summarySub = document.getElementById('summary-sub');
@@ -1230,6 +1338,8 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
   const companyTaxLabel = document.getElementById('company-tax-label');
   const govPayDisplay = document.getElementById('gov-pay-display');
   const finalTakeHomeDisplay = document.getElementById('final-take-home-display');
+  const retentionRateDisplay = document.getElementById('retention-rate-display');
+  const retentionFill = document.getElementById('retention-fill');
 
   // 금액 취득
   function getSalary() {
@@ -1339,6 +1449,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
       rows.push({ month: m, actual, tag, tagClass });
     }
 
+    reportPanelTitle.textContent = '육아휴직 예상 수령액 리포트';
     const typeStr = spouseLeaveUsed ? `6+6 부모휴직 (${effectiveSixMonths}개월 적용)` : '일반 육아휴직';
     summaryTitle.textContent = `${typeStr} 총 예상 수령액 (${myLeaveMonths}개월)`;
     totalDisplay.textContent = total.toLocaleString('ko-KR');
@@ -1347,49 +1458,49 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     renderTimeline(rows);
   }
 
-  // 2. 육아기 근로시간 단축 급여
+  // 2. 육아기 근로시간 단축 급여 (기간 무관, 월 단위 수령액 명확 산출)
   function calcShortWork(salary) {
-    const weeklyReduce = shortHoursPerDay * 5; // 하루 2시간 x 5일 = 주 10시간
-    const workedHours = 40 - weeklyReduce; // 주 30시간 근무
+    const workedHours = 40 - weeklyReduceHours; // 단축 후 주당 근무시간 (예: 40 - 10 = 30시간)
+    workedHoursDisplay.textContent = `주 ${workedHours}시간 (하루 ${workedHours / 5}h)`;
 
-    // 회사 지급 월급 = 통상임금 x (근무시간 / 40)
-    const companyPay = Math.round(salary * (workedHours / 40));
-    const { totalDeduct, netPay: companyNet } = estimateDeductions(companyPay);
-    const companyActual = (taxMode === 'net') ? companyNet : companyPay;
+    // 회사 지급 월급 = 통상임금 x (단축 후 근무시간 / 40)
+    const companyGross = Math.round(salary * (workedHours / 40));
+    const { totalDeduct, netPay: companyNet } = estimateDeductions(companyGross);
+    const companyActual = (taxMode === 'net') ? companyNet : companyGross;
 
-    // 정부 지원금 계산
-    const capFirst5 = Math.min(salary, 2200000);
-    const govFirst5 = Math.round(capFirst5 * (Math.min(weeklyReduce, 5) / 40));
+    // 정부 지원금 계산 (2026 최신 고용보험법 기준):
+    // ① 최초 10시간분: 통상임금 100%(월 상한 250만) x (단축시간 중 최대 10h / 40)
+    const first10Hours = Math.min(weeklyReduceHours, 10);
+    const capFirst10 = Math.min(salary, 2500000);
+    const govFirst10 = Math.round(capFirst10 * (first10Hours / 40));
 
-    let govRemain = 0;
-    if (weeklyReduce > 5) {
-      const remainHours = weeklyReduce - 5;
-      const capRemain = Math.min(Math.round(salary * 0.8), 1500000);
-      govRemain = Math.round(capRemain * (remainHours / 40));
+    // ② 초과 단축분(10시간 초과~25시간): 통상임금 80%(월 상한 160만) x (초과시간 / 40)
+    let govExcess = 0;
+    if (weeklyReduceHours > 10) {
+      const excessHours = weeklyReduceHours - 10;
+      const capExcess = Math.min(Math.round(salary * 0.8), 1600000);
+      govExcess = Math.round(capExcess * (excessHours / 40));
     }
 
-    const govTotalMonth = govFirst5 + govRemain;
+    const govTotalMonth = govFirst10 + govExcess;
     const totalTakeHomeMonth = companyActual + govTotalMonth;
 
-    summaryTitle.textContent = `단축근무 정부 지원금 (고용보험 확정)`;
-    totalDisplay.textContent = `${govTotalMonth.toLocaleString('ko-KR')}`;
-    summarySub.textContent = `+ 회사 급여(${taxMode === 'net' ? '세후 예상' : '세전'}) 약 ${companyActual.toLocaleString('ko-KR')}원 = 월 통장 입금 총 약 ${totalTakeHomeMonth.toLocaleString('ko-KR')}원`;
+    // 기존 풀타임 근무 시 예상 세후 실수령액 대비 보전율
+    const { netPay: originalNet } = estimateDeductions(salary);
+    const retentionRate = originalNet > 0 ? ((totalTakeHomeMonth / originalNet) * 100).toFixed(1) : '100.0';
+
+    reportPanelTitle.textContent = '단축근무 월 급여 & 정부지원 리포트';
+    summaryTitle.textContent = `월 최종 통장 입금액 (회사 급여 + 정부 지원금)`;
+    totalDisplay.textContent = `${totalTakeHomeMonth.toLocaleString('ko-KR')}`;
+    summarySub.textContent = `회사 ${taxMode === 'net' ? '세후' : '세전'} 약 ${companyActual.toLocaleString('ko-KR')}원 + 정부 비과세 지원금 ${govTotalMonth.toLocaleString('ko-KR')}원`;
 
     companyPayDisplay.textContent = `약 ${companyActual.toLocaleString('ko-KR')}원`;
     companyDeductDisplay.textContent = `약 -${totalDeduct.toLocaleString('ko-KR')}원`;
     govPayDisplay.textContent = `+${govTotalMonth.toLocaleString('ko-KR')}원`;
     finalTakeHomeDisplay.textContent = `약 ${totalTakeHomeMonth.toLocaleString('ko-KR')}원 / 월`;
 
-    const rows = [];
-    for (let m = 1; m <= myLeaveMonths; m++) {
-      rows.push({
-        month: m,
-        actual: govTotalMonth,
-        tag: `정부지원 확정 (회사 ${taxMode === 'net' ? '세후' : '세전'} 약 +${Math.round(companyActual/10000)}만)`,
-        tagClass: 'tag-bonus'
-      });
-    }
-    renderTimeline(rows);
+    retentionRateDisplay.textContent = `${retentionRate}%`;
+    retentionFill.style.width = `${Math.min(parseFloat(retentionRate), 100)}%`;
   }
 
   // 3. 휴직 vs 단축 비교
@@ -1398,22 +1509,23 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     const leaveMid = Math.min(salary, 2000000);
     const leaveLate = Math.min(Math.round(salary * 0.8), 1600000);
 
-    const weeklyReduce = shortHoursPerDay * 5;
-    const workedHours = 40 - weeklyReduce;
-    const companyPay = Math.round(salary * (workedHours / 40));
-    const govFirst5 = Math.round(Math.min(salary, 2200000) * (Math.min(weeklyReduce, 5) / 40));
-    const remainHours = Math.max(0, weeklyReduce - 5);
-    const govRemain = Math.round(Math.min(Math.round(salary * 0.8), 1500000) * (remainHours / 40));
-    const govTotalMonth = govFirst5 + govRemain;
-    const shortTotalMonth = companyPay + govTotalMonth;
+    const workedHours = 40 - weeklyReduceHours;
+    const companyGross = Math.round(salary * (workedHours / 40));
+    const first10Hours = Math.min(weeklyReduceHours, 10);
+    const govFirst10 = Math.round(Math.min(salary, 2500000) * (first10Hours / 40));
+    const excessHours = Math.max(0, weeklyReduceHours - 10);
+    const govExcess = Math.round(Math.min(Math.round(salary * 0.8), 1600000) * (excessHours / 40));
+    const govTotalMonth = govFirst10 + govExcess;
+    const shortTotalMonth = companyGross + govTotalMonth;
 
     const leave1Year = (leaveEarly * 3) + (leaveMid * 3) + (leaveLate * 6);
     const short1Year = shortTotalMonth * 12;
     const diff = short1Year - leave1Year;
 
+    reportPanelTitle.textContent = '휴직 vs 단축 수입 비교 리포트';
     summaryTitle.textContent = `1년 기준 수입 차이 (단축근무 vs 일반휴직)`;
     totalDisplay.textContent = `+${diff.toLocaleString('ko-KR')}`;
-    summarySub.textContent = `단축근무(하루 ${shortHoursPerDay}시간) 선택 시 전일 휴직 대비 연간 약 ${Math.round(diff/10000)}만원 수입 증가 (회사 세전 예상치 포함)`;
+    summarySub.textContent = `주 ${weeklyReduceHours}시간 단축근무 선택 시 전일 휴직 대비 연간 약 ${Math.round(diff/10000)}만원 수입 증가 (회사 세전 예상치 포함)`;
 
     compareBody.innerHTML = `
       <tr>
@@ -1435,8 +1547,8 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
         <td class="amount" style="color:#2563eb;">${leaveLate.toLocaleString('ko-KR')}원</td>
       </tr>
       <tr class="highlight-row">
-        <td><strong>육아기 단축근무 (하루 ${shortHoursPerDay}h 단축)</strong></td>
-        <td class="amount" style="color:var(--muted);">약 ${companyPay.toLocaleString('ko-KR')}원 <span style="font-size:11px; color:#d97706;">(예상)</span></td>
+        <td><strong>육아기 단축근무 (주 ${weeklyReduceHours}h 단축)</strong></td>
+        <td class="amount" style="color:var(--muted);">약 ${companyGross.toLocaleString('ko-KR')}원 <span style="font-size:11px; color:#d97706;">(세전)</span></td>
         <td class="amount" style="color:#059669;">${govTotalMonth.toLocaleString('ko-KR')}원 <span style="font-size:11px; color:#10b981;">(확정)</span></td>
         <td class="amount" style="color:#059669; font-weight:800;">약 ${shortTotalMonth.toLocaleString('ko-KR')}원</td>
       </tr>
@@ -1476,19 +1588,14 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
       const isCompare = (currentTab === 'compare');
 
       sectionSpouseOptions.style.display = isLeave ? 'block' : 'none';
-      groupMyMonths.style.display = isCompare ? 'none' : 'block';
+      groupMyMonths.style.display = isLeave ? 'block' : 'none';
       sectionShortOptions.style.display = (isShort || isCompare) ? 'block' : 'none';
       calloutNotice.style.display = isLeave ? 'block' : 'none';
-      calloutShort.style.display = (isShort || isCompare) ? 'block' : 'none';
+      calloutShort.style.display = isShort ? 'block' : 'none';
       shortTaxCard.style.display = isShort ? 'block' : 'none';
 
-      if (isCompare) {
-        timelineContainer.style.display = 'none';
-        compareContainer.style.display = 'block';
-      } else {
-        timelineContainer.style.display = 'block';
-        compareContainer.style.display = 'none';
-      }
+      timelineContainer.style.display = isLeave ? 'block' : 'none';
+      compareContainer.style.display = isCompare ? 'block' : 'none';
 
       calculate();
     });
@@ -1530,7 +1637,7 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     });
   });
 
-  // 내 개월 수 버튼
+  // 내 개월 수 버튼 (휴직 탭)
   myMonthBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       myMonthBtns.forEach(b => b.classList.remove('active'));
@@ -1541,12 +1648,12 @@ const pageDesc = "2026년 최신 개정 고용보험 기준 일반 육아휴직(
     });
   });
 
-  // 단축 시간 버튼
-  shortHourBtns.forEach(btn => {
+  // 단축 시간 칩 (단축근무 탭: 주 5~25시간)
+  shortWeeklyChips.forEach(btn => {
     btn.addEventListener('click', () => {
-      shortHourBtns.forEach(b => b.classList.remove('active'));
+      shortWeeklyChips.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      shortHoursPerDay = parseInt(btn.getAttribute('data-hours'), 10);
+      weeklyReduceHours = parseInt(btn.getAttribute('data-whours'), 10);
       calculate();
     });
   });
